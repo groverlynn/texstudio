@@ -3,7 +3,7 @@
 QMAKE_CXX=$1
 BUILD_DIR=$2
 PRO_DIR=$3
-export PATH=$PATH:/usr/local/bin  # standard path for hg installation on OSX. May not be on PATH when called from a GUI application (e.g. QtCreator)
+export PATH=$PATH:/usr/local/bin:/opt/homebrew/bin  # standard path for hg installation on OSX. May not be on PATH when called from a GUI application (e.g. QtCreator)
 version=$(git describe --tags --always)
 # write new file if we have version information or if the file does not exist at all.
 # ensures a file exists and that it is updated if new version information is available.

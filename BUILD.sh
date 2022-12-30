@@ -89,4 +89,3 @@ if [ "$DO_INSTALL" = yes ]; then
 fi
 # set the -spec option, if necessary. Ex : qmake -spec linux-g++ PREFIX=$PREFIX texstudio.pro
 exit 0
-

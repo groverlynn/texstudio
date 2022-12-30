@@ -3,7 +3,7 @@ To compile and install TeXstudio, write:
 mkdir build
 cd build
 cmake ..
-cmake --build . --target install
+cmake --build . --target texstudio
 
 On Unix and MacOSX you can also use:
 sudo sh BUILD.sh
@@ -14,4 +14,24 @@ Requirements :
 * Qt tool kit (qt.io) (6.2+ recommended)
 * Poppler for the internal pdf preview 
   (is automatically disabled if poppler is not found)
+* For MacOS, brew deliberately broke the poppler package. Try the following poppler-qt6:
+* Load source from https://poppler.freedesktop.org unpack source In poppler source folder
+* mkdir build
+* cd build
+* cmake ..
+* cmake --build . --parallel
+* cmake --build . -t install
+* (other dependencies: cairo fontconfig freetype gettext jpeg libpng libtiff little-cms2 nspr nss openjp eg ninja)
+* bash BUILD.sh
 
+* Or, manually:
+* mkdir build
+* cd build
+* export PATH="/opt/Qt/6.4.2/macos/bin:$PATH"
+* export LDFLAGS="-L/opt/Qt/6.4.2/macos/lib"
+* export CPPFLAGS="-I/opt/Qt/6.4.2/macos/include"
+* /opt/Qt/6.4.2/macos/bin/qt-cmake .. -G Ninja -Wno-dev
+* cmake --build . --parallel
+* mkdir -p texstudio.app/Contents/Frameworks
+* cp /opt/homebrew/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
+* /opt/Qt/6.4.2/macos/bin/macdeployqt texstudio.app -no-strip -dmg -always-overwrite

@@ -4642,7 +4642,7 @@ QHash<QString, int> QEditor::getEditOperations(bool excludeDefault){
 
 		registerEditOperation(NextPlaceHolder);
 		registerEditOperation(PreviousPlaceHolder);
-	#ifdef Q_OS_MAC
+    #ifdef Q_OS_MAC
         addEditOperation(NextPlaceHolderOrWord, Qt::AltModifier, Qt::Key_Right);
         addEditOperation(PreviousPlaceHolderOrWord, Qt::AltModifier, Qt::Key_Left);
 	#else
