@@ -169,7 +169,7 @@
 
 	<commandDefinition>
 		<latexCommand>\hexagon</latexCommand>
-		<unicodeCommand>⎔</unicodeCommand>
+		<unicodeCommand>⬣</unicodeCommand>
 		<package>
 			<name>wasysym</name>
 		</package>
