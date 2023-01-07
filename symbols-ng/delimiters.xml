@@ -172,7 +172,7 @@
 	<!-- arg math \{ -->
 	<commandDefinition>
 		<latexCommand>\{</latexCommand>
-		<unicodeCommand>\{</unicodeCommand>
+		<unicodeCommand>{</unicodeCommand>
 		<mathMode>true</mathMode>
 	</commandDefinition>
 
@@ -180,7 +180,7 @@
 	<!-- arg math \} -->
 	<commandDefinition>
 		<latexCommand>\}</latexCommand>
-		<unicodeCommand>\}</unicodeCommand>
+		<unicodeCommand>}</unicodeCommand>
 		<mathMode>true</mathMode>
 	</commandDefinition>
 
@@ -263,6 +263,7 @@
 	<commandDefinition>
 		<latexCommand>\bracevert</latexCommand>
 		<imageCommand>\left \bracevert \right.</imageCommand>
+		<unicodeCommand>┃</unicodeCommand>
 		<mathMode>true</mathMode>
 	</commandDefinition>
 
@@ -292,6 +293,7 @@
 	<!-- arg math \lVert -->
 	<commandDefinition>
 		<latexCommand>\lVert</latexCommand>
+		<unicodeCommand>⎸⎸</unicodeCommand>
 		<mathMode>true</mathMode>
 		<package>
 			<name>amsmath</name>
@@ -302,6 +304,7 @@
 	<!-- arg math \rVert -->
 	<commandDefinition>
 		<latexCommand>\rVert</latexCommand>
+		<unicodeCommand>⎹⎹</unicodeCommand>
 		<mathMode>true</mathMode>
 		<package>
 			<name>amsmath</name>

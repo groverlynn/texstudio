@@ -107,7 +107,7 @@ void writeSVGComments(const Command &cmd, const QString &fileName) {
 	}
 
 	QStringList fileContent;
- 	QTextStream stream(&file);
+	QTextStream stream(&file);
 	QString line;
 	do {
 		line = stream.readLine();
@@ -132,12 +132,15 @@ void writeSVGComments(const Command &cmd, const QString &fileName) {
 			if (!commentAsLatin1.isEmpty() ) {
 				additional=" Comment='"+commentAsLatin1+"'";
 			}
-			if( !unicodeCommandAsLatin1.isEmpty() ) {
+			if (!unicodeCommandAsLatin1.isEmpty() ) {
 				additional+=" CommandUnicode='"+unicodeCommandAsLatin1+"'";
 				additional+=" UnicodePackages='"+pkgListToString(cmd.unicodePackages)+"'";
 			}
 			ts<<"<desc"<<" Packages='"<<pkgListToString(cmd.packages)<<"'";
 			ts<<additional<<"/>\n";
+			// if (!cmd.iconMode) {
+			// 	ts<<"<style>path{stroke:black;stroke-width:0.4}</style>\n";
+			// }
 		}
 		ts<<line<<"\n";
 	}
@@ -376,6 +379,8 @@ QString generateLatexFile(const Preamble &preamble, const Command &cmd) {
 
 	if(!cmd.iconMode) {
 		output+="\\usepackage{calc}\n";
+		// output+="\\usepackage[I]{sansmathfonts}\n";
+		// output+="\\renewcommand{\\familydefault}{\\sfdefault}\n";
 		output+="\\newcommand{\\sqbox}[1]{\\rule[\\widthof{#1} * \\real{-0.3}]{0bp}{\\widthof{#1}}#1}\n";
 	}
 

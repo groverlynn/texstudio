@@ -13,7 +13,7 @@
  */
 
 SymbolListModel::SymbolListModel(QVariantMap usageCountMap, QStringList favoriteList) :
-    m_darkMode(false)
+	m_darkMode(false)
 {
 	foreach (const QString &key, usageCountMap.keys()) {
 		usageCount.insert(key, usageCountMap.value(key).toInt());
@@ -123,7 +123,7 @@ void SymbolListModel::loadSymbols(const QString &category, const QStringList &fi
 			symbolItem.packages = img.text("Packages");
 			symbolItem.unicode = img.text("CommandUnicode");
 			symbolItem.iconFile = fileName;
-            symbolItem.icon = QIcon(fileName);
+			symbolItem.icon = QIcon(fileName);
 		}
 		if (!symbolItem.unicode.isEmpty()) {
 			// convert to real unicode
@@ -134,17 +134,21 @@ void SymbolListModel::loadSymbols(const QString &category, const QStringList &fi
 				StrCode = StrCode.mid(2); // Remove U+
 				bool ok;
 				int code = StrCode.toInt(&ok, 16);
-				// if (ok)
-				// 	helper += QChar::fromUcs4(code);
-				if (ok && code<0x10000)
-					helper += QChar(code);
-				else if (ok && code<=0x10FFFF) {
-					helper += QChar((code >> 10) + 0xD7C0);
-					helper += QChar((code & 0x3FF) + 0xDC00);
+				if (ok) {
+#if (QT_VERSION >= QT_VERSION_CHECK(6,0,0))
+					helper += QChar::fromUcs4(code);
+#else
+					if (code < 0x10000) {
+						helper += QChar(code); // single utf-16
+					} else if (code <= 0x10FFFF) {
+						helper += QChar((code >> 10) + 0xD7C0); // high surrogate, 1st utf-16
+						helper += QChar((code & 0x3FF) + 0xDC00); // low surrogate, 2nd utf-16
+					}
+#endif
 				}
 			}
+			helper.replace("<", "&lt;");
 			symbolItem.unicode = helper;
-
 		}
 
 		symbolItem.category = category;
@@ -242,7 +246,7 @@ void SymbolListModel::incrementUsage(const QString &id)
  */
 void SymbolListModel::setDarkmode(bool active)
 {
-    m_darkMode=active;
+	m_darkMode=active;
 }
 /*!
  * \brief add symbol with id to favourite list

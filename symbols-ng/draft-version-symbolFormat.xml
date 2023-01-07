@@ -20,9 +20,9 @@
 	<!-- Define the preamble of the latex document, the default preamble should work for all cases
 	     Note: Using \usepackage{} in <additional> will _not_ result in the symbol being dependend on the package-->
 	<preamble>
-		<class>article</class>
-		<arguments>10pt</arguments>
-		<additional>\pagestyle{empty}</additional>
+		<class>standalone</class>
+		<arguments>14bp,margin=1bp</arguments>
+		<additional>\usepackage[T1]{fontenc}</additional>
 	</preamble>
 
 	<!--  the packages needed for <unicodeCommand> to work -->
