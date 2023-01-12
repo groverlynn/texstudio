@@ -24,14 +24,19 @@ Requirements :
 * (other dependencies: cairo fontconfig freetype gettext jpeg libpng libtiff little-cms2 nspr nss openjp eg ninja)
 * bash BUILD.sh
 
+* One-liner:
+* /opt/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -DQT_QMAKE_EXECUTABLE:STRING=/opt/Qt/6.4.2/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/opt/Qt/6.4.2/macos -DCMAKE_C_COMPILER:STRING=/opt/homebrew/bin/gcc-12 -DCMAKE_CXX_COMPILER:STRING=/opt/homebrew/bin/g++-12
+* /opt/Qt/Tools/CMake/CMake.app/Contents/bin/cmake --build . --parallel
+
 * Or, manually:
 * mkdir build
 * cd build
 * export PATH="/opt/Qt/6.4.2/macos/bin:$PATH"
 * export LDFLAGS="-L/opt/Qt/6.4.2/macos/lib"
 * export CPPFLAGS="-I/opt/Qt/6.4.2/macos/include"
-* /opt/Qt/6.4.2/macos/bin/qt-cmake .. -G Ninja -Wno-dev
-* cmake --build . --parallel
+* /opt/Qt/6.4.2/macos/bin/qt-cmake .. -GNinja -DTEXSTUDIO_ENABLE_MEDIAPLAYER:BOOL=ON
+* /opt/Qt/Tools/CMake/CMake.app/Contents/bin/cmake --build . --parallel
 * mkdir -p texstudio.app/Contents/Frameworks
-* cp /opt/homebrew/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
+* cp -L /opt/homebrew/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
+* install_name_tool -add_rpath @loader_path/../Frameworks texstudio.app/Contents/MacOS/texstudio
 * /opt/Qt/6.4.2/macos/bin/macdeployqt texstudio.app -no-strip -dmg -always-overwrite
