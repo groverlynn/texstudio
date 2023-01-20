@@ -1222,6 +1222,7 @@ void Texstudio::setupMenus()
 	newManagedAction(menu, "htmlexport", tr("C&onvert to Html..."), SLOT(webPublish()));
 	newManagedAction(menu, "htmlsourceexport", tr("C&onvert Source to Html..."), SLOT(webPublishSource()));
 	menu->addSeparator();
+	newManagedAction(menu, "textexport", tr("Convert to Abridged Plaintext"), SLOT(convertToPlainText()));
 	newManagedAction(menu, "analysetext", tr("A&nalyse Text..."), SLOT(analyseText()));
 	newManagedAction(menu, "generaterandomtext", tr("Generate &Random Text..."), SLOT(generateRandomText()));
 	menu->addSeparator();
@@ -6315,6 +6316,28 @@ void Texstudio::webPublishSource()
 	htmll->resize(300,300);*/
 }
 /*!
+ * Remove latex commands
+ */
+void Texstudio::convertToPlainText(){
+	if (!currentEditorView()) return;
+	QList<LineInfo> inlines;
+	QString plaintext;
+	LatexDocument* doc = currentEditorView()->document;
+	for (int i=0;i<=doc->lines();i++) {
+		if (i != doc->lines() && doc->line(i).firstChar() != -1)
+			inlines << LineInfo(doc->line(i).handle());
+		else if (inlines.count()){
+			//convert to plain text after each paragraph and at the end
+			QList<TokenizedBlock> blocks = tokenizeWords(LatexParser::getInstancePtr(), inlines);
+			foreach (const TokenizedBlock &tb, blocks)
+				plaintext += tb.toString() + "\n\n";
+			inlines.clear();
+		}
+	}
+	fileNew();
+	currentEditor()->setText(plaintext, false);
+}
+/*!
  * \brief open analyse text dialog
  * Makes use of TextAnalysisDialog
  */
@@ -6352,11 +6375,7 @@ void Texstudio::generateRandomText()
 		UtilsUi::txsWarning(tr("The random text generator constructs new texts from existing words, so you have to open some text files"));
 		return;
 	}
-
-	QStringList allLines;
-	foreach (LatexEditorView *edView, editors->editors())
-		allLines << edView->editor->document()->textLines();
-	RandomTextGenerator generator(this, allLines);
+	RandomTextGenerator generator(this, &documents);
 	generator.exec();
 }
 
