@@ -1389,7 +1389,6 @@ void ConfigManager::saveMacros()
 bool ConfigManager::execConfigDialog(QWidget *parentToDialog)
 {
 	ConfigDialog *confDlg = new ConfigDialog(parentToDialog);
-	UtilsUi::resizeInFontHeight(confDlg, 86, 52);
 
     if(showConfigMaximized){
         confDlg->showMaximized();
@@ -1640,6 +1639,7 @@ bool ConfigManager::execConfigDialog(QWidget *parentToDialog)
 	connect(confDlg->ui.horizontalSliderSymbol, SIGNAL(valueChanged(int)), SIGNAL(symbolGridIconSizeChanged(int)));
 
 	//EXECUTE IT
+	confDlg->showAndLimitSize();
 	bool executed = confDlg->exec();
 	configRiddled = confDlg->riddled;
 

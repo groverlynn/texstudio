@@ -594,18 +594,25 @@ ConfigDialog::ConfigDialog(QWidget *parent): QDialog(parent,Qt::Dialog|Qt::Windo
 	connect(ui.tbRevertIcon, SIGNAL(clicked()), this, SLOT(revertClicked()));
 	connect(ui.tbRevertCentralIcon, SIGNAL(clicked()), this, SLOT(revertClicked()));
 	connect(ui.tbRevertSymbol, SIGNAL(clicked()), this, SLOT(revertClicked()));
-    connect(ui.tbRevertPDF, SIGNAL(clicked()), this, SLOT(revertClicked()));
+    connect(ui.tbRevertPDF, SIGNAL(clicked()), this, SLOT(revertClicked()));	
+}
 
-	// limit dialog size
-	QRect screen = QGuiApplication::primaryScreen()->geometry();
+
+void ConfigDialog::showAndLimitSize() {
+	show();
+	QRect screen = QGuiApplication::primaryScreen()->availableGeometry();
 	if (!screen.isEmpty()) {
-		int nwidth = width(), nheight = height();
-		if (nwidth > screen.width()) nwidth = screen.width();
-		if (nheight > screen.height()) nheight = screen.height();
+		int nwidth = width(), nheight = height(),
+			heightDiff = frameGeometry().height() - geometry().height(),
+			maxHeight = screen.height() - heightDiff, maxWidth = screen.width();
+
+		if (nwidth > maxWidth) nwidth = maxWidth;
+		if (nheight > maxHeight) nheight = maxHeight;
 		if (nwidth == width() && nheight == height()) return;
+
 		resize(nwidth, nheight);
 		move(frameGeometry().right() > screen.right() ? screen.left() : x(),
-		     frameGeometry().bottom() > screen.bottom() ? screen.left() : y());
+		   frameGeometry().bottom() > screen.bottom() ? screen.top() : y());	
 	}
 }
 

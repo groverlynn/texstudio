@@ -109,6 +109,10 @@ bool DefaultInputBinding::runMacros(QKeyEvent *event, QEditor *editor)
 	QDocumentLine line = editor->cursor().selectionStart().line();
 	int column = editor->cursor().selectionStart().columnNumber();
 	QString prev = line.text().mid(0, column) + event->text(); //TODO: optimize
+    if(event->text().isEmpty() && event->key()==Qt::Key_Tab){
+        // workaround for #2866 (tab as trigger in macro on osx)
+        prev+="\t";
+    }
 	foreach (const Macro &m, completerConfig->userMacros) {
 		if (!m.isActiveForTrigger(Macro::ST_REGEX)) continue;
 		if (!m.isActiveForLanguage(language)) continue;
@@ -211,7 +215,7 @@ bool DefaultInputBinding::keyPressEvent(QKeyEvent *event, QEditor *editor)
 		}
 		return true;
 	}
-	if (!event->text().isEmpty()) {
+    if (!event->text().isEmpty() || event->key()==Qt::Key_Tab) {
 		if (!editor->flag(QEditor::Overwrite) && runMacros(event, editor))
 			return true;
 		if (autoInsertLRM(event, editor))
@@ -661,6 +665,7 @@ LatexEditorView::LatexEditorView(QWidget *parent, LatexEditorViewConfig *aconfig
 	editor->setProperty("latexEditor", QVariant::fromValue<LatexEditorView *>(this));
 
 	lineMarkPanel = new QLineMarkPanel;
+    lineMarkPanel->setCursor(Qt::PointingHandCursor);
 	lineMarkPanelAction = codeeditor->addPanel(lineMarkPanel, QCodeEdit::West, false);
 	lineNumberPanel = new QLineNumberPanel;
     lineNumberPanelAction = codeeditor->addPanel(lineNumberPanel, QCodeEdit::West, false);
