@@ -240,6 +240,50 @@
 		<!-- <forcePNG>true</forcePNG> -->
 	</commandDefinition>
 
+	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
+	<!-- arg math \ulcorner -->
+	<commandDefinition>
+		<latexCommand>\ulcorner</latexCommand>
+		<unicodeCommand>⌜</unicodeCommand>
+		<mathMode>true</mathMode>
+		<package>
+			<name>amssymb</name>
+		</package>
+	</commandDefinition>
+
+	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
+	<!-- arg math \urcorner -->
+	<commandDefinition>
+		<latexCommand>\urcorner</latexCommand>
+		<unicodeCommand>⌝</unicodeCommand>
+		<mathMode>true</mathMode>
+		<package>
+			<name>amssymb</name>
+		</package>
+	</commandDefinition>
+
+	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
+	<!-- arg math \llcorner -->
+	<commandDefinition>
+		<latexCommand>\llcorner</latexCommand>
+		<unicodeCommand>⌞</unicodeCommand>
+		<mathMode>true</mathMode>
+		<package>
+			<name>amssymb</name>
+		</package>
+	</commandDefinition>
+
+	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
+	<!-- arg math \lrcorner -->
+	<commandDefinition>
+		<latexCommand>\lrcorner</latexCommand>
+		<unicodeCommand>⌟</unicodeCommand>
+		<mathMode>true</mathMode>
+		<package>
+			<name>amssymb</name>
+		</package>
+	</commandDefinition>
+
 	<!-- pkgs= ,pkgsarg= ,savepkgs= ,savepkgsarg= -->
 	<!-- optarg math \arrowvert \left \arrowvert \right. -->
 	<commandDefinition>
@@ -308,50 +352,6 @@
 		<mathMode>true</mathMode>
 		<package>
 			<name>amsmath</name>
-		</package>
-	</commandDefinition>
-
-	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
-	<!-- arg math \ulcorner -->
-	<commandDefinition>
-		<latexCommand>\ulcorner</latexCommand>
-		<unicodeCommand>⌜</unicodeCommand>
-		<mathMode>true</mathMode>
-		<package>
-			<name>amssymb</name>
-		</package>
-	</commandDefinition>
-
-	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
-	<!-- arg math \urcorner -->
-	<commandDefinition>
-		<latexCommand>\urcorner</latexCommand>
-		<unicodeCommand>⌝</unicodeCommand>
-		<mathMode>true</mathMode>
-		<package>
-			<name>amssymb</name>
-		</package>
-	</commandDefinition>
-
-	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
-	<!-- arg math \llcorner -->
-	<commandDefinition>
-		<latexCommand>\llcorner</latexCommand>
-		<unicodeCommand>⌞</unicodeCommand>
-		<mathMode>true</mathMode>
-		<package>
-			<name>amssymb</name>
-		</package>
-	</commandDefinition>
-
-	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
-	<!-- arg math \lrcorner -->
-	<commandDefinition>
-		<latexCommand>\lrcorner</latexCommand>
-		<unicodeCommand>⌟</unicodeCommand>
-		<mathMode>true</mathMode>
-		<package>
-			<name>amssymb</name>
 		</package>
 	</commandDefinition>
 

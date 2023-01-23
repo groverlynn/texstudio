@@ -9629,6 +9629,7 @@ Version History
 
 	<commandDefinition>
 		<latexCommand>\faVolleyballBall</latexCommand>
+		<unicodeCommand>🏐</unicodeCommand>
 		<forcePNG>false</forcePNG>
 		<iconMode>true</iconMode>
 	</commandDefinition>
@@ -9773,6 +9774,7 @@ Version History
 
 	<commandDefinition>
 		<latexCommand>\faWifi</latexCommand>
+		<unicodeCommand>🛜</unicodeCommand>
 		<forcePNG>false</forcePNG>
 		<iconMode>true</iconMode>
 	</commandDefinition>
@@ -9800,7 +9802,6 @@ Version History
 	<commandDefinition>
 		<latexCommand>\faWindowMaximize</latexCommand>
 		<unicodeCommand>🗖</unicodeCommand>
-		<unicodeCommand></unicodeCommand>
 		<forcePNG>false</forcePNG>
 		<iconMode>true</iconMode>
 	</commandDefinition>

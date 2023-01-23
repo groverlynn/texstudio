@@ -261,6 +261,17 @@
 		</package>
 	</commandDefinition>
 
+	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
+	<!-- arg math \backepsilon -->
+	<commandDefinition>
+		<latexCommand>\backepsilon</latexCommand>
+		<unicodeCommand>϶</unicodeCommand>
+		<mathMode>true</mathMode>
+		<package>
+			<name>amssymb</name>
+		</package>
+	</commandDefinition>
+
 	<!-- pkgs= ,pkgsarg= ,savepkgs= ,savepkgsarg= -->
 	<!-- arg math \prec -->
 	<commandDefinition>
@@ -1379,17 +1390,6 @@
 	<commandDefinition>
 		<latexCommand>\nsupseteqq</latexCommand>
 		<unicodeCommand>⫆̸</unicodeCommand>
-		<mathMode>true</mathMode>
-		<package>
-			<name>amssymb</name>
-		</package>
-	</commandDefinition>
-
-	<!-- pkgs=amssymb ,pkgsarg= ,savepkgs=amssymb ,savepkgsarg= -->
-	<!-- arg math \backepsilon -->
-	<commandDefinition>
-		<latexCommand>\backepsilon</latexCommand>
-		<unicodeCommand>϶</unicodeCommand>
 		<mathMode>true</mathMode>
 		<package>
 			<name>amssymb</name>
