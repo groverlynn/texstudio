@@ -147,7 +147,6 @@ void SymbolListModel::loadSymbols(const QString &category, const QStringList &fi
 #endif
 				}
 			}
-			helper.replace("<", "&lt;");
 			symbolItem.unicode = helper;
 		}
 
@@ -330,8 +329,7 @@ QString SymbolListModel::getTooltip(const SymbolItem &item) const
 {
 	QStringList args, pkgs;
 
-	QString label = item.command;
-	label.replace("<", "&lt;");
+	QString label = item.command.toHtmlEscaped();
 	label = tr("Command: ") + "<b>" + label + "</b>";
 
 	QRegExp rePkgs("(?:\\[(.*)\\])?\\{(.*)\\}");
@@ -358,7 +356,7 @@ QString SymbolListModel::getTooltip(const SymbolItem &item) const
 		}
 	}
 	if (!item.unicode.isEmpty())
-		label += "<br>" + tr("Unicode Character: ") + item.unicode;
+		label += "<br>" + tr("Unicode Character: ") + item.unicode.toHtmlEscaped();
 	return label;
 }
 
