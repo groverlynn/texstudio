@@ -108,14 +108,14 @@
   
   
   <menu id="fontstyles" text="Font St&amp;yles">
-    <insert id="emph" text="Emphasis - \emph" insert="\emph{%|}" icon="font_emph48" shortcut="Ctrl+Shift+E"/>
-    <insert id="textit" text="Italics - \textit" insert="\textit{%|}" icon="font_textit48" shortcut="Ctrl+I"/>
-    <insert id="textsl" text="Slanted - \textsl" insert="\textsl{%|}" icon="font_textsl48" />
-    <insert id="textbf" text="Boldface - \textbf" insert="\textbf{%|}" icon="font_textbf48" shortcut="Ctrl+B"/>
-    <insert id="texttt" text="Typewriter - \texttt" insert="\texttt{%|}" icon="font_texttt48" shortcut="Ctrl+Shift+T"/>
-    <insert id="textsc" text="Small Caps - \textsc" insert="\textsc{%|}" icon="font_textsc48" shortcut="Ctrl+Shift+C"/>
-    <insert id="textsf" text="Sans Serif - \textsf" insert="\textsf{%|}" icon="font_textsf48" shortcut="Ctrl+Shift+A"/>
-    <insert id="underline" text="Underline - \underline" insert="\underline{%|}" icon="font_underline48"/>
+    <insert id="emph" text="Emphasis – \emph" insert="\emph{%|}" icon="font_emph48" shortcut="Ctrl+Shift+E"/>
+    <insert id="textit" text="Italics – \textit" insert="\textit{%|}" icon="font_textit48" shortcut="Ctrl+I"/>
+    <insert id="textsl" text="Slanted – \textsl" insert="\textsl{%|}" icon="font_textsl48" />
+    <insert id="textbf" text="Boldface – \textbf" insert="\textbf{%|}" icon="font_textbf48" shortcut="Ctrl+B"/>
+    <insert id="texttt" text="Typewriter – \texttt" insert="\texttt{%|}" icon="font_texttt48" shortcut="Ctrl+Shift+T"/>
+    <insert id="textsc" text="Small Caps – \textsc" insert="\textsc{%|}" icon="font_textsc48" shortcut="Ctrl+Shift+C"/>
+    <insert id="textsf" text="Sans Serif – \textsf" insert="\textsf{%|}" icon="font_textsf48" shortcut="Ctrl+Shift+A"/>
+    <insert id="underline" text="Underline – \underline" insert="\underline{%|}" icon="font_underline48"/>
   </menu>
 
   <menu id="fontsizes" text="Font Sizes">
@@ -143,13 +143,18 @@
   </menu>
 
   <menu id="horizontalSpacing" text="&amp;Horizontal Spacing">
-    <insert id="spaceCharacter" text="\space" insert="\space" info="The command \space gives you a space where you can't enter a space character."/>
-    <insert id="enspace" text="\enspace" insert="\enspace" info="The \enspace command inserts a horizontal space of 1/2em."/>
-    <insert id="quad" text="\quad" insert="\quad" info="The \quad command inserts a horizontal space of 1em (1em being the width of M)."/>
-    <insert id="qquad" text="\qquad" insert="\qquad" info="The \qquad command inserts a horizontal space of 2em."/>
-    <insert id="thinspace" text="\thinspace" insert="\thinspace" info="The command \thinspace produces unbreakable and unstretchable space of 1/6em (same as \, in math mode)."/>
-    <insert id="negthinspace" text="\negthinspace" insert="\negthinspace" info="The command \negthinspace produces unbreakable and unstretchable space of -1/6em (same as \, in math mode)."/>
-    <insert id="hspace" text="\hspace" insert="\hspace{%&lt;skip%>}" info="The \hspace command inserts an amount of skip of horizontal space."/>
+    <insert id="spaceCharacter" text="\space" insert="\space" info="The command \space gives you a regular space where you can't enter a space character (same as \␣)."/>
+    <insert id="nobreakspace" text="\nobreakspace" insert="\nobreakspace" info="The command \nobreakspace inserts a space and also prevents the processor from inserting a linebreak at that position (same as ~)."/>
+    <insert id="enspace" text="\enspace" insert="\enspace" info="The \enspace command inserts a horizontal space of 1/2 em."/>
+    <insert id="quad" text="\quad" insert="\quad" info="The \quad command inserts a horizontal space of 1 em (em = height of em quadrat = line height = fontsize)."/>
+    <insert id="qquad" text="\qquad" insert="\qquad" info="The \qquad command inserts a horizontal space of 2 em."/>
+    <insert id="thickspace" text="\thickspace" insert="\thickspace" info="The command \thickspace produces unbreakable and unstretchable space of 5/18 em (same as \; in math mode)."/>
+    <insert id="medspace" text="\medspace" insert="\medspace" info="The command \medspace produces unbreakable and unstretchable space of 4/18 em (same as \: in math mode)."/>
+    <insert id="thinspace" text="\thinspace" insert="\thinspace" info="The command \thinspace produces unbreakable and unstretchable space of 3/18 em (same as \, in math mode)."/>
+    <insert id="negthinspace" text="\negthinspace" insert="\negthinspace" info="The command \negthinspace produces unbreakable and unstretchable space of −3/18 em (same as \! in math mode)."/>
+    <insert id="negmedspace" text="\negmedspace" insert="\negmedspace" info="The command \negmedspace produces unbreakable and unstretchable space of −4/18 em."/>
+    <insert id="negthickspace" text="\negthickspace" insert="\negthickspace" info="The command \negthickspace produces unbreakable and unstretchable space of −5/18 em."/>
+    <insert id="hspace" text="\hspace" insert="\hspace{%&lt;skip%>}" info="The \hspace command inserts a horizontal space with the width of skip."/>
     <insert id="hfill" text="\hfill" insert="\hfill" info="The \hfill command inserts a rubber length which has no natural space but that can stretch horizontally as far as needed."/>
     <insert id="hrulefill" text="\hrulefill" insert="\hrulefill" info="The \hrulefill command produces an infinite horizontal rubber length that LaTeX fills with a rule (that is, a line), instead of white space."/>
     <insert id="dotfill" text="\dotfill" insert="\dotfill" info="The \dotfill command produces an infinite horizontal rubber length that LaTeX fills with dots, instead of white space."/>
@@ -159,12 +164,13 @@
     <insert id="newpage" text="\newpage" insert="\newpage" info="The \newpage command ends the current page"/>
     <insert id="linebreak" text="\linebreak" insert="\linebreak" info="The \linebreak command tells LaTeX to break the current line at the point of the command."/>
     <insert id="pagebreak" text="\pagebreak" insert="\pagebreak" info="The \pagebreak command tells LaTeX to break the current page at the point of the command."/>
-    <insert id="bigskip" text="\bigskip" insert="\bigskip" info="The \bigskip command adds a 'big' vertical space."/>
-    <insert id="medskip" text="\medskip" insert="\medskip" info="The \medskip command adds a 'medium' vertical space."/>
-    <insert id="smallskip" text="\smallskip" insert="\smallskip" info="The \smallskip command adds a 'small' vertical space."/>
-    <insert id="vspace" text="\vspace" insert="\vspace{%&lt;skip%>}" info="The \vspace command inserts an amount of skip (positive, zero or negative) of vertical space."/>
+    <insert id="bigskip" text="\bigskip" insert="\bigskip" info="The \bigskip command adds a ‘big’ vertical space."/>
+    <insert id="medskip" text="\medskip" insert="\medskip" info="The \medskip command adds a ‘medium’ vertical space."/>
+    <insert id="smallskip" text="\smallskip" insert="\smallskip" info="The \smallskip command adds a ‘small’ vertical space."/>
+    <insert id="vspace" text="\vspace" insert="\vspace{%&lt;skip%>}" info="The \vspace command inserts a vertical space with the height of skip (positive, zero or negative)."/>
     <insert id="vfill" text="\vfill" insert="\vfill" info="The \vfill command inserts a rubber length which has no natural space but that can stretch vertically as far as needed."/>
-    <insert id="newline" text="New line - \\" insert="\\%\" info="The \newline command breaks the line right where it is." icon="newline" shortcut="Ctrl+Return"/>
+    <insert id="newline" text="New line – \\" insert="\\%\" info="The \newline command breaks the line right where it is." icon="newline" shortcut="Ctrl+Return"/>
+    <insert id="newlineNopagebreak" text="New line without pagebreak – \\*" insert="\\*%\" info="The \\* command breaks the line right where it is but disallows a pagebreak at that position."/>
   </menu>
   
   <menu id="accents" text="International &amp;Accents">
@@ -249,11 +255,11 @@
   <insert id="mathmode" text="Inline math mode $...$" insert="$%&lt; %>$" info="The math environment can be used in both paragraph and LR mode" icon="mathmode" shortcut="Ctrl+Shift+M"/>
   <insert id="latexmathmode" text="LaTeX inline math mode \(...\)" insert="\( %| \)" info="The LaTeX math environment can be used in both paragraph and LR mode"/>
   <insert id="displaymath" text="Display math mode \[...\]" insert="\[ %| \]" info="The displaymath environment can be used only in paragraph mode" shortcut="Alt+Shift+M"/>
-  <insert id="subscript" text="Subscript - _{}" insert="_{%|}" icon="subscript" shortcut="Ctrl+Shift+D"/>  
-  <insert id="superscript" text="Superscript - ^{}" insert="^{%|}"  icon="superscript" shortcut="Ctrl+Shift+U"/>  
-  <insert id="frac" text="Fraction - \frac{}{}" insert="\frac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" icon="smallfrac" shortcut="Alt+Shift+F"/>    
-  <insert id="dfrac" text="Fraction - \dfrac{}{}" insert="\dfrac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" info="\dfrac is an amsmath package shorthand for \displaystyle\frac..." icon="dfrac" shortcut="Ctrl+Shift+F"/>  
-  <insert id="sqrt" text="Square Root - \sqrt{}" insert="\sqrt{%|}" icon="sqrt" shortcut="Ctrl+Shift+Q"/>  
+  <insert id="subscript" text="Subscript – _{}" insert="_{%|}" icon="subscript" shortcut="Ctrl+Shift+D"/>  
+  <insert id="superscript" text="Superscript – ^{}" insert="^{%|}"  icon="superscript" shortcut="Ctrl+Shift+U"/>  
+  <insert id="frac" text="Fraction – \frac{}{}" insert="\frac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" icon="smallfrac" shortcut="Alt+Shift+F"/>    
+  <insert id="dfrac" text="Fraction – \dfrac{}{}" insert="\dfrac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" info="\dfrac is an amsmath package shorthand for \displaystyle\frac..." icon="dfrac" shortcut="Ctrl+Shift+F"/>  
+  <insert id="sqrt" text="Square Root – \sqrt{}" insert="\sqrt{%|}" icon="sqrt" shortcut="Ctrl+Shift+Q"/>  
   <insert id="array" text="\begin{array}" insert="\begin{array}{%&lt;columns%>}%\%&lt;content%|%>%\\end{array}" info="\begin{array}{col1col2...coln}%ncolumn 1 entry &amp; column 2 entry ... &amp; column n entry \\%n...%n\end{array}"/>  
 
   
@@ -324,14 +330,14 @@
   </menu>
      
   <menu id="fontstyles" text="Math Font St&amp;yles">
-    <insert id="mathrm" text="Roman - \mathrm{}" insert="\mathrm{%|}" icon="font_mathrm"/>
-    <insert id="mathit" text="Italic - \mathit{}" insert="\mathit{%|}" icon="font_mathit"/>
-    <insert id="mathbf" text="Bold - \mathbf{}" insert="\mathbf{%|}" icon="font_mathbf"/>
-    <insert id="mathsf" text="Sans Serif - \mathsf{}" insert="\mathsf{%|}" icon="font_mathsf"/>
-    <insert id="mathtt" text="Typewriter - \mathtt{}" insert="\mathtt{%|}" icon="font_mathtt"/>
-    <insert id="mathcal" text="Calligraphic - \mathcal{}" insert="\mathcal{%|}" icon="font_mathcal"/>
-    <insert id="mathbb" text="Blackboard Bold - \mathbb{} (amssymb)" insert="\mathbb{%|}" icon="font_mathbb"/>
-    <insert id="mathfrak" text="Fraktur - \mathfrak{} (amssymb)" insert="\mathfrak{%|}" icon="font_mathfrak"/>
+    <insert id="mathrm" text="Roman – \mathrm{}" insert="\mathrm{%|}" icon="font_mathrm"/>
+    <insert id="mathit" text="Italic – \mathit{}" insert="\mathit{%|}" icon="font_mathit"/>
+    <insert id="mathbf" text="Bold – \mathbf{}" insert="\mathbf{%|}" icon="font_mathbf"/>
+    <insert id="mathsf" text="Sans Serif – \mathsf{}" insert="\mathsf{%|}" icon="font_mathsf"/>
+    <insert id="mathtt" text="Typewriter – \mathtt{}" insert="\mathtt{%|}" icon="font_mathtt"/>
+    <insert id="mathcal" text="Calligraphic – \mathcal{}" insert="\mathcal{%|}" icon="font_mathcal"/>
+    <insert id="mathbb" text="Blackboard Bold – \mathbb{} (amssymb)" insert="\mathbb{%|}" icon="font_mathbb"/>
+    <insert id="mathfrak" text="Fraktur – \mathfrak{} (amssymb)" insert="\mathfrak{%|}" icon="font_mathfrak"/>
   </menu>
 
   <menu id="grouping" text="Math &amp;Stacking Symbols">
@@ -353,10 +359,11 @@
     <insert id="acute" text="\acute{}" insert="\acute{%|}" icon="acute"/>
     <insert id="grave" text="\grave{}" insert="\grave{%|}" icon="grave"/>
     <insert id="tilde" text="\tilde{}" insert="\tilde{%|}" icon="tilde"/>
-
+    <insert id="tilde" text="\widetilde{}" insert="\widetilde{%|}" icon="widetilde"/>
     <insert id="bar" text="\bar{}" insert="\bar{%|}" icon="bar"/>
     <insert id="vec" text="\vec{}" insert="\vec{%|}" icon="vec"/>
     <insert id="hat" text="\hat{}" insert="\hat{%|}" icon="hat"/>
+    <insert id="widehat" text="\widehat{}" insert="\widehat{%|}" icon="widehat"/>
     <insert id="check" text="\check{}" insert="\check{%|}" icon="check"/>
     <insert id="breve" text="\breve{}" insert="\breve{%|}" icon="breve"/>
     <insert id="dot" text="\dot{}" insert="\dot{%|}" icon="dot"/>
@@ -365,13 +372,14 @@
   
   
   <menu id="fontspaces" text="Math S&amp;paces">
-    <insert id="negative" text="Negative - \!" insert="\!" info="Negative thin space"/>
-    <insert id="small" text="Thin - \," insert="\," info="3/18 of a \quad"/>
-    <insert id="medium" text="Medium - \:" insert="\:" info="4/18 of a \quad"/>
-    <insert id="large" text="Thick - \;" insert="\;" info="5/18 of a \quad"/>
-	<insert id="interword" text="Interword - \ " insert="\ " info="regular whitespace"/>
-	<insert id="quad" text="One quad - \quad" insert="\quad " info="The \quad command inserts a horizontal space of 1em (1em being the width of M)."/>
-    <insert id="qquad" text="Two quads - \qquad" insert="\qquad" info="Twice the size of a \quad"/>
+    <insert id="negative" text="Negative – \!" insert="\!" info="Negative thin space"/>
+    <insert id="small" text="Thin – \," insert="\," info="3/18 of a \quad"/>
+    <insert id="medium" text="Medium – \:" insert="\:" info="4/18 of a \quad"/>
+    <insert id="large" text="Thick – \;" insert="\;" info="5/18 of a \quad"/>
+    <insert id="interword" text="Interword – \ " insert="\ " info="regular whitespace"/>
+    <insert id="quad" text="One quad – \quad" insert="\quad " info="The \quad command inserts a horizontal space of 1 em (em = height of em quadrat = line height = fontsize)."/>
+    <insert id="qquad" text="Two quads – \qquad" insert="\qquad" info="Twice the size of a \quad"/>
+    <insert id="mspace" text="\mspace" insert="\mspace{%&lt;skip%>}" info="The \mspace command inserts an amount of skip of horizontal space in math mode."/>
   </menu>
 </menu>
 </TexMakerXUI>

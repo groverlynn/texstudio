@@ -281,6 +281,18 @@
 	</commandDefinition>
 
 	<commandDefinition>
+		<name>widetilde</name>
+		<latexCommand>\pb[6bp]{$\widetilde{a}$}</latexCommand>
+		<iconMode>true</iconMode>
+	</commandDefinition>
+
+	<commandDefinition>
+		<name>widetilde_dm</name>
+		<latexCommand>\color{black!2}\pb[6bp]{$\widetilde{a}$}</latexCommand>
+		<iconMode>true</iconMode>
+	</commandDefinition>
+
+	<commandDefinition>
 		<name>bar</name>
 		<latexCommand>\pb[6bp]{$\bar{a}$}</latexCommand>
 		<!-- <forcePNG>true</forcePNG> -->
@@ -317,6 +329,18 @@
 	<commandDefinition>
 		<name>hat_dm</name>
 		<latexCommand>\color{black!2}\pb[6bp]{$\hat{a}$}</latexCommand>
+		<iconMode>true</iconMode>
+	</commandDefinition>
+
+	<commandDefinition>
+		<name>widehat</name>
+		<latexCommand>\pb[6bp]{$\widehat{ab}$}</latexCommand>
+		<iconMode>true</iconMode>
+	</commandDefinition>
+
+		<commandDefinition>
+		<name>widehat_dm</name>
+		<latexCommand>\color{black!2}\pb[6bp]{$\widehat{ab}$}</latexCommand>
 		<iconMode>true</iconMode>
 	</commandDefinition>
 
