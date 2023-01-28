@@ -1188,9 +1188,9 @@ void Texstudio::setupMenus()
 	newManagedAction(submenu, "xelatex", "&XeLaTeX", SLOT(commandFromAction()), QKeySequence(), "compile-xelatex")->setData(BuildManager::CMD_XELATEX);
 	newManagedAction(submenu, "lualatex", "L&uaLaTeX", SLOT(commandFromAction()), QKeySequence(), "compile-lua")->setData(BuildManager::CMD_LUALATEX);
 	submenu->addSeparator();
-	newManagedAction(submenu, "dvi2ps", tr("DVI ➔ PS"), SLOT(commandFromAction()), QKeySequence(), "convert-dvips")->setData(BuildManager::CMD_DVIPS);
-	newManagedAction(submenu, "ps2pdf", tr("P&S ➔ PDF"), SLOT(commandFromAction()), QKeySequence(), "convert-pspdf")->setData(BuildManager::CMD_PS2PDF);
-	newManagedAction(submenu, "dvipdf", tr("DV&I ➔ PDF"), SLOT(commandFromAction()), QKeySequence(), "convert-dvipdf")->setData(BuildManager::CMD_DVIPDF);
+	newManagedAction(submenu, "dvi2ps", tr("DVI&ThinSpace;→&ThinSpace;PS"), SLOT(commandFromAction()), QKeySequence(), "convert-dvips")->setData(BuildManager::CMD_DVIPS);
+	newManagedAction(submenu, "ps2pdf", tr("P&S&ThinSpace;→&ThinSpace;PDF"), SLOT(commandFromAction()), QKeySequence(), "convert-pspdf")->setData(BuildManager::CMD_PS2PDF);
+	newManagedAction(submenu, "dvipdf", tr("DV&I&ThinSpace;→&ThinSpace;PDF"), SLOT(commandFromAction()), QKeySequence(), "convert-dvipdf")->setData(BuildManager::CMD_DVIPDF);
 	submenu->addSeparator();
 	newManagedAction(submenu, "viewdvi", tr("View &DVI"), SLOT(commandFromAction()), QKeySequence(), "view-doc-dvi")->setData(BuildManager::CMD_VIEW_DVI);
 	newManagedAction(submenu, "viewps", tr("Vie&w PS"), SLOT(commandFromAction()), QKeySequence(), "view-doc-ps")->setData(BuildManager::CMD_VIEW_PS);
