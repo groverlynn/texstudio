@@ -7,7 +7,7 @@
 #include "codesnippet.h"
 #include "bibtexparser.h"
 #include "latexparser.h"
-#include "usermacro.h"
+//#include "usermacro.h"
 #include "syntaxcheck.h"
 #include "grammarcheck.h"
 #include "latexpackage.h"
@@ -77,9 +77,7 @@ public:
 
     Q_PROPERTY(QString fileName READ getFileName)
     Q_PROPERTY(QFileInfo fileInfo READ getFileInfo)
-#if (QT_VERSION<QT_VERSION_CHECK(6,0,0))
     Q_PROPERTY(LatexEditorView *editorView READ getEditorView)
-#endif
 
 	bool isHidden(); ///< true if editor is not displayed
 
