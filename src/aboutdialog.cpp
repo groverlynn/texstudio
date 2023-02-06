@@ -11,14 +11,22 @@
 
 #include "aboutdialog.h"
 #include "utilsVersion.h"
+#include "utilsSystem.h"
 
 AboutDialog::AboutDialog(QWidget *parent)
 	: QDialog(parent)
 {
 	ui.setupUi(this);
+    QString changelogPath = findResourceFile("CHANGELOG.md");
+    if(changelogPath.isEmpty()){
+        changelogPath="https://texstudio-org.github.io/CHANGELOG.html";
+    }else{
+        changelogPath="file://"+changelogPath;
+    }
 	ui.textBrowser->setOpenExternalLinks(true);
     ui.textBrowser->setHtml(QString("<b>%1 %2</b> (git %3)").arg(TEXSTUDIO,TXSVERSION,TEXSTUDIO_GIT_REVISION ? TEXSTUDIO_GIT_REVISION : "n/a") + "<br>" +
-                            tr("Using Qt Version %1, compiled with Qt %2 %3").arg(qVersion(),QT_VERSION_STR,COMPILED_DEBUG_OR_RELEASE) + "<br><br>" +
+                            tr("Using Qt Version %1, compiled with Qt %2 %3").arg(qVersion(),QT_VERSION_STR,COMPILED_DEBUG_OR_RELEASE) + "<br>" +
+                            "<a href=\""+changelogPath+"\">"+tr("Changelog")+"</a><br><br>" +
 	                        "Copyright (c)<br>" +
 	                        TEXSTUDIO + ": Benito van der Zander, Jan Sundermeyer, Daniel Braun, Tim Hoffmann<br>" +
 	                        "Texmaker: Pascal Brachet<br>" +

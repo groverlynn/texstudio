@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)
 
-project(TeXstudio VERSION 4.5.1 LANGUAGES C CXX)
+project(TeXstudio VERSION 4.5.2 LANGUAGES C CXX)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 set(CMAKE_DEBUG_POSTFIX "d")
 set(CMAKE_AUTOMOC ON)
@@ -94,6 +94,8 @@ if(APPLE)
         texstudio.icns
         utilities/latex2e.html
         utilities/latex2e.css
+		utilities/list.png
+		utilities/manual/source/CHANGELOG.md
         ${templates}
         ${dictionaries}
         ${translation}
@@ -463,7 +465,8 @@ if(UNIX)
 	install(FILES utilities/manual/build/html/searchindex.js DESTINATION share/texstudio)
 	install(FILES utilities/latex2e.html DESTINATION share/texstudio)
 	install(FILES utilities/latex2e.css DESTINATION share/texstudio)
+	install(FILES utilities/list.png DESTINATION share/texstudio)
 	install(FILES utilities/AUTHORS DESTINATION share/texstudio)
 	install(FILES utilities/COPYING DESTINATION share/texstudio)
-	install(FILES utilities/manual/CHANGELOG.txt DESTINATION share/texstudio)
+	install(FILES utilities/manual/source/CHANGELOG.md DESTINATION share/texstudio)
 endif()

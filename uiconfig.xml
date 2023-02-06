@@ -197,7 +197,7 @@
 	</menu>
 
 
-	<menu id="insertfiles" text="Input/Include &amp;Files">
+	<menu id="insertfiles" text="Input&#x2009;/Include&#x2009;&amp;Files">
 			<insert id="input" text="\input{file}" insert="\input{%(TeX files (*.tex);;All files (*.*)%)}"/>
 			<insert id="include" text="\include{file}" insert="%SCRIPT&#10;
 				fnOld=editor.fileName();&#10;

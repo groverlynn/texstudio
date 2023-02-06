@@ -3,7 +3,7 @@
 # These three must be integers
 !define VERSIONMAJOR 4
 !define VERSIONMINOR 5
-!define VERSIONBUILD 1
+!define VERSIONBUILD 2
 # These will be displayed by the "Click here for support information" link in "Add/Remove Programs"
 # It is possible to use "mailto:" links in here to open the email client
 !define HELPURL "https://texstudio.org" # "Support Information" link
@@ -182,6 +182,7 @@ File ..\utilities\AUTHORS
 File ..\utilities\COPYING
 File ..\utilities\latex2e.html
 File ..\utilities\latex2e.css
+File ..\utilities\list.png
 File ..\utilities\license.txt
 File /r ..\utilities\manual\build\html\*
 
