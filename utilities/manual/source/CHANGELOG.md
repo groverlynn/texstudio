@@ -1,7 +1,8 @@
 # CHANGELOG
 ## TeXstudio development (4.5.2)
 
-- Show changelog in about dialog
+- Show changelog in about dialog and manual
+- change Adv. Editor option "Vertical Overscroll" to scroll last line to top ([#2944](https://github.com/texstudio-org/texstudio/issues/2944))
 
 ## TeXstudio 4.5.1
 
@@ -124,7 +125,7 @@
 
 - use QT6.2.1 on OSX, fix crash when checking for updates, fix restoring last session
 - better pdf font substitution on windows ([#1812](https://github.com/texstudio-org/texstudio/issues/1812))
-- fix placing cursor for large fonts (#1908)
+- fix placing cursor for large fonts ([#1908](https://github.com/texstudio-org/texstudio/issues/1908))
 - more cwls
 
 ## TeXstudio 4.0.3

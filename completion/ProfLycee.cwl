@@ -1,5 +1,5 @@
 # ProfLycee package
-# Matthew Bertucci 2023/01/25 for v2.1.8
+# Matthew Bertucci 2023/02/11 for v2.5.2
 
 #include:mathtools
 #include:xcolor
@@ -20,6 +20,7 @@
 #include:tabularray
 #include:hologo
 #include:fancyvrb
+#include:nicefrac
 #include:siunitx
 #include:fontawesome5
 #include:tikzlibrarycalc
@@ -36,80 +37,15 @@
 #include:piton
 
 #keyvals:\usepackage/ProfLycee#c
-nonshellescape
 build
+#endkeyvals
+
+\useproflyclib{librairies%keyvals}
+
+#keyvals:\useproflyclib#c
+piton
+minted
 pythontex
-#endkeyvals
-
-#ifOption:pythontex
-#include:pythontex
-\begin{CodePythontex}#V
-\begin{CodePythontex}[options%keyvals]#V
-\end{CodePythontex}
-#keyvals:\begin{CodePythontex}
-Largeur=##L
-Centre#true,false
-TaillePolice=%<font commands%>
-EspacementVertical=%<factor%>
-Lignes#true,false
-#endkeyvals
-\begin{ConsolePythontex}#V
-\begin{ConsolePythontex}[options%keyvals]#V
-\end{ConsolePythontex}
-#keyvals:\begin{ConsolePythontex}
-Largeur=##L
-Centre#true,false
-TaillePolice=%<font commands%>
-EspacementVertical=%<factor%>
-Label#true,false
-#endkeyvals
-\begin{pythont}#S
-\begin{tcpythontexcode}#S
-\begin{tcpythontexcode}[width]#S
-\begin{tcpythontexcodeno}#S
-\begin{tcpythontexcodeno}[width]#S
-\CODPYfonte#S
-\CODPYlargeur#S
-\CODPYstretch#S
-\CSPYfonte#S
-\CSPYlargeur#S
-\CSPYstretch#S
-\end{pythont}#S
-\end{tcpythontexcode}#S
-\end{tcpythontexcodeno}#S
-\hookcenterpost#S
-\hookcenterpre#S
-#endif
-
-#ifOption:csvii
-#include:csvsimple-legacy
-#endif
-
-## L’outil « SplineTikz » ##
-\SplineTikz{x1/y1/d1§x2/y2/d2§...}
-\SplineTikz[options%keyvals]{x1/y1/d1§x2/y2/d2§...}
-
-#keyvals:\SplineTikz
-Couleur=#%color
-Epaisseur=##L
-Style={%<TikZ clés%>}
-Coeffs=
-CouleurPoints=#%color
-AffPoints#true,false
-TaillePoints=##L
-#endkeyvals
-
-## L’outil « TangenteTikz » ##
-\TangenteTikz{x1/y1/d1§x2/y2/d2§...}
-\TangenteTikz[options%keyvals]{x1/y1/d1§x2/y2/d2§...}
-
-#keyvals:\TangenteTikz
-Point=%<num%>
-Epaisseur=##L
-Couleur=#%color
-Style={%<TikZ clés%>}
-xl=%<num%>
-xr=%<num%>
 #endkeyvals
 
 ## Résolution approchée d’une équation ##
@@ -171,23 +107,6 @@ Sens=%<< ou >%>
 #endkeyvals
 
 \CompteurSeuil#*
-
-## Suites récurrentes et « toile » ##
-\ToileRecurrence[options%keyvals]
-\ToileRecurrence[options%keyvals][options du tracé]
-\ToileRecurrence[options%keyvals][options du tracé][option supplémentaire des termes]
-
-#keyvals:\ToileRecurrence
-Fct=%<fonction%>
-Nom=%<nom%>
-No=%<l’indice initial%>
-Uno=%<la valeur du terme initial%>
-Nb=%<nombre%>
-PosLabel=%<pos%>
-DecalLabel=##L
-TailleLabel=%<fontsize cmd%>
-AffTermes#true,false
-#endkeyvals
 
 ## L’outil « Calcul Formel » ##
 \CalculFormelParametres
@@ -494,6 +413,33 @@ AffNom#true,false
 \xunit#*
 \yunit#*
 
+## L’outil « SplineTikz » ##
+\SplineTikz{x1/y1/d1§x2/y2/d2§...}
+\SplineTikz[options%keyvals]{x1/y1/d1§x2/y2/d2§...}
+
+#keyvals:\SplineTikz
+Couleur=#%color
+Epaisseur=##L
+Style={%<TikZ clés%>}
+Coeffs=
+CouleurPoints=#%color
+AffPoints#true,false
+TaillePoints=##L
+#endkeyvals
+
+## L’outil « TangenteTikz » ##
+\TangenteTikz{x1/y1/d1§x2/y2/d2§...}
+\TangenteTikz[options%keyvals]{x1/y1/d1§x2/y2/d2§...}
+
+#keyvals:\TangenteTikz
+Point=%<num%>
+Epaisseur=##L
+Couleur=#%color
+Style={%<TikZ clés%>}
+xl=%<num%>
+xr=%<num%>
+#endkeyvals
+
 ## Boîtes à moustaches ##
 \BoiteMoustaches{a1/a2/...}
 \BoiteMoustaches[options%keyvals]{a1/a2/...}
@@ -702,8 +648,18 @@ AfficheDelimiteurs#true,false
 #endkeyvals
 
 ## Fractions, ensembles ##
-\ConversionFraction{fraction expr}
-\ConversionFraction[d ou t]{fraction expr}
+\ConversionFraction{calcul}
+\ConversionFraction[option de formatage%keyvals]{calcul}
+\ConversionFraction*{calcul}
+\ConversionFraction*[option de formatage%keyvals]{calcul}
+
+#keyvals:\ConversionFraction,\ConversionFraction*
+t
+d
+n
+dec
+dec=%<k%>
+#endkeyvals
 
 \EcritureEnsemble{a1/a2/...}
 \EcritureEnsemble[options%keyvals]{a1/a2/...}
@@ -716,7 +672,13 @@ Mathpunct#true,false
 
 ## Petits schémas pour le signe d’une fonction affine ou d’un trinôme ##
 \MiniSchemaSignes
-\MiniSchemaSignes[options%keyvals]
+\MiniSchemaSignes<TikZ options>#*
+\MiniSchemaSignes[options%keyvals]#*
+\MiniSchemaSignes[options%keyvals]<TikZ options>
+\MiniSchemaSignes*
+\MiniSchemaSignes*<TikZ options>#*
+\MiniSchemaSignes*[options%keyvals]#*
+\MiniSchemaSignes*[options%keyvals]<TikZ options>
 
 \MiniSchemaSignesTkzTab{numligne}
 \MiniSchemaSignesTkzTab{numligne}[echelle]
@@ -725,13 +687,30 @@ Mathpunct#true,false
 \MiniSchemaSignesTkzTab[options%keyvals]{numligne}[echelle]
 \MiniSchemaSignesTkzTab[options%keyvals]{numligne}[echelle][décalage horizontal]
 
-#keyvals:\aidesignePL,\aidesignetkztabPL
+#keyvals:\MiniSchemaSignes,\MiniSchemaSignes*,\MiniSchemaSignesTkzTab
 Code=
 Couleur=#%color
 Racines=%<racines%>
 Largeur=%<num%>
 Hauteur=%<num%>
 Cadre#true,false
+#endkeyvals
+
+## Suites récurrentes et « toile » ##
+\ToileRecurrence[options%keyvals]
+\ToileRecurrence[options%keyvals][options du tracé]
+\ToileRecurrence[options%keyvals][options du tracé][option supplémentaire des termes]
+
+#keyvals:\ToileRecurrence
+Fct=%<fonction%>
+Nom=%<nom%>
+No=%<l’indice initial%>
+Uno=%<la valeur du terme initial%>
+Nb=%<nombre%>
+PosLabel=%<pos%>
+DecalLabel=##L
+TailleLabel=%<fontsize cmd%>
+AffTermes#true,false
 #endkeyvals
 
 ## Style « main levée » en TikZ ##
@@ -786,6 +765,46 @@ ListeLegV=%<liste%>
 ListeLegH=%<liste%>
 DecalLegende=%<décalage%>
 #endkeyvals
+
+## pythontex library ##
+# conditional loading not possible, just listed here
+#include:pythontex
+\begin{CodePythontex}#V
+\begin{CodePythontex}[options%keyvals]#V
+\end{CodePythontex}
+#keyvals:\begin{CodePythontex}
+Largeur=##L
+Centre#true,false
+TaillePolice=%<font commands%>
+EspacementVertical=%<factor%>
+Lignes#true,false
+#endkeyvals
+\begin{ConsolePythontex}#V
+\begin{ConsolePythontex}[options%keyvals]#V
+\end{ConsolePythontex}
+#keyvals:\begin{ConsolePythontex}
+Largeur=##L
+Centre#true,false
+TaillePolice=%<font commands%>
+EspacementVertical=%<factor%>
+Label#true,false
+#endkeyvals
+\begin{pythont}#S
+\begin{tcpythontexcode}#S
+\begin{tcpythontexcode}[width]#S
+\begin{tcpythontexcodeno}#S
+\begin{tcpythontexcodeno}[width]#S
+\CODPYfonte#S
+\CODPYlargeur#S
+\CODPYstretch#S
+\CSPYfonte#S
+\CSPYlargeur#S
+\CSPYstretch#S
+\end{pythont}#S
+\end{tcpythontexcode}#S
+\end{tcpythontexcodeno}#S
+\hookcenterpost#S
+\hookcenterpre#S
 
 # from table option of xcolor
 #include:colortbl

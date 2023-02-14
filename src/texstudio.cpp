@@ -593,7 +593,10 @@ void Texstudio::addTagList(const QString &id, const QString &iconName, const QSt
 				connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(insertXmlTag(QListWidgetItem*)));
 		leftPanel->addWidget(list, id, text, iconName);
 		//(*list)->setProperty("mType",2);
-	} else leftPanel->setWidgetText(list, text);
+    } else {
+        leftPanel->setWidgetText(list, text);
+        leftPanel->setWidgetIcon(list,iconName);
+    }
 }
 
 /*!
@@ -605,27 +608,31 @@ void Texstudio::addTagList(const QString &id, const QString &iconName, const QSt
  */
 void Texstudio::addMacrosAsTagList()
 {
-		bool addToPanel=true;
-		QListWidget *list = qobject_cast<QListWidget *>(leftPanel->widget("txs-macros"));
-		if (!list) {
-				list = new QListWidget(this);
-				list->setObjectName("tags/txs-macros");
-		}else{
-				list->clear();
-				addToPanel=false;
-		}
-		// add elements
-		for(const auto &m:configManager.completerConfig->userMacros) {
-				if (m.name == "TMX:Replace Quote Open" || m.name == "TMX:Replace Quote Close" || m.document)
-						continue;
-				QListWidgetItem* item=new QListWidgetItem(m.name);
-				item->setData(Qt::UserRole, m.typedTag());
-				list->addItem(item);
-		}
-		UtilsUi::enableTouchScrolling(list);
-		connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(insertFromTagList(QListWidgetItem*)),Qt::UniqueConnection);
-		if(addToPanel)
-				leftPanel->addWidget(list, "txs-macros", tr("Macros"), getRealIconFile("executeMacro"));
+    bool addToPanel=true;
+    QListWidget *list = qobject_cast<QListWidget *>(leftPanel->widget("txs-macros"));
+    if (!list) {
+        list = new QListWidget(this);
+        list->setObjectName("tags/txs-macros");
+    }else{
+        list->clear();
+        addToPanel=false;
+    }
+    // add elements
+    for(const auto &m:configManager.completerConfig->userMacros) {
+        if (m.name == "TMX:Replace Quote Open" || m.name == "TMX:Replace Quote Close" || m.document)
+            continue;
+        QListWidgetItem* item=new QListWidgetItem(m.name);
+        item->setData(Qt::UserRole, m.typedTag());
+        list->addItem(item);
+    }
+    UtilsUi::enableTouchScrolling(list);
+    connect(list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(insertFromTagList(QListWidgetItem*)),Qt::UniqueConnection);
+    if(addToPanel){
+        leftPanel->addWidget(list, "txs-macros", tr("Macros"), getRealIconFile("executeMacro"));
+    }else{
+        leftPanel->setWidgetText(list,tr("Macros"));
+        leftPanel->setWidgetIcon(list,getRealIconFile("executeMacro"));
+    }
 }
 
 /*! set-up side- and bottom-panel
@@ -671,43 +678,58 @@ void Texstudio::setupDockWidgets()
 		for (int i = 0; i < structureIconNames.length(); i++)
 				iconSection[i] = getRealIconCached(structureIconNames[i]);
 
-		if(!structureTreeWidget){
-				structureTreeWidget = new QTreeWidget();
-				connect(structureTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(gotoLine(QTreeWidgetItem*,int)));
-				connect(structureTreeWidget, &QTreeWidget::itemExpanded, this, &Texstudio::syncExpanded);
-				connect(structureTreeWidget, &QTreeWidget::itemCollapsed, this, &Texstudio::syncCollapsed);
-				connect(structureTreeWidget, &QTreeWidget::customContextMenuRequested, this, &Texstudio::customMenuStructure);
-				structureTreeWidget->setHeaderHidden(true);
-				structureTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-				structureTreeWidget->installEventFilter(this);
-				leftPanel->addWidget(structureTreeWidget, "structureTreeWidget", tr("Structure"), getRealIconFile("structure"));
-		} else leftPanel->setWidgetText(topTOCTreeWidget, tr("TOC"));
-		if(!topTOCTreeWidget){
-				topTOCTreeWidget = new QTreeWidget();
-				connect(topTOCTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(gotoLine(QTreeWidgetItem*,int)));
-				connect(topTOCTreeWidget, &QTreeWidget::itemExpanded, this, &Texstudio::syncExpanded);
-				connect(topTOCTreeWidget, &QTreeWidget::itemCollapsed, this, &Texstudio::syncCollapsed);
-				connect(topTOCTreeWidget, &QTreeWidget::customContextMenuRequested, this, &Texstudio::customMenuStructure);
-				topTOCTreeWidget->setHeaderHidden(true);
-				topTOCTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-				topTOCTreeWidget->installEventFilter(this);
-				leftPanel->addWidget(topTOCTreeWidget, "topTOCTreeWidget", tr("TOC"), getRealIconFile("toc"));
-		} else leftPanel->setWidgetText(topTOCTreeWidget, tr("TOC"));
-		if (!leftPanel->widget("bookmarks")) {
-				QListWidget *bookmarksWidget = bookmarks->widget();
-				bookmarks->setDarkMode(darkMode);
-				connect(bookmarks, SIGNAL(loadFileRequest(QString)), this, SLOT(load(QString)));
-				connect(bookmarks, SIGNAL(gotoLineRequest(int,int,LatexEditorView*)), this, SLOT(gotoLine(int,int,LatexEditorView*)));
-				leftPanel->addWidget(bookmarksWidget, "bookmarks", tr("Bookmarks"), getRealIconFile("bookmarks"));
-		} else leftPanel->setWidgetText("bookmarks", tr("Bookmarks"));
+    if(!structureTreeWidget){
+        structureTreeWidget = new QTreeWidget();
+        connect(structureTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(gotoLine(QTreeWidgetItem*,int)));
+        connect(structureTreeWidget, &QTreeWidget::itemExpanded, this, &Texstudio::syncExpanded);
+        connect(structureTreeWidget, &QTreeWidget::itemCollapsed, this, &Texstudio::syncCollapsed);
+        connect(structureTreeWidget, &QTreeWidget::customContextMenuRequested, this, &Texstudio::customMenuStructure);
+        structureTreeWidget->setHeaderHidden(true);
+        structureTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+        structureTreeWidget->installEventFilter(this);
+        leftPanel->addWidget(structureTreeWidget, "structureTreeWidget", tr("Structure"), getRealIconFile("structure"));
+    } else {
+        leftPanel->setWidgetText(structureTreeWidget, tr("Structure"));
+        leftPanel->setWidgetIcon(structureTreeWidget, getRealIconFile("structure"));
+    }
+    if(!topTOCTreeWidget){
+        topTOCTreeWidget = new QTreeWidget();
+        connect(topTOCTreeWidget, SIGNAL(itemClicked(QTreeWidgetItem*,int)), this, SLOT(gotoLine(QTreeWidgetItem*,int)));
+        connect(topTOCTreeWidget, &QTreeWidget::itemExpanded, this, &Texstudio::syncExpanded);
+        connect(topTOCTreeWidget, &QTreeWidget::itemCollapsed, this, &Texstudio::syncCollapsed);
+        connect(topTOCTreeWidget, &QTreeWidget::customContextMenuRequested, this, &Texstudio::customMenuStructure);
+        topTOCTreeWidget->setHeaderHidden(true);
+        topTOCTreeWidget->setContextMenuPolicy(Qt::CustomContextMenu);
+        topTOCTreeWidget->installEventFilter(this);
+        leftPanel->addWidget(topTOCTreeWidget, "topTOCTreeWidget", tr("TOC"), getRealIconFile("toc"));
+    } else {
+        leftPanel->setWidgetText(topTOCTreeWidget, tr("TOC"));
+        leftPanel->setWidgetIcon(topTOCTreeWidget, getRealIconFile("toc"));
+    }
+    if (!leftPanel->widget("bookmarks")) {
+        QListWidget *bookmarksWidget = bookmarks->widget();
+        bookmarks->setDarkMode(darkMode);
+        connect(bookmarks, SIGNAL(loadFileRequest(QString)), this, SLOT(load(QString)));
+        connect(bookmarks, SIGNAL(gotoLineRequest(int,int,LatexEditorView*)), this, SLOT(gotoLine(int,int,LatexEditorView*)));
+        leftPanel->addWidget(bookmarksWidget, "bookmarks", tr("Bookmarks"), getRealIconFile("bookmarks"));
+    } else {
+        leftPanel->setWidgetText("bookmarks", tr("Bookmarks"));
+        leftPanel->setWidgetIcon("bookmarks", getRealIconFile("bookmarks"));
+        bookmarks->setDarkMode(darkMode);
+    }
 
-		if (!leftPanel->widget("symbols")) {
-				symbolWidget = new SymbolWidget(symbolListModel, configManager.insertSymbolsAsUnicode, this);
-				symbolWidget->restoreSplitter(configManager.stateSymbolsWidget);
-				symbolWidget->setSymbolSize(qRound(configManager.guiSymbolGridIconSize*scale));
-				connect(symbolWidget, SIGNAL(insertSymbol(QString)), this, SLOT(insertSymbol(QString)));
-				leftPanel->addWidget(symbolWidget, "symbols", tr("Symbols"), getRealIconFile("symbols"));
-		} else leftPanel->setWidgetText("symbols", tr("Symbols"));
+    if (!leftPanel->widget("symbols")) {
+        symbolWidget = new SymbolWidget(symbolListModel, configManager.insertSymbolsAsUnicode, this);
+        symbolWidget->restoreSplitter(configManager.stateSymbolsWidget);
+        symbolWidget->setSymbolSize(qRound(configManager.guiSymbolGridIconSize*scale));
+        connect(symbolWidget, SIGNAL(insertSymbol(QString)), this, SLOT(insertSymbol(QString)));
+        leftPanel->addWidget(symbolWidget, "symbols", tr("Symbols"), getRealIconFile("symbols"));
+    } else {
+        leftPanel->setWidgetText("symbols", tr("Symbols"));
+        leftPanel->setWidgetIcon("symbols", getRealIconFile("symbols"));
+        symbolListModel->setDarkmode(darkMode);
+        symbolWidget->reloadData();
+    }
 
 		addTagList("brackets", getRealIconFile("leftright"), tr("Left / Right Brackets"), "brackets_tags.xml");
 		addTagList("pstricks", getRealIconFile("pstricks"), tr("PSTricks Commands"), "pstricks_tags.xml");
@@ -737,14 +759,14 @@ void Texstudio::setupDockWidgets()
 	if (k == -1) // there are no visible tools
 		emit leftPanel->titleChanged("");
 
-		// OUTPUT WIDGETS
-		if (!outputView) {
-				outputView = new OutputViewWidget(this, configManager.terminalConfig);
-				outputView->setObjectName("OutputView");
-				centralVSplitter->addWidget(outputView);
-				outputView->toggleViewAction()->setChecked(configManager.getOption("GUI/outputView/visible", true).toBool());
-				centralVSplitter->setStretchFactor(1, 0);
-				centralVSplitter->restoreState(configManager.getOption("centralVSplitterState").toByteArray());
+    // OUTPUT WIDGETS
+    if (!outputView) {
+        outputView = new OutputViewWidget(this, configManager.terminalConfig);
+        outputView->setObjectName("OutputView");
+        centralVSplitter->addWidget(outputView);
+        outputView->toggleViewAction()->setChecked(configManager.getOption("GUI/outputView/visible", true).toBool());
+        centralVSplitter->setStretchFactor(1, 0);
+        centralVSplitter->restoreState(configManager.getOption("centralVSplitterState").toByteArray());
 
 				connect(outputView->getLogWidget(), SIGNAL(logEntryActivated(int)), this, SLOT(gotoLogEntryEditorOnly(int)));
 				connect(outputView->getLogWidget(), SIGNAL(logLoaded()), this, SLOT(updateLogEntriesInEditors()));
@@ -10514,8 +10536,8 @@ void Texstudio::recoverFromCrash()
 		while (!programStopped) {
 			ThreadBreaker::sleep(1);
 			if (t &&  t == killAtCrashedThread) {
-								name += QString(" forced kill in %1").arg(reinterpret_cast<uintptr_t>(t), sizeof(uintptr_t) * 2, 16, QChar('0'));
-								name += QString(" (TXS-Version %1 %2 )").arg(TEXSTUDIO_GIT_REVISION,COMPILED_DEBUG_OR_RELEASE);
+                name += QString(" forced kill in %1").arg(reinterpret_cast<uintptr_t>(t), sizeof(uintptr_t) * 2, 16, QChar('0'));
+                name += QString(" (TXS-Version %1 %2 )").arg(TEXSTUDIO_GIT_REVISION,COMPILED_DEBUG_OR_RELEASE);
 				backtraceFilename = print_backtrace(name);
 				exit(1);
 			}
@@ -10638,7 +10660,7 @@ void Texstudio::threadCrashed()
 	QThread *thread = lastCrashedThread;
 
 	QString threadName = "<unknown>";
-		QString threadId = QString("%1").arg(reinterpret_cast<uintptr_t>(thread), sizeof(uintptr_t) * 2, 16, QChar('0'));
+    QString threadId = QString("%1").arg(reinterpret_cast<uintptr_t>(thread), sizeof(uintptr_t) * 2, 16, QChar('0'));
 	if (qobject_cast<QThread *>(static_cast<QObject *>(thread)))
 		threadName = QString("%1 %2").arg(threadId).arg(qobject_cast<QThread *>(thread)->objectName());
 
@@ -11210,27 +11232,31 @@ void Texstudio::LTErrorMessage(QString message){
  * \param palette new palette
  */
 void Texstudio::paletteChanged(const QPalette &palette){
-		bool oldDarkMode=darkMode;
-		bool newDarkMode=systemUsesDarkMode(palette);
-		if(newDarkMode != oldDarkMode && !configManager.useTexmakerPalette){
-				darkMode=newDarkMode;
-				// load appropriate syntax highlighting scheme
-				QSettings *config=configManager.getSettings();
-				config->beginGroup(darkMode ? "formatsDark" : "formats");
-				m_formats = new QFormatFactory(darkMode ? ":/qxs/defaultFormatsDark.qxf" : ":/qxs/defaultFormats.qxf", this); //load default formats from resource file
-				m_formats->load(*config, true); //load customized formats
-				QDocument::setDefaultFormatScheme(m_formats);
-				//m_formats->modified=true;
-				config->endGroup();
-		}
-		foreach (LatexEditorView *edView, editors->editors()) {
-				QEditor *ed = edView->editor;
-				edView->updatePalette(palette);
-				ed->document()->markFormatCacheDirty();
-				ed->update();
-				QSearchReplacePanel *searchpanel = qobject_cast<QSearchReplacePanel *>(edView->codeeditor->panels("Search")[0]);
-				searchpanel->updateIcon();
-		}
+    bool oldDarkMode=darkMode;
+    bool newDarkMode=systemUsesDarkMode(palette);
+    if(newDarkMode != oldDarkMode){
+        if(!configManager.useTexmakerPalette){
+            darkMode=newDarkMode;
+            // load appropriate syntax highlighting scheme
+            QSettings *config=configManager.getSettings();
+            config->beginGroup(darkMode ? "formatsDark" : "formats");
+            m_formats = new QFormatFactory(darkMode ? ":/qxs/defaultFormatsDark.qxf" : ":/qxs/defaultFormats.qxf", this); //load default formats from resource file
+            m_formats->load(*config, true); //load customized formats
+            QDocument::setDefaultFormatScheme(m_formats);
+            //m_formats->modified=true;
+            config->endGroup();
+        }
+        setupMenus(); // reload actions for new icons !
+        setupDockWidgets();
+    }
+    foreach (LatexEditorView *edView, editors->editors()) {
+        QEditor *ed = edView->editor;
+        edView->updatePalette(palette);
+        ed->document()->markFormatCacheDirty();
+        ed->update();
+        QSearchReplacePanel *searchpanel = qobject_cast<QSearchReplacePanel *>(edView->codeeditor->panels("Search")[0]);
+        searchpanel->updateIcon();
+    }
 }
 /*!
  * \brief open webpage with txs issue submit
@@ -11396,71 +11422,71 @@ bool Texstudio::parseStruct(StructureEntry* se, QVector<QTreeWidgetItem *> &root
 				}
 		}
 
-		char offset=0;
-		QString docName=se->document->getName();
-		foreach(StructureEntry* elem,se->children){
-				if(todoList && (elem->type == StructureEntry::SE_OVERVIEW)&&(elem->title=="TODO")){
-						parseStruct(elem,rootVector,visited,todoList);
-				}
-				if(todoList && (elem->type == StructureEntry::SE_TODO)){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						item->setToolTip(0,tr("Document: ")+docName);
-						todoList->append(item);
-				}
-				if(elem->type == StructureEntry::SE_SECTION){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						elementsAdded=true;
-						item->setText(0,elem->title);
-						item->setToolTip(0,tr("Document: ")+docName);
-						item->setIcon(0,iconSection.value(elem->level));
-						if(configManager.globalTOCbackgroundOptions>0){
-								item->setBackground(0,colors[currentColor]);
-						}
-						rootVector[elem->level]->addChild(item);
-						item->setExpanded(elem->expanded);
-						// fill rootVector with item for subsequent lower level elements (which are children of item then)
-						for(int i=elem->level+1;i<latexParser.MAX_STRUCTURE_LEVEL;i++){
-								rootVector[i]=item;
-						}
-						parseStruct(elem,rootVector,visited,todoList,currentColor);
-				}
-				if(elem->type == StructureEntry::SE_INCLUDE){
-						LatexDocument *doc=elem->document;
-						//QString fn=ensureTrailingDirSeparator(doc->getRootDocument()->getFileInfo().absolutePath())+elem->title;
-						QFileInfo fi(doc->getRootDocument()->getFileInfo().absolutePath(),elem->title);
-						doc=documents.findDocumentFromName(fi.absoluteFilePath());
-						if(!doc){
-								doc=documents.findDocumentFromName(fi.absoluteFilePath()+".tex");
-						}
-						bool ea=false;
-						if(doc &&!visited->contains(doc)){
-								visited->insert(doc);
-								ea=parseStruct(doc->baseStructure,rootVector,visited,todoList,(currentColor+1+offset)%nrColors);
-						}
-						if(!ea){
-								QTreeWidgetItem * item=new QTreeWidgetItem();
-								item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-								item->setText(0,elem->title);
-								item->setToolTip(0,tr("Document: ")+docName);
-								item->setIcon(0,QIcon(":/images/include.png"));
-								if(configManager.globalTOCbackgroundOptions>0){
-										item->setBackground(0,colors[currentColor]);
-								}
-								rootVector[latexParser.MAX_STRUCTURE_LEVEL-1]->addChild(item);
-						}else{
-								offset=(offset+1)&1; //toggle between 0 & 1
-						}
-						elementsAdded=true;
-				}
-		}
-		if(deleteVisitedDocs){
-				delete visited;
-				visited=nullptr;
-		}
-		return elementsAdded;
+    char offset=0;
+    QString docName=se->document->getName();
+    foreach(StructureEntry* elem,se->children){
+        if(todoList && (elem->type == StructureEntry::SE_OVERVIEW)&&(elem->title=="TODO")){
+            parseStruct(elem,rootVector,visited,todoList);
+        }
+        if(todoList && (elem->type == StructureEntry::SE_TODO)){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            item->setToolTip(0,tr("Document: ")+docName);
+            todoList->append(item);
+        }
+        if(elem->type == StructureEntry::SE_SECTION){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            elementsAdded=true;
+            item->setText(0,elem->title);
+            item->setToolTip(0,tr("Document: ")+docName);
+            item->setIcon(0,iconSection.value(elem->level));
+            if(configManager.globalTOCbackgroundOptions>0){
+                item->setBackground(0,colors[currentColor]);
+            }
+            rootVector[elem->level]->addChild(item);
+            item->setExpanded(elem->expanded);
+            // fill rootVector with item for subsequent lower level elements (which are children of item then)
+            for(int i=elem->level+1;i<latexParser.MAX_STRUCTURE_LEVEL;i++){
+                rootVector[i]=item;
+            }
+            parseStruct(elem,rootVector,visited,todoList,currentColor);
+        }
+        if(elem->type == StructureEntry::SE_INCLUDE){
+            LatexDocument *doc=elem->document;
+            //QString fn=ensureTrailingDirSeparator(doc->getRootDocument()->getFileInfo().absolutePath())+elem->title;
+            QFileInfo fi(doc->getRootDocument()->getFileInfo().absolutePath(),elem->title);
+            doc=documents.findDocumentFromName(fi.absoluteFilePath());
+            if(!doc){
+                doc=documents.findDocumentFromName(fi.absoluteFilePath()+".tex");
+            }
+            bool ea=false;
+            if(doc &&!visited->contains(doc)){
+                visited->insert(doc);
+                ea=parseStruct(doc->baseStructure,rootVector,visited,todoList,(currentColor+1+offset)%nrColors);
+            }
+            if(!ea){
+                QTreeWidgetItem * item=new QTreeWidgetItem();
+                item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+                item->setText(0,elem->title);
+                item->setToolTip(0,tr("Document: ")+docName);
+                item->setIcon(0,getRealIcon("include"));
+                if(configManager.globalTOCbackgroundOptions>0){
+                    item->setBackground(0,colors[currentColor]);
+                }
+                rootVector[latexParser.MAX_STRUCTURE_LEVEL-1]->addChild(item);
+            }else{
+                offset=(offset+1)&1; //toggle between 0 & 1
+            }
+            elementsAdded=true;
+        }
+    }
+    if(deleteVisitedDocs){
+        delete visited;
+        visited=nullptr;
+    }
+    return elementsAdded;
 }
 /*!
  * \brief sync expanded state to structure entry
@@ -11919,150 +11945,150 @@ void Texstudio::updateStructureLocally(){
 				return;
 		}
 
-		LatexDocument *master = documents.getMasterDocument();
-		bool showHiddenMasterFirst=false;
-		bool hiddenMasterStructureIsVisible=false;
-		if(configManager.parseMaster && master && master->isHidden()){
-				showHiddenMasterFirst=true;
-		}
-		if(configManager.structureShowSingleDoc){
-				root= structureTreeWidget->topLevelItem(0);
-				if(structureTreeWidget->topLevelItemCount()>1){
-						for(int i=1;structureTreeWidget->topLevelItemCount()>1;){
-								QTreeWidgetItem *item=structureTreeWidget->takeTopLevelItem(i);
-								delete item;
-						}
-				}
-		}else{
-				for(int i=0;i<structureTreeWidget->topLevelItemCount();++i){
-						QTreeWidgetItem *item = structureTreeWidget->topLevelItem(i);
-						StructureEntry *contextEntry = item->data(0,Qt::UserRole).value<StructureEntry *>();
-						if (!contextEntry){
-								structureTreeWidget->takeTopLevelItem(i);
-								delete item;
-								--i;
-								continue;
-						}
-						if (contextEntry->type == StructureEntry::SE_DOCUMENT_ROOT) {
-								if(contextEntry->document == doc){
-										root=item;
-								}else{
-										QFont font=item->font(0);
-										font.setBold(false);
-										item->setFont(0,font);
-										if(!documents.documents.contains(contextEntry->document) || documents.hiddenDocuments.contains(contextEntry->document)){
-												if(showHiddenMasterFirst && contextEntry->document == master && !hiddenMasterStructureIsVisible){
-														// run only once
-														// reload may add more structure views
-														hiddenMasterStructureIsVisible=true;
-														continue; // keep showing master document regardless
-												}
-												structureTreeWidget->takeTopLevelItem(i);
-												delete item;
-												--i;
-										}
-								}
-						}else{
-								// remove invalid
-								structureTreeWidget->takeTopLevelItem(i);
-								delete item;
-								--i;
-						}
-				}
-				// reorder documents
-				for(int i=0;i<documents.documents.length();++i){
-						bool found=false;
-						int j=i;
-						StructureEntry *contextEntry;
-						for(;j<structureTreeWidget->topLevelItemCount();++j){
-								QTreeWidgetItem *item = structureTreeWidget->topLevelItem(j);
-								contextEntry = item->data(0,Qt::UserRole).value<StructureEntry *>();
-								if(contextEntry->document == documents.documents.value(i)){
-										found=true;
-										break;
-								}
-						}
-						if(found && i<j){
-								QTreeWidgetItem *item = structureTreeWidget->takeTopLevelItem(j);
-								if(contextEntry->document==master){
-										item->setIcon(0,QIcon(":/images/masterdoc.png"));
-								}else{
-										item->setIcon(0,QIcon(":/images/doc.png"));
-								}
-								structureTreeWidget->insertTopLevelItem(i,item);
-						}
-						if(!found){
-								QTreeWidgetItem *item=new QTreeWidgetItem();
-								LatexDocument *doc=documents.documents.value(i);
-								StructureEntry *base=doc->baseStructure;
+    LatexDocument *master = documents.getMasterDocument();
+    bool showHiddenMasterFirst=false;
+    bool hiddenMasterStructureIsVisible=false;
+    if(configManager.parseMaster && master && master->isHidden()){
+        showHiddenMasterFirst=true;
+    }
+    if(configManager.structureShowSingleDoc){
+        root= structureTreeWidget->topLevelItem(0);
+        if(structureTreeWidget->topLevelItemCount()>1){
+            for(int i=1;structureTreeWidget->topLevelItemCount()>1;){
+                QTreeWidgetItem *item=structureTreeWidget->takeTopLevelItem(i);
+                delete item;
+            }
+        }
+    }else{
+        for(int i=0;i<structureTreeWidget->topLevelItemCount();++i){
+            QTreeWidgetItem *item = structureTreeWidget->topLevelItem(i);
+            StructureEntry *contextEntry = item->data(0,Qt::UserRole).value<StructureEntry *>();
+            if (!contextEntry){
+                structureTreeWidget->takeTopLevelItem(i);
+                delete item;
+                --i;
+                continue;
+            }
+            if (contextEntry->type == StructureEntry::SE_DOCUMENT_ROOT) {
+                if(contextEntry->document == doc){
+                    root=item;
+                }else{
+                    QFont font=item->font(0);
+                    font.setBold(false);
+                    item->setFont(0,font);
+                    if(!documents.documents.contains(contextEntry->document) || documents.hiddenDocuments.contains(contextEntry->document)){
+                        if(showHiddenMasterFirst && contextEntry->document == master && !hiddenMasterStructureIsVisible){
+                            // run only once
+                            // reload may add more structure views
+                            hiddenMasterStructureIsVisible=true;
+                            continue; // keep showing master document regardless
+                        }
+                        structureTreeWidget->takeTopLevelItem(i);
+                        delete item;
+                        --i;
+                    }
+                }
+            }else{
+                // remove invalid
+                structureTreeWidget->takeTopLevelItem(i);
+                delete item;
+                --i;
+            }
+        }
+        // reorder documents
+        for(int i=0;i<documents.documents.length();++i){
+            bool found=false;
+            int j=i;
+            StructureEntry *contextEntry;
+            for(;j<structureTreeWidget->topLevelItemCount();++j){
+                QTreeWidgetItem *item = structureTreeWidget->topLevelItem(j);
+                contextEntry = item->data(0,Qt::UserRole).value<StructureEntry *>();
+                if(contextEntry->document == documents.documents.value(i)){
+                    found=true;
+                    break;
+                }
+            }
+            if(found && i<j){
+                QTreeWidgetItem *item = structureTreeWidget->takeTopLevelItem(j);
+                if(contextEntry->document==master){
+                    item->setIcon(0,getRealIcon("masterdoc"));
+                }else{
+                    item->setIcon(0,getRealIcon("doc"));
+                }
+                structureTreeWidget->insertTopLevelItem(i,item);
+            }
+            if(!found){
+                QTreeWidgetItem *item=new QTreeWidgetItem();
+                LatexDocument *doc=documents.documents.value(i);
+                StructureEntry *base=doc->baseStructure;
 
-								item->setText(0,doc->getFileInfo().fileName());
-								item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(base));
-								if(doc==master){
-										item->setIcon(0,QIcon(":/images/masterdoc.png"));
-								}else{
-										item->setIcon(0,QIcon(":/images/doc.png"));
-								}
-								structureTreeWidget->insertTopLevelItem(i,item);
-								if(doc==documents.getCurrentDocument()){
-										root=item;
-								}
-						}
-				}
-		}
-		StructureEntry *selectedEntry=nullptr;
-		bool itemExpandedLABEL=false;
-		bool itemExpandedTODO=false;
-		bool itemExpandedMAGIC=false;
-		bool itemExpandedBIBLIO=false;
-		bool addToTopLevel=false;
-		if(!root){
-				root=new QTreeWidgetItem();
-				addToTopLevel=true;
-		}else{
-				// get current selected item, check only first and deduce structureEntry
-				QList<QTreeWidgetItem*> selected=structureTreeWidget->selectedItems();
-				if(!selected.isEmpty()){
-						QTreeWidgetItem *item=selected.first();
-						if(item){
-								selectedEntry = item->data(0,Qt::UserRole).value<StructureEntry *>();
-						}
-				}
-				// remove all item in topTOC but keep itemTODO
-				for(int i=0;i<root->childCount();++i){
-						QTreeWidgetItem *item=root->child(i);
-						if(item->data(0,Qt::UserRole+1).toString()=="TODO"){
-								itemExpandedTODO=item->isExpanded();
-						}
-						if(item->data(0,Qt::UserRole+1).toString()=="LABEL"){
-								itemExpandedLABEL=item->isExpanded();
-						}
-						if(item->data(0,Qt::UserRole+1).toString()=="MAGIC"){
-								itemExpandedMAGIC=item->isExpanded();
-						}
-						if(item->data(0,Qt::UserRole+1).toString()=="BIBLIO"){
-								itemExpandedBIBLIO=item->isExpanded();
-						}
-				}
-				QList<QTreeWidgetItem*> items=root->takeChildren();
-				qDeleteAll(items);
-		}
-		QVector<QTreeWidgetItem *>rootVector(latexParser.MAX_STRUCTURE_LEVEL,root);
-		// fill TOC, starting by current master/top
+                item->setText(0,doc->getFileInfo().fileName());
+                item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(base));
+                if(doc==master){
+                    item->setIcon(0,getRealIcon("masterdoc"));
+                }else{
+                    item->setIcon(0,getRealIcon("doc"));
+                }
+                structureTreeWidget->insertTopLevelItem(i,item);
+                if(doc==documents.getCurrentDocument()){
+                    root=item;
+                }
+            }
+        }
+    }
+    StructureEntry *selectedEntry=nullptr;
+    bool itemExpandedLABEL=false;
+    bool itemExpandedTODO=false;
+    bool itemExpandedMAGIC=false;
+    bool itemExpandedBIBLIO=false;
+    bool addToTopLevel=false;
+    if(!root){
+        root=new QTreeWidgetItem();
+        addToTopLevel=true;
+    }else{
+        // get current selected item, check only first and deduce structureEntry
+        QList<QTreeWidgetItem*> selected=structureTreeWidget->selectedItems();
+        if(!selected.isEmpty()){
+            QTreeWidgetItem *item=selected.first();
+            if(item){
+                selectedEntry = item->data(0,Qt::UserRole).value<StructureEntry *>();
+            }
+        }
+        // remove all item in topTOC but keep itemTODO
+        for(int i=0;i<root->childCount();++i){
+            QTreeWidgetItem *item=root->child(i);
+            if(item->data(0,Qt::UserRole+1).toString()=="TODO"){
+                itemExpandedTODO=item->isExpanded();
+            }
+            if(item->data(0,Qt::UserRole+1).toString()=="LABEL"){
+                itemExpandedLABEL=item->isExpanded();
+            }
+            if(item->data(0,Qt::UserRole+1).toString()=="MAGIC"){
+                itemExpandedMAGIC=item->isExpanded();
+            }
+            if(item->data(0,Qt::UserRole+1).toString()=="BIBLIO"){
+                itemExpandedBIBLIO=item->isExpanded();
+            }
+        }
+        QList<QTreeWidgetItem*> items=root->takeChildren();
+        qDeleteAll(items);
+    }
+    QVector<QTreeWidgetItem *>rootVector(latexParser.MAX_STRUCTURE_LEVEL,root);
+    // fill TOC, starting by current master/top
 
 
 		StructureEntry *base=doc->baseStructure;
 
-		root->setText(0,doc->getFileInfo().fileName());
-		root->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(base));
-		if(doc==master){
-				root->setIcon(0,QIcon(":/images/masterdoc.png"));
-		}else{
-				root->setIcon(0,QIcon(":/images/doc.png"));
-		}
-		QFont font=root->font(0);
-		font.setBold(true);
-		root->setFont(0,font);
+    root->setText(0,doc->getFileInfo().fileName());
+    root->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(base));
+    if(doc==master){
+        root->setIcon(0,getRealIcon("masterdoc"));
+    }else{
+        root->setIcon(0,getRealIcon("doc"));
+    }
+    QFont font=root->font(0);
+    font.setBold(true);
+    root->setFont(0,font);
 
 		QList<QTreeWidgetItem*> todoList;
 		QList<QTreeWidgetItem*> labelList;
@@ -12121,67 +12147,67 @@ void Texstudio::parseStructLocally(StructureEntry* se, QVector<QTreeWidgetItem *
 		static const QColor beyondEndColor(255, 170, 0);
 		static const QColor inAppendixColor(200, 230, 200);
 
-		foreach(StructureEntry* elem,se->children){
-				if(todoList && (elem->type == StructureEntry::SE_OVERVIEW)){
-						parseStructLocally(elem,rootVector,todoList,labelList,magicList,biblioList);
-				}
-				if(todoList && (elem->type == StructureEntry::SE_TODO)){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						todoList->append(item);
-				}
-				if(labelList && (elem->type == StructureEntry::SE_LABEL)){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						labelList->append(item);
-				}
-				if(magicList && (elem->type == StructureEntry::SE_MAGICCOMMENT)){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						magicList->append(item);
-				}
-				if(biblioList && (elem->type == StructureEntry::SE_BIBTEX)){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						biblioList->append(item);
-				}
-				if(elem->type == StructureEntry::SE_SECTION){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						item->setIcon(0,iconSection.value(elem->level));
-						rootVector[elem->level]->addChild(item);
-						item->setExpanded(elem->expanded);
-						if (documents.markStructureElementsInAppendix && elem->hasContext(StructureEntry::InAppendix)) item->setBackground(0,inAppendixColor);
-						if (documents.markStructureElementsBeyondEnd && elem->hasContext(StructureEntry::BeyondEnd)) item->setBackground(0,beyondEndColor);
-						// fill rootVector with item for subsequent lower level elements (which are children of item then)
-						for(int i=elem->level+1;i<latexParser.MAX_STRUCTURE_LEVEL;i++){
-								rootVector[i]=item;
-						}
-						parseStructLocally(elem,rootVector,todoList,labelList,magicList);
-				}
-				if(elem->type == StructureEntry::SE_INCLUDE){
-						QTreeWidgetItem * item=new QTreeWidgetItem();
-						item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
-						item->setText(0,elem->title);
-						if(!elem->valid){
-								item->setForeground(0,Qt::red);
-						}
-						item->setIcon(0,QIcon(":/images/include.png"));
-						if(configManager.indentIncludesInStructure){
-								rootVector[latexParser.MAX_STRUCTURE_LEVEL-1]->addChild(item);
-						}else{
-								rootVector[0]->addChild(item);
-								for(int i=1;i<latexParser.MAX_STRUCTURE_LEVEL;i++){
-										rootVector[i]=rootVector[0];
-								}
-						}
-				}
-		}
+    foreach(StructureEntry* elem,se->children){
+        if(todoList && (elem->type == StructureEntry::SE_OVERVIEW)){
+            parseStructLocally(elem,rootVector,todoList,labelList,magicList,biblioList);
+        }
+        if(todoList && (elem->type == StructureEntry::SE_TODO)){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            todoList->append(item);
+        }
+        if(labelList && (elem->type == StructureEntry::SE_LABEL)){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            labelList->append(item);
+        }
+        if(magicList && (elem->type == StructureEntry::SE_MAGICCOMMENT)){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            magicList->append(item);
+        }
+        if(biblioList && (elem->type == StructureEntry::SE_BIBTEX)){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            biblioList->append(item);
+        }
+        if(elem->type == StructureEntry::SE_SECTION){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            item->setIcon(0,iconSection.value(elem->level));
+            rootVector[elem->level]->addChild(item);
+            item->setExpanded(elem->expanded);
+            if (documents.markStructureElementsInAppendix && elem->hasContext(StructureEntry::InAppendix)) item->setBackground(0,inAppendixColor);
+            if (documents.markStructureElementsBeyondEnd && elem->hasContext(StructureEntry::BeyondEnd)) item->setBackground(0,beyondEndColor);
+            // fill rootVector with item for subsequent lower level elements (which are children of item then)
+            for(int i=elem->level+1;i<latexParser.MAX_STRUCTURE_LEVEL;i++){
+                rootVector[i]=item;
+            }
+            parseStructLocally(elem,rootVector,todoList,labelList,magicList);
+        }
+        if(elem->type == StructureEntry::SE_INCLUDE){
+            QTreeWidgetItem * item=new QTreeWidgetItem();
+            item->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(elem));
+            item->setText(0,elem->title);
+            if(!elem->valid){
+                item->setForeground(0,Qt::red);
+            }
+            item->setIcon(0,getRealIcon("include"));
+            if(configManager.indentIncludesInStructure){
+                rootVector[latexParser.MAX_STRUCTURE_LEVEL-1]->addChild(item);
+            }else{
+                rootVector[0]->addChild(item);
+                for(int i=1;i<latexParser.MAX_STRUCTURE_LEVEL;i++){
+                    rootVector[i]=rootVector[0];
+                }
+            }
+        }
+    }
 }
 #ifndef QT_NO_DEBUG
 /*!

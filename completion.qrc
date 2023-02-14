@@ -699,6 +699,8 @@
 <file>completion/class-FUbeamer.cwl</file>
 <file>completion/class-FUpowerdot.cwl</file>
 <file>completion/class-gammas.cwl</file>
+<file>completion/class-g-brief.cwl</file>
+<file>completion/class-g-brief2.cwl</file>
 <file>completion/class-geradwp.cwl</file>
 <file>completion/class-grant-afosr.cwl</file>
 <file>completion/class-grant-aro.cwl</file>
@@ -1386,6 +1388,7 @@
 <file>completion/eulervm.cwl</file>
 <file>completion/euroitc.cwl</file>
 <file>completion/europasscv-bibliography.cwl</file>
+<file>completion/europs.cwl</file>
 <file>completion/eurosym.cwl</file>
 <file>completion/euscript.cwl</file>
 <file>completion/everyhook.cwl</file>
@@ -2106,6 +2109,7 @@
 <file>completion/luakeys.cwl</file>
 <file>completion/luakeys-debug.cwl</file>
 <file>completion/lualatex-truncate.cwl</file>
+<file>completion/lualinalg.cwl</file>
 <file>completion/luamathalign.cwl</file>
 <file>completion/luamaths.cwl</file>
 <file>completion/luamesh.cwl</file>
@@ -2660,6 +2664,7 @@
 <file>completion/phonrule.cwl</file>
 <file>completion/photo.cwl</file>
 <file>completion/physconst.cwl</file>
+<file>completion/physics2.cwl</file>
 <file>completion/physics.cwl</file>
 <file>completion/physunits.cwl</file>
 <file>completion/piano.cwl</file>
@@ -2977,6 +2982,7 @@
 <file>completion/rescansync.cwl</file>
 <file>completion/resizegather.cwl</file>
 <file>completion/resmes.cwl</file>
+<file>completion/ResolSysteme.cwl</file>
 <file>completion/rest-api.cwl</file>
 <file>completion/returntogrid.cwl</file>
 <file>completion/revquantum.cwl</file>
@@ -3020,6 +3026,7 @@
 <file>completion/rustic.cwl</file>
 <file>completion/rviewport.cwl</file>
 <file>completion/rvwrite.cwl</file>
+<file>completion/sacsymb.cwl</file>
 <file>completion/sagetex.cwl</file>
 <file>completion/sankey.cwl</file>
 <file>completion/Sanremo.cwl</file>
