@@ -15,7 +15,9 @@ Requirements :
 * Poppler for the internal pdf preview 
   (is automatically disabled if poppler is not found)
 * For MacOS, brew deliberately broke the poppler package. Try the following poppler-qt6:
-* Load source from https://poppler.freedesktop.org unpack source In poppler source folder
+* wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/poppler-23.02.0-Darwin.tar.xz
+* sudo tar xvf ./poppler-23.02.0-Darwin.tar.xz -C /usr/local/QtBase-6.4.2-Darwin --strip-components=1
+* rm poppler-23.02.0-Darwin.tar.xz
 * mkdir build
 * cd build
 * cmake ..
