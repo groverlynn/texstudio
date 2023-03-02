@@ -1,8 +1,6 @@
 # xduugtp class
-# Matthew Bertucci 2023/02/03 for v4.4.0.0
+# Matthew Bertucci 2023/02/23 for v5.4.0.1
 
-#include:expl3
-#include:xparse
 #include:l3keys2e
 #include:class-ctexart
 #include:xeCJK
@@ -20,10 +18,10 @@
 
 #keyvals:\xdusetup#c
 style={%<keyvals%>}
-style/cjk-font=#adobe,fandol,founder,sinotype,win,none
+style/cjk-font=#adobe,fandol,founder,hanyi,sinotype,win,none
 style/cjk-fake-bold=%<伪粗体粗细程度%>
 style/cjk-fake-slant=%<伪斜体倾斜程度%>
-style/latin-font=#tac,tacn,thcs,gyre,none
+style/latin-font=#gyre,tac,tacn,tcc,thcs,tll,none
 style/latin-sans-scale=#upper,lower,off
 style/latin-mono-scale=#upper,lower,off
 style/math-font=#asana,cambria,cm,concrete,erewhon,euler,fira,garamond,gfsneohellenic,kp,libertinus,lm,newcm,stix2,stix,xcharter,xits,bonum,dejavu,pagella,schola,termes,none
@@ -47,8 +45,8 @@ style/caption-format=#plain,hang
 style/ft-caption-format=#plain,hang
 style/ft-caption-align=#left,centering,centering-left
 style/table-small-font#true,false
-style/algorithm-small-caption#true,false
-style/algorithm-small-font#true,false
+style/alg-small-caption#true,false
+style/alg-small-font#true,false
 style/alg-caption-format=#plain,hang
 style/alg-caption-align=#left,centering,centering-left
 add-alg-rule-vspace#true,false
@@ -66,7 +64,7 @@ info/department={%<院系名称%>}
 info/major={%<专业名称/一级学科名称%>}
 info/author={%<作者姓名%>}
 info/supervisor={%<导师姓名%>}
-info/supervisor-enterprise={%<界%>}
+info/supv-ent={%<界%>}
 info/class={%<院内导师姓名%>}
 info/submit-date={%<yyyy-mm-dd%>}
 info/sign={%<文件路径1,文件路径2%>}

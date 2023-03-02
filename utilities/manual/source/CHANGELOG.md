@@ -1,7 +1,9 @@
 # CHANGELOG
-## TeXstudio development (4.5.2)
+## TeXstudio 4.5.2
 
+- fix skipping scroll when pointer was moved outside the text pane ([#2614](https://github.com/texstudio-org/texstudio/issues/2614))
 - Show changelog in about dialog and manual
+- pasting from LibreOffice Calc uses '&' and '\\' as delimiters. If pasted where no table is defined, the table wizard is called.
 - change Adv. Editor option "Vertical Overscroll" to scroll last line to top ([#2944](https://github.com/texstudio-org/texstudio/issues/2944))
 
 ## TeXstudio 4.5.1
