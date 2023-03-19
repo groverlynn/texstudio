@@ -59,8 +59,7 @@ QuickDocumentDialog::QuickDocumentDialog(QWidget *parent, const QString &name)
 	setWindowTitle(tr("Quick Start"));
 
 	//Package Tab
-	ui.pushButtonPackages->setFocusPolicy(Qt::NoFocus);
-	connect(ui.tabWidget, SIGNAL(tabBarClicked(int)), SLOT(setFocusToTable(int)));
+	connect(ui.tabWidget, SIGNAL(tabBarClicked(int)), SLOT(setPkgTabToolTip(int)));
 
 	//Geometry package
 	connect(ui.spinBoxUnitGeometryPageWidth, SIGNAL(editTextChanged(QString)), SLOT(geometryUnitsChanged()));
@@ -141,12 +140,15 @@ QString QuickDocumentDialog::getNewDocumentText()
 		}
 	}
 
-	if (ui.lineEditTitle->text() != "")
+	QString makeTitle;
+	if (ui.lineEditTitle->text() != "") {
+		makeTitle = "\\maketitle\n";
 		tag += "\\title{" + ui.lineEditTitle->text() + "}\n";
-	if (ui.lineEditAuthor->text() != "")
-      tag += "\\author{" + ui.lineEditAuthor->text() + "}\n";
+		if (ui.lineEditAuthor->text() != "")
+			tag += "\\author{" + ui.lineEditAuthor->text() + "}\n";
+	}
 
-	tag += QString("\\begin{document}\n%|\n\\end{document}");
+	tag += "\\begin{document}\n" + makeTitle + "%|\n\\end{document}";
 	return tag;
 }
 
@@ -212,6 +214,7 @@ QStringList babelLanguages = QStringList()
 
 void QuickDocumentDialog::Init()
 {
+	ui.lineEditTitle->setFocus();
 	ui.comboBoxClass->clear();
 	ui.comboBoxClass->addItem("article");
 	ui.comboBoxClass->addItem("report");
@@ -287,7 +290,6 @@ void QuickDocumentDialog::Init()
 	table->clearContents();
 	table->horizontalHeader()->setStretchLastSection(true);
 	table->setSelectionMode(QAbstractItemView::NoSelection);
-//	table->setSelectionBehavior(QAbstractItemView::SelectRows);
 	table->verticalHeader()->hide();
 
 	//each QStringList holds 2 items: the name of the package, and a short package description. These constitute a row of the table of the packages tab
@@ -554,11 +556,10 @@ void QuickDocumentDialog::addUserPackages()
 	}
 }
 
-void QuickDocumentDialog::setFocusToTable(int idx)
+void QuickDocumentDialog::setPkgTabToolTip(int idx)
 {
 	int tabPos = ui.tabWidget->indexOf(ui.tabPackages);
 	if (idx == tabPos) {
-		ui.tableWidgetPackages->setFocus();
 		ui.tabWidget->setTabToolTip(tabPos, tr("All packages that have the checkbox checked will appear in a new document within \\usepackage commands after pressing OK."));
 	}
 	else ui.tabWidget->setTabToolTip(tabPos, "");

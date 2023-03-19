@@ -2,7 +2,7 @@
 # commands for biblatex users
 # tbraun, 19.08.2009
 # dbitouze, 14.02.2012
-# Matthew Bertucci 27.06.2022 for v3.18
+# Matthew Bertucci 06.03.2023 for v3.19
 
 #include:pdftexcmds
 #include:etoolbox
@@ -1638,6 +1638,8 @@ filter=
 \DeclareLabeldate[entrytype list]{specification}#*
 \DeclareExtradate{specification}#*
 \scope{code}#*
+\DeclareExtradateContext{specification}#*
+\DeclareExtradateContext[entrytype list]{specification}#*
 \DeclareLabeltitle{specification}#*
 \DeclareLabeltitle[entrytype list]{specification}#*
 
@@ -1803,26 +1805,26 @@ override#true,false
 \ifboolexpr{expression}{true}{false}#*
 \ifthenelse{tests}{true}{false}#*
 
-\newbibmacro{name%cmd}{definition}#*d
-\newbibmacro{name%cmd}[args]{definition}#*d
-\newbibmacro{name%cmd}[args][default]{definition}#*d
-\newbibmacro*{name%cmd}{definition}#*d
-\newbibmacro*{name%cmd}[args]{definition}#*d
-\newbibmacro*{name%cmd}[args][default]{definition}#*d
-\renewbibmacro{name%cmd}{definition}#*d
-\renewbibmacro{name%cmd}[args]{definition}#*d
-\renewbibmacro{name%cmd}[args][default]{definition}#*d
-\renewbibmacro*{name%cmd}{definition}#*d
-\renewbibmacro*{name%cmd}[args]{definition}#*d
-\renewbibmacro*{name%cmd}[args][default]{definition}#*d
-\providebibmacro{name%cmd}{definition}#*d
-\providebibmacro{name%cmd}[args]{definition}#*d
-\providebibmacro{name%cmd}[args][default]{definition}#*d
-\providebibmacro*{name%cmd}{definition}#*d
-\providebibmacro*{name%cmd}[args]{definition}#*d
-\providebibmacro*{name%cmd}[args][default]{definition}#*d
-\letbibmacro{alias%cmd}{name}#*d
-\letbibmacro*{alias%cmd}{name}#*d
+\newbibmacro{name}{definition}#*
+\newbibmacro{name}[args]{definition}#*
+\newbibmacro{name}[args][default]{definition}#*
+\newbibmacro*{name}{definition}#*
+\newbibmacro*{name}[args]{definition}#*
+\newbibmacro*{name}[args][default]{definition}#*
+\renewbibmacro{name}{definition}#*
+\renewbibmacro{name}[args]{definition}#*
+\renewbibmacro{name}[args][default]{definition}#*
+\renewbibmacro*{name}{definition}#*
+\renewbibmacro*{name}[args]{definition}#*
+\renewbibmacro*{name}[args][default]{definition}#*
+\providebibmacro{name}{definition}#*
+\providebibmacro{name}[args]{definition}#*
+\providebibmacro{name}[args][default]{definition}#*
+\providebibmacro*{name}{definition}#*
+\providebibmacro*{name}[args]{definition}#*
+\providebibmacro*{name}[args][default]{definition}#*
+\letbibmacro{alias}{name}#*
+\letbibmacro*{alias}{name}#*
 \usebibmacro{name}#*
 \usebibmacro*{name}#*
 \savecommand{cmd}#*
@@ -2073,6 +2075,7 @@ override#true,false
 \currentname#*
 
 \AtBeginRefsection{code}#*
+\AtNextRefsection{code}#*
 \AtBeginBibliography{code}#*
 \AtBeginShorthands{code}#*
 \AtBeginBiblist{biblistname}{code}#*

@@ -1849,6 +1849,7 @@ void listAnnotationDetails(const Poppler::Annotation *an)
 void PDFWidget::updateCursor(const QPoint &pos)
 {
 	if (document.isNull()) return;
+	if (usingTool != kNone) return;
 
 	QPointF scaledPos;
 	int pageNr;
@@ -2955,11 +2956,7 @@ void PDFDocument::setupMenus(bool embedded)
     menuGrid=configManager->newManagedMenu(menuView,nullptr,"pdf/view/grid",QApplication::translate("PDFDocument", "Grid"));
     menuWindow=configManager->newManagedMenu(menuroot,menubar,"pdf/window",QApplication::translate("PDFDocument", "&Window"));
     menuEdit=configManager->newManagedMenu(menuroot,menubar,"pdf/config",QApplication::translate("PDFDocument", "&Configure"));
-#ifdef Q_OS_MAC // enable search field in help menu in macOS
-    menuHelp=configManager->newManagedMenu(menuroot,menubar,"pdf/help",QApplication::translate("PDFDocument", "Help"));
-#else
     menuHelp=configManager->newManagedMenu(menuroot,menubar,"pdf/help",QApplication::translate("PDFDocument", "&Help"));
-#endif
     menus<<menuFile<<menuEdit<<menuEdit_2<<menuGrid<<menuHelp<<menuWindow<<menuView; // housekeeping for later removal
 
     if(!embedded)

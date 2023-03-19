@@ -26,7 +26,7 @@
 #include "utilsUI.h"
 
 UserMenuDialog::UserMenuDialog(QWidget *parent,  QString name, QLanguageFactory *languageFactory)
-    : QDialog(parent), languages(languageFactory)
+    : QDialog(parent,Qt::Dialog|Qt::WindowMinMaxButtonsHint|Qt::WindowCloseButtonHint), languages(languageFactory)
 {
 	setWindowTitle(name);
 	ui.setupUi(this);
@@ -58,6 +58,7 @@ UserMenuDialog::UserMenuDialog(QWidget *parent,  QString name, QLanguageFactory 
 	ui.tagEdit->setLayout(new QVBoxLayout());
 	codeedit = new QCodeEdit(ui.tagEdit);
 	codeedit->editor()->setFlag(QEditor::AdjustIndent, false);
+	codeedit->editor()->setDisplayModifyTime(false);
 	codeedit->editor()->document()->setCenterDocumentInEditor(false);
 	languages->setLanguage(codeedit->editor(), "");
 	//QLineMarkPanel* lineMarkPanel=new QLineMarkPanel;

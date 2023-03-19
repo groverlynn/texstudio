@@ -1,10 +1,25 @@
 # CHANGELOG
 ## TeXstudio 4.5.2
 
+- allow wheel usage over linenumber/linemark/fold panel of editors
 - fix skipping scroll when pointer was moved outside the text pane ([#2614](https://github.com/texstudio-org/texstudio/issues/2614))
-- Show changelog in about dialog and manual
+- add Min/Max/Close buttons to Macro Editor dialog ([#2987](https://github.com/texstudio-org/texstudio/pull/2987))
+- fix text in status bar of Macro Editor wiggling around after 10s and 50s ([#3001](https://github.com/texstudio-org/texstudio/pull/3001))
+- Show changelog in about dialog and [manual](https://texstudio-org.github.io/CHANGELOG.html)
 - pasting from LibreOffice Calc uses '&' and '\\' as delimiters. If pasted where no table is defined, the table wizard is called.
 - change Adv. Editor option "Vertical Overscroll" to scroll last line to top ([#2944](https://github.com/texstudio-org/texstudio/issues/2944))
+- when the mouse cursor hovers over a spin/combo box, the wheel scrolls through the configuration page instead of changing values ([#2977](https://github.com/texstudio-org/texstudio/issues/2977))
+- support toggling comment on folded lines ([#2912](https://github.com/texstudio-org/texstudio/issues/2912))
+- don't show pointing hand cursor over hyperlinks when magnifier is activ ([#2982](https://github.com/texstudio-org/texstudio/pull/2982))
+- improve usage of tab key and enter key in QuickStart Wizard ([#3014](https://github.com/texstudio-org/texstudio/pull/3014))
+- add \maketitle to the document created by QuickStart Wizard if appropriate ([#3015](https://github.com/texstudio-org/texstudio/pull/3015))
+- pos1 (home) key now sets cursor to start or to first non-blank character of editor lines ([#3012](https://github.com/texstudio-org/texstudio/issues/3012))
+- fix a crash in a special case ([#2985](https://github.com/texstudio-org/texstudio/issues/2985))
+- updated LaTeX2e manual (help menu) and added missing image
+- allow git push when using git checkin dialog ([#3005](https://github.com/texstudio-org/texstudio/issues/3005))
+- many new and updated cwls
+- updated translations
+- improved cmake build
 
 ## TeXstudio 4.5.1
 
@@ -18,6 +33,7 @@
 - add editor action "Move all (others) to other view" ([#2713](https://github.com/texstudio-org/texstudio/issues/2713))
 - show macro name in completer list ([#2679](https://github.com/texstudio-org/texstudio/issues/2679))
 - show macro trigger and shortcut in configuration window ([#2635](https://github.com/texstudio-org/texstudio/issues/2635))
+- support import of several macros at once ([#2911](https://github.com/texstudio-org/texstudio/issues/2911))
 - fix wrong side panel title when changing grid size in config ([#2743](https://github.com/texstudio-org/texstudio/issues/2743))
 - preview/clear preview now use position of context menu as reference [(#2794](https://github.com/texstudio-org/texstudio/issues/2794))
 - add a Package Tab to the QuickStart Wizard ([#2831](https://github.com/texstudio-org/texstudio/issues/2831))

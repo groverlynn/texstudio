@@ -482,7 +482,7 @@ bool DefaultInputBinding::contextMenuEvent(QContextMenuEvent *event, QEditor *ed
 		if (tk.type == Token::file) {
             Token cmdTk=Parsing::getCommandTokenFromToken(tl,tk);
             QString fn=tk.getText();
-            if(cmdTk.getText()=="\\subimport"){
+            if(cmdTk.dlh && cmdTk.getText()=="\\subimport"){
                 int i=tl.indexOf(cmdTk);
                 TokenList tl2=tl.mid(i); // in case of several cmds in one line
                 QString path=Parsing::getArg(tl,Token::definition);
@@ -1013,7 +1013,7 @@ void LatexEditorView::checkForLinkOverlay(QDocumentCursor cursor)
 		} else if (tk.type == Token::file) {
             Token cmdTk=Parsing::getCommandTokenFromToken(tl,tk);
             QString fn=tk.getText();
-            if(cmdTk.getText()=="\\subimport"){
+            if(cmdTk.dlh && cmdTk.getText()=="\\subimport"){
                 int i=tl.indexOf(cmdTk);
                 TokenList tl2=tl.mid(i); // in case of several cmds in one line
                 QString path=Parsing::getArg(tl,Token::definition);
@@ -2986,6 +2986,7 @@ QList<int> LatexEditorViewConfig::possibleEditOperations()
 		QEditor::CursorWordLeft,
 		QEditor::CursorWordRight,
 		QEditor::CursorStartOfLine,
+        QEditor::CursorStartOfLineText,
 		QEditor::CursorEndOfLine,
 		QEditor::CursorStartOfDocument,
 		QEditor::CursorEndOfDocument,
@@ -3000,6 +3001,7 @@ QList<int> LatexEditorViewConfig::possibleEditOperations()
 		QEditor::SelectCursorWordLeft,
 		QEditor::SelectCursorWordRight,
 		QEditor::SelectCursorStartOfLine,
+        QEditor::SelectCursorStartOfLineText,
 		QEditor::SelectCursorEndOfLine,
 		QEditor::SelectCursorStartOfDocument,
 		QEditor::SelectCursorEndOfDocument,
