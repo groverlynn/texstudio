@@ -1127,7 +1127,7 @@ bool QEditor::writeToFile(const QString &filename, const QByteArray &data) {
 */
 void QEditor::save(const QString& fn)
 {
-	if ( fileName().count() ) {
+    if ( fileName().size() ) {
 		watcher()->removeWatch(fileName(), this);
 	}
 
@@ -1503,7 +1503,7 @@ void QEditor::addAction(QAction *a, const QString& menu, const QString& toolbar)
 
 	m_actions[a->objectName()] = a;
 
-	if ( pMenu && menu.count() )
+    if ( pMenu && menu.size() )
 	{
 		pMenu->addAction(a);
 
@@ -1512,7 +1512,7 @@ void QEditor::addAction(QAction *a, const QString& menu, const QString& toolbar)
 		#endif
 	}
 
-	if ( toolbar.count() )
+    if ( toolbar.size() )
 	{
 		#ifdef _QMDI_
 		toolbars[toolbar]->addAction(a);
@@ -2375,8 +2375,8 @@ void QEditor::setLanguageDefinition(QLanguageDefinition *d)
 		m_doc->setLanguageDefinition(d);
 
 	if ( m_definition )
-	{
-		bool cuc = d->singleLineComment().count();
+    {
+        bool cuc = d->singleLineComment().size();
 
 		QCE_ENABLE_ACTION("comment", cuc)
 		QCE_ENABLE_ACTION("uncomment", cuc)
@@ -2557,7 +2557,7 @@ static bool unindent(const QDocumentCursor& cur)
 	int r = 0, n = 0, t = QDocument::tabStop();
 	QString txt = beg.text().left(beg.firstChar());
 
-	while ( txt.count() && (n < t) )
+    while ( txt.size() && (n < t) )
 	{
 		if ( txt.at(txt.length() - 1) == '\t' )
 			n += t - (n % t);
@@ -3091,6 +3091,17 @@ void QEditor::setVerticalScrollBarMaximum()
 bool QEditor::event(QEvent *e)
 {
 	// preparations for tooltips
+    if(e->type() == QEvent::ShortcutOverride){
+        QKeyEvent *event = static_cast<QKeyEvent *>(e);
+        if(event->matches(QKeySequence::Cancel)){
+            if(cursorMirrorCount()>0){
+                // collapse mirrors to main cursor
+                clearCursorMirrors();
+                e->accept();
+                return true;
+            }
+        }
+    }
 
 	if (e->type() == QEvent::ToolTip) {
 		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(e);
@@ -3652,7 +3663,7 @@ void QEditor::inputMethodEvent(QInputMethodEvent* e)
     }
 //#endif
 
-	if ( e->commitString().count() ) {
+    if ( e->commitString().size() ) {
 		m_cursor.beginEditBlock();
         if(preEditSet){
             preEditSet=false;
@@ -4287,6 +4298,7 @@ void QEditor::focusOutEvent(QFocusEvent *e)
 {
 	setFlag(CursorOn, false);
 	m_blink.stop();
+    repaintCursor();
 
 	QAbstractScrollArea::focusOutEvent(e);
 }
@@ -4393,10 +4405,10 @@ void QEditor::setFileName(const QString& f)
 
 	m_doc->setFileName_DONOTCALLTHIS(f);
 
-	if ( fileName().count() )
+    if ( fileName().size() )
 		watcher()->addWatch(fileName(), this);
 
-	setTitle(name().count() ? name() : "untitled");
+    setTitle(name().size() ? name() : "untitled");
 }
 
 /*!
@@ -5315,7 +5327,7 @@ void QEditor::insertText(QDocumentCursor& c, const QString& text)
             if(!flag(WeakIndent)){
                 int n = 0;
 
-                while ( n < l.count() && l.at(n).isSpace() )
+                while ( n < l.size() && l.at(n).isSpace() )
                     ++n;
 
                 l.remove(0, n);

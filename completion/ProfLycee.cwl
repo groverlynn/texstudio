@@ -1,5 +1,5 @@
 # ProfLycee package
-# Matthew Bertucci 2023/03/12 for v2.5.4
+# Matthew Bertucci 2023/04/17 for v2.6.0
 
 #include:mathtools
 #include:xcolor
@@ -18,6 +18,7 @@
 #include:simplekv
 #include:listofitems
 #include:tabularray
+#include:settobox
 #include:hologo
 #include:fancyvrb
 #include:nicefrac
@@ -148,15 +149,24 @@ HautRes=%<hauteur%>
 \begin{CodePythonLst}*{tcolorbox options}#V
 \begin{CodePythonLst}*[largeur%l]{tcolorbox options}#V
 \end{CodePythonLst}
+\begin{CodePythonLstAlt}{tcolorbox options}#V
+\begin{CodePythonLstAlt}[largeur%l]{tcolorbox options}#V
+\begin{CodePythonLstAlt}*{tcolorbox options}#V
+\begin{CodePythonLstAlt}*[largeur%l]{tcolorbox options}#V
+\end{CodePythonLstAlt}
 
 \CodePythonLstFichier{tcolorbox options}{file}
 \CodePythonLstFichier[largeur%l]{tcolorbox options}{file}
 \CodePythonLstFichier*{tcolorbox options}{file}
 \CodePythonLstFichier*[largeur%l]{tcolorbox options}{file}
+\CodePythonLstFichierAlt{tcolorbox options}{file}
+\CodePythonLstFichierAlt[largeur%l]{tcolorbox options}{file}
+\CodePythonLstFichierAlt*{tcolorbox options}{file}
+\CodePythonLstFichierAlt*[largeur%l]{tcolorbox options}{file}
 
 ## Code Python via le package piton ##
-\begin{CodePiton}#V
-\begin{CodePiton}[options%keyvals]#V
+\begin{CodePiton}{tcolorbox options}#V
+\begin{CodePiton}[options%keyvals]{tcolorbox options}#V
 \end{CodePiton}
 
 #keyvals:\begin{CodePiton}
@@ -165,21 +175,48 @@ Gobble#true,false
 Largeur=##L
 TaillePolice=%<font commands%>
 Alignement=#justify,left,flush left,right,flush right,center,flush center
+Style=#Moderne,Classique
+Filigrane#true,false
+BarreTitre#true,false
+Cadre#true,false
+CouleurNombres=#%color
+#endkeyvals
+
+\begin{ConsolePiton}{tcolorbox options}#V
+\begin{ConsolePiton}<options%keyvals>{tcolorbox options}#V
+\begin{ConsolePiton}[piton options]{tcolorbox options}#V
+\begin{ConsolePiton}[piton options]<options%keyvals>{tcolorbox options}#V
+\end{ConsolePiton}
+
+#keyvals:\begin{ConsolePiton}
+Largeur=##L
+Alignement=#justify,left,flush left,right,flush right,center,flush center
+Logo#true,false
 #endkeyvals
 
 ## Code & Console Python, via les packages Pythontex ou Minted ##
-\begin{CodePythonMinted}#V
-\begin{CodePythonMinted}[largeur%l][tcolorbox options]#V
-\begin{CodePythonMinted}*#V
-\begin{CodePythonMinted}*[largeur%l][tcolorbox options]#V
+\begin{CodePythonMinted}{tcolorbox options}#V
+\begin{CodePythonMinted}[largeur%l]{tcolorbox options}#V
+\begin{CodePythonMinted}*{tcolorbox options}#V
+\begin{CodePythonMinted}*[largeur%l]{tcolorbox options}#V
 \end{CodePythonMinted}
+\begin{CodePythonMintedAlt}{tcolorbox options}#V
+\begin{CodePythonMintedAlt}[largeur%l]{tcolorbox options}#V
+\begin{CodePythonMintedAlt}*{tcolorbox options}#V
+\begin{CodePythonMintedAlt}*[largeur%l]{tcolorbox options}#V
+\end{CodePythonMintedAlt}
 
 ## Pseudo-Code ##
-\begin{PseudoCode}
-\begin{PseudoCode}[largeur%l][tcolorbox options]
-\begin{PseudoCode}*
-\begin{PseudoCode}*[largeur%l][tcolorbox options]
+\begin{PseudoCode}{tcolorbox options}#V
+\begin{PseudoCode}[largeur%l]{tcolorbox options}#V
+\begin{PseudoCode}*{tcolorbox options}#V
+\begin{PseudoCode}*[largeur%l]{tcolorbox options}#V
 \end{PseudoCode}
+\begin{PseudoCodeAlt}{tcolorbox options}#V
+\begin{PseudoCodeAlt}[largeur%l]{tcolorbox options}#V
+\begin{PseudoCodeAlt}*{tcolorbox options}#V
+\begin{PseudoCodeAlt}*[largeur%l]{tcolorbox options}#V
+\end{PseudoCodeAlt}
 
 ## Terminal Windows/UNiX/OSX ##
 \begin{TerminalWin}{Titre=%<texte%>}#V
@@ -201,8 +238,8 @@ Alignement=#justify,left,flush left,right,flush right,center,flush center
 \CartoucheCapytale*[prefix]{code capytale}
 
 ## Présentation de code LaTeX ##
-\begin{PresentationCode}[color]{tcolorbox options}#V
 \begin{PresentationCode}{tcolorbox options}#V
+\begin{PresentationCode}[color]{tcolorbox options}#V
 \end{PresentationCode}
 
 ## Pavé droit « simple » ##
@@ -354,7 +391,12 @@ HautGrad=##L
 AffGrad#true,false
 AffOrigine#true,false
 Annee#true,false
+Trigo#true,false
+Dfrac#true,false
 #endkeyvals
+
+\AffAngleRadian{expr}
+\AffAngleRadian*{expr}
 
 \FenetreTikz
 \FenetreSimpleTikz{liste valx}{liste valy}
@@ -742,6 +784,18 @@ Anegatif#true,false
 #keyvals:\MesurePrincipale
 d#true,false
 Crochets#true,false
+Brut#true,false
+#endkeyvals
+
+## Lignes trigonométriques ##
+\LigneTrigo{cos|sin|tan}(angle)
+\LigneTrigo[options%keyvals]{cos|sin|tan}(angle)
+\LigneTrigo*{cos|sin|tan}(angle)
+\LigneTrigo*[options%keyvals]{cos|sin|tan}(angle)
+
+#keyvals:\LigneTrigo,\LigneTrigo*
+d#true,false
+Etapes#true,false
 #endkeyvals
 
 ## SudoMaths, en TikZ ##
@@ -773,18 +827,21 @@ DecalLegende=%<décalage%>
 ## pythontex library ##
 # conditional loading not possible, just listed here
 #include:pythontex
-\begin{CodePythontex}#V
-\begin{CodePythontex}[options%keyvals]#V
+\begin{CodePythontex}{}#V
+\begin{CodePythontex}[options%keyvals]{}#V
 \end{CodePythontex}
-#keyvals:\begin{CodePythontex}
+\begin{CodePythontexAlt}{}#V
+\begin{CodePythontexAlt}[options%keyvals]{}#V
+\end{CodePythontexAlt}
+#keyvals:\begin{CodePythontex},\begin{CodePythontexAlt}
 Largeur=##L
 Centre#true,false
 TaillePolice=%<font commands%>
 EspacementVertical=%<factor%>
 Lignes#true,false
 #endkeyvals
-\begin{ConsolePythontex}#V
-\begin{ConsolePythontex}[options%keyvals]#V
+\begin{ConsolePythontex}{}#V
+\begin{ConsolePythontex}[options%keyvals]{}#V
 \end{ConsolePythontex}
 #keyvals:\begin{ConsolePythontex}
 Largeur=##L
@@ -809,6 +866,12 @@ Label#true,false
 \end{tcpythontexcodeno}#S
 \hookcenterpost#S
 \hookcenterpre#S
+\begin{tcpythontexcodealt}#S
+\begin{tcpythontexcodealt}[width]#S
+\end{tcpythontexcodealt}#S
+\begin{tcpythontexcodenoalt}#S
+\begin{tcpythontexcodenoalt}[width]#S
+\end{tcpythontexcodenoalt}#S
 
 # from table option of xcolor
 #include:colortbl
@@ -1053,13 +1116,19 @@ vertcapyt#B
 \chbrut#S
 \chiffre#S
 \CODPITalign#S
+\CODPITcolnb#S
+\CODPITespV#S
 \CODPITfonte#S
 \CODPITlargeur#S
+\CODPITstyle#S
+\CODPITtitre#S
 \COEFF#S
 \COEFFA#S
 \Coeffa#S
 \COEFFB#S
 \Coeffc#S
+\ConsPyluaAlign#S
+\ConsPyluaLarg#S
 \convertbasedixtobase{arg1}{arg2}#S
 \convertbasetobasedix{arg1}{arg2}#S
 \cpt#S
@@ -1086,6 +1155,7 @@ vertcapyt#B
 \ifinal#S
 \iinit#S
 \indice#S
+\IntSimplifMesPpale{arg}#S
 \larcolinter#S
 \larliginter#S
 \LCNA#S

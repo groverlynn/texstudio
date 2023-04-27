@@ -134,6 +134,9 @@ private:
 	void closeAllFiles();
 	bool canCloseNow(bool saveSettings = true); ///< asks the user and close all files, and prepares to exit txs
 	void closeEvent(QCloseEvent *e);
+    void setStructureSectionIcons();
+    void updateStatusBarIcons();
+    void updatePDFIcons();
 
 	void updateUserMacros(bool updateMenu = true);
 
@@ -237,6 +240,7 @@ private:
 #endif
 private slots:
     void updateTOCs();
+    void updateAllTOCs();
 
     void updateTOC();
     void updateCurrentPosInTOC(QTreeWidgetItem *root=nullptr,StructureEntry *old=nullptr,StructureEntry *selected=nullptr);
@@ -261,7 +265,7 @@ private slots:
     void collapseSubitems();
     StructureEntry *labelForStructureEntry(const StructureEntry *entry);
 
-    void updateStructureLocally();
+    void updateStructureLocally(bool updateAll=false);
     void customMenuStructure(const QPoint &pos);
     void createLabelFromAction();
 
@@ -390,6 +394,9 @@ protected slots:
 	void LTErrorMessage(QString message);
 
     void paletteChanged(const QPalette &palette);
+#if (QT_VERSION >= 0x060500) && (defined( Q_OS_WIN )||defined( Q_OS_LINUX ))
+    void colorSchemeChanged(Qt::ColorScheme  colorScheme);
+#endif
 
 private slots:
 	void readSettings(bool reread = false); ///< read configured/default settings from ini

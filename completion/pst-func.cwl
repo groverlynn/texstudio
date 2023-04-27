@@ -1,5 +1,5 @@
 # pst-func package
-# Matthew Bertucci 2/25/2022 for v0.99
+# Matthew Bertucci 2023/04/14 for v1.02
 
 #include:pstricks
 #include:pst-plot
@@ -7,6 +7,8 @@
 #include:pst-tools
 #include:pstricks-add
 #include:pst-xkey
+#include:iftex
+#include:luacode
 
 \ChebyshevT
 \ChebyshevU
@@ -66,8 +68,12 @@
 \psChiIIDist[options%keyvals]{x0}{x1}
 \psTDist{x0}{x1}
 \psTDist[options%keyvals]{x0}{x1}
+\psNonCentralTDist{x0}{x1}
+\psNonCentralTDist[options%keyvals]{x0}{x1}
 \psFDist{x0}{x1}
 \psFDist[options%keyvals]{x0}{x1}
+\psNonCentralFDist{x0}{x1}
+\psNonCentralFDist[options%keyvals]{x0}{x1}
 \psBetaDist{x0}{x1}
 \psBetaDist[options%keyvals]{x0}{x1}
 \psCauchy{x0}{x1}

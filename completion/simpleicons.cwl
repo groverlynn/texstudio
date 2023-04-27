@@ -1,5 +1,5 @@
 # simpleicons package
-# Matthew Bertucci 2023/03/03 for v8.6.0
+# Matthew Bertucci 2023/04/14 for v8.10.0
 
 #include:ifxetex
 #include:ifluatex
@@ -397,6 +397,7 @@ cilium
 cinema4d
 circle
 circleci
+circuitverse
 cirrusci
 cisco
 citrix
@@ -765,6 +766,7 @@ folium
 fonoma
 fontawesome
 fontbase
+fontforge
 foodpanda
 ford
 forestry
@@ -1353,6 +1355,7 @@ mlflow
 mobx
 mobxstatetree
 mocha
+modin
 modrinth
 modx
 mojangstudios
@@ -1438,6 +1441,7 @@ nodered
 nokia
 norco
 nordvpn
+normalizedotcss
 norwegian
 notepadplusplus
 notion
@@ -1520,6 +1524,7 @@ oreilly
 org
 origin
 osano
+osgeo
 oshkosh
 osmc
 osu
@@ -1533,6 +1538,7 @@ oyo
 p5dotjs
 packagist
 packer
+paddlepaddle
 paddypower
 pagekit
 pagerduty
@@ -1625,6 +1631,7 @@ pocketbase
 pocketcasts
 podcastaddict
 podman
+poe
 poetry
 pointy
 pokemon
@@ -1765,6 +1772,7 @@ redhat
 redhatopenshift
 redis
 redmine
+redox
 redux
 reduxsaga
 redwoodjs
@@ -1880,6 +1888,7 @@ semanticweb
 semaphoreci
 semver
 sencha
+sendinblue
 sennheiser
 sensu
 sentry
@@ -2002,6 +2011,7 @@ stackbit
 stackblitz
 stackedit
 stackexchange
+stackhawk
 stackoverflow
 stackpath
 stackshare
@@ -2066,6 +2076,7 @@ swift
 swiggy
 swiper
 symantec
+symbolab
 symfony
 symphony
 sympy
@@ -2398,6 +2409,7 @@ yahoo
 yale
 yamahacorporation
 yamahamotorcorporation
+yaml
 yammer
 yarn
 ycombinator

@@ -431,8 +431,8 @@ public:
 
 	Q_INVOKABLE QString fileName() const { return curFile; }
 	Q_INVOKABLE QFileInfo getMasterFile() const { return masterFile; }
-
 	void saveGeometryToConfig();
+	void setActionTypesetEnabled(bool enable);
 
 	Q_INVOKABLE void zoomToRight(QWidget *otherWindow);
 	void showScale(qreal scale);
@@ -457,6 +457,7 @@ public:
 	bool autoClose;
 
 	void setStateEnlarged(bool state);
+    void updateIcons();
 
 protected:
 	virtual void changeEvent(QEvent *event);
@@ -468,6 +469,7 @@ protected:
 	virtual void mouseMoveEvent(QMouseEvent *event);
 	void setToolbarsVisible(bool visible);
 	void shortcutOnlyIfFocused(const QList<QAction *> &actions);
+    void loadSyncIcons();
 
 public slots:
 	void reloadSettings();
@@ -677,6 +679,8 @@ private:
 
 	QAction *actionPage_Up;
 	QAction *actionPage_Down;
+
+    QToolButton *tbCursorFollowsScrolling,*tbScrollingFollowsCursor;
 
 	QButtonGroup	*toolButtonGroup;
 	QToolButton *comboZoom;

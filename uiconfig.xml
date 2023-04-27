@@ -259,38 +259,40 @@
 </menu>
 
 <menu id="main/math" text="&amp;Math">
+	
+	<insert id="mathmode" text="Inline math - $...$" insert="$%&lt; %>$" info="Math (in text style) within a paragraph of text" icon="mathmode" shortcut="Ctrl+Shift+M"/>
+	<insert id="latexmathmode" text="Inline math - \(...\)" insert="\( %| \)" info="Same as $...$ and the math environment"/>
+	<insert id="displaymath" text="Display math - \[...\]" insert="\[ %| \]" info="Math (in display style) apart from paragraph of text" shortcut="Alt+Shift+M"/>
+	<insert id="subscript" text="Subscript - _{}" insert="_{%|}" icon="subscript" shortcut="Ctrl+Shift+D"/>  
+	<insert id="superscript" text="Superscript - ^{}" insert="^{%|}"  icon="superscript" shortcut="Ctrl+Shift+U"/>  
+	<insert id="frac" text="Fraction - \frac{}{}" insert="\frac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" icon="smallfrac" shortcut="Alt+Shift+F"/>    
+	<insert id="dfrac" text="Fraction - \dfrac{}{}" insert="\dfrac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" info="\dfrac (amsmath) always uses display style for the fraction" icon="dfrac" shortcut="Ctrl+Shift+F"/>  
+	<insert id="sqrt" text="Square Root - \sqrt{}" insert="\sqrt{%|}" icon="sqrt" shortcut="Ctrl+Shift+Q"/>  
+	<insert id="left" text="\left" insert="\left " info="Autosize opening delimiter" shortcut="Ctrl+Shift+L"/>  
+	<insert id="right" text="\right" insert="\right " info="Autosize closing delimiter" shortcut="Ctrl+Shift+R"/>  
+	<insert id="array" text="\begin{array}...\end{array}" insert="\begin{array}{%&lt;columns%>}%\%&lt;content%|%>%\\end{array}" info="Tabular for math (used inside one of the other math environments)"/>  
 
-	<insert id="mathmode" text="Inline math mode $...$" insert="$%&lt; %>$" info="The math environment can be used in both paragraph and LR mode" icon="mathmode" shortcut="Ctrl+Shift+M"/>
-	<insert id="latexmathmode" text="LaTeX inline math mode \(...\)" insert="\( %| \)" info="The LaTeX math environment can be used in both paragraph and LR mode"/>
-	<insert id="displaymath" text="Display math mode \[...\]" insert="\[ %| \]" info="The displaymath environment can be used only in paragraph mode" shortcut="Alt+Shift+M"/>
-	<insert id="subscript" text="Subscript – _{}" insert="_{%|}" icon="subscript" shortcut="Ctrl+Shift+D"/>
-	<insert id="superscript" text="Superscript – ^{}" insert="^{%|}"  icon="superscript" shortcut="Ctrl+Shift+U"/>
-	<insert id="frac" text="Fraction – \frac{}{}" insert="\frac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" icon="smallfrac" shortcut="Alt+Shift+F"/>
-	<insert id="dfrac" text="Fraction – \dfrac{}{}" insert="\dfrac{%&lt;num%|%:translatable%>}{%&lt;den%:translatable%>}" info="\dfrac is an amsmath package shorthand for \displaystyle\frac…" icon="dfrac" shortcut="Ctrl+Shift+F"/>
-	<insert id="sqrt" text="Square Root – \sqrt{}" insert="\sqrt{%|}" icon="sqrt" shortcut="Ctrl+Shift+Q"/>
-	<insert id="left" text="\left" insert="\left " shortcut="Ctrl+Shift+L"/>
-	<insert id="right" text="\right" insert="\right " shortcut="Ctrl+Shift+R"/>
-	<insert id="array" text="\begin{array}" insert="\begin{array}{%&lt;columns%>}%\%&lt;content%|%>%\\end{array}" info="\begin{array}{col1 col2 … coln}%ncolumn 1 entry &amp; column 2 entry … &amp; column n entry \\%n…%n\end{array}"/>
+	
+	<menu id="equations" text="Math &amp;Equations">  // s. issue #3002 for a discussion about the tooltips
+			// envs with numbers
+			<insert id="equation" text="env equation" insert="\begin{equation}%\    %&lt;eqn%>%\\end{equation}" info="Single equation centered in a row" shortcut="Ctrl+Shift+N"/>
+			<insert id="align" text="env align (amsmath)" insert="\begin{align}%\    %&lt;ralign%> &amp; %&lt;lalign%> \\%\    %&lt;ralign%> &amp; %&lt;lalign%>%\\end{align}" info="Multiple equations aligned within columns"/>
+			<insert id="alignat" text="env alignat (amsmath)" insert="\begin{alignat}{%&lt;ncols%>}%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp; %&lt;dist%>  %&lt;ralign%> &amp; %&lt;lalign%> \\%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp;       %&lt;ralign%> &amp; %&lt;lalign%>%\\end{alignat}" info="Multiple equations aligned within columns with customizable column spacing"/>
+			<insert id="flalign" text="env flalign (amsmath)" insert="\begin{flalign}%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp;  %&lt;ralign%> &amp; %&lt;lalign%> \\%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp;  %&lt;ralign%> &amp; %&lt;lalign%>%\\end{flalign}" info="Multiple equations aligned within columns having column spacing to fill full line"/>
+			<insert id="gather" text="env gather (amsmath)" insert="\begin{gather}%\    %&lt;eqn1%> \\%\    %&lt;eqn2%>%\\end{gather}" info="Multiple equations centered in rows"/>
+			<insert id="multline" text="env multline (amsmath)" insert="\begin{multline}%\    %&lt;eqn%> \\%\        %&lt;eqn%>%\\end{multline}" info="Single equation split into multiple lines"/>
+			// envs without numbers
+			<insert id="equation*" text="env equation* (amsmath)" insert="\begin{equation*}%\    %&lt;eqn%>%\\end{equation*}" info="The equation* environment is an unnumbered equation environment."/>
+			<insert id="align*" text="env align* (amsmath)" insert="\begin{align*}%\    %&lt;ralign%> &amp; %&lt;lalign%> \\%\    %&lt;ralign%> &amp; %&lt;lalign%>%\\end{align*}" info="The align* environment is an unnumbered align environment."/>
+			<insert id="alignat*" text="env alignat* (amsmath)" insert="\begin{alignat*}{%&lt;ncols%>}%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp; %&lt;dist%>  %&lt;ralign%> &amp; %&lt;lalign%> \\%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp;       %&lt;ralign%> &amp; %&lt;lalign%>%\\end{alignat*}" info="The alignat* environment is an unnumbered alignat environment."/>
+			<insert id="flalign*" text="env flalign* (amsmath)" insert="\begin{flalign*}%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp;  %&lt;ralign%> &amp; %&lt;lalign%> \\%\    %&lt;ralign%> &amp; %&lt;lalign%>  &amp;  %&lt;ralign%> &amp; %&lt;lalign%>%\\end{flalign*}" info="The flalign* environment is an unnumbered flalign environment."/>
+			<insert id="gather*" text="env gather* (amsmath)" insert="\begin{gather*}%\    %&lt;eqn1%> \\%\    %&lt;eqn2%>%\\end{gather*}" info="The gather* environment is an unnumbered gather environment."/>
+			<insert id="multline*" text="env multline* (amsmath)" insert="\begin{multline*}%\    %&lt;eqn%> \\%\        %&lt;eqn%>%\\end{multline*}" info="The multline* environment is an unnumbered multline environment."/>
 
+			<separator/>
 
-	<menu id="equations" text="Math &amp;Equations">
-		<insert id="equation" text="env equation" insert="\begin{equation}\label{%&lt;key%>}%\%|%\\end{equation}" info="The equation environment centers one equation on the page and places the equation number in the margin." shortcut="Ctrl+Shift+N"/>
-		<insert id="align" text="env align (amsmath)" insert="\begin{align}%\%|%\\end{align}" info="The align environment vertically aligns multiple equations. You can do so in several equation columns. Use &amp; sign for alignment and splitting into columns."/>
-		<insert id="alignat" text="env alignat (amsmath)" insert="\begin{alignat}{%&lt;ncols%>}%\%&lt;content%>%\\end{alignat}" info="The alignat environment is a variation of the align environment and allows to explicitly specify the space between equation columns. For ex. use &amp;\quad&amp; as column separator. Give the number of columns as a parameter."/>
-		<insert id="flalign" text="env flalign (amsmath)" insert="\begin{flalign}%\%|%\\end{flalign}" info="The flalign environment is an align environment that stretches space between equation columns as much as possible, leaving just enough space at the margin for the equation number."/>
-		<insert id="gather" text="env gather (amsmath)" insert="\begin{gather}%\%|%\\end{gather}" info="The gather environment is used for multiple centered equations separated by \\, each having an equation number."/>
-		<insert id="multline" text="env multline (amsmath)" insert="\begin{multline}%\%|%\\end{multline}" info="The multline environment is a variation of the equation environment used for equations that don't fit on one line. Use \\ to split lines. Lines between the first and the last one will be centered."/>
-		<insert id="equation*" text="env equation* (amsmath)" insert="\begin{equation*}%\%|%\\end{equation*}" info="The equation* environment is an unnumbered equation environment."/>
-		<insert id="align*" text="env align* (amsmath)" insert="\begin{align*}%\%|%\\end{align*}" info="The align* environment is an unnumbered align environment."/>
-		<insert id="alignat*" text="env alignat* (amsmath)" insert="\begin{alignat*}{%&lt;ncols%>}%\%&lt;content%>%\\end{alignat*}" info="The alignat* environment is an unnumbered alignat environment."/>
-		<insert id="flalign*" text="env flalign* (amsmath)" insert="\begin{flalign*}%\%|%\\end{flalign*}" info="The flalign* environment is an unnumbered flalign environment."/>
-		<insert id="gather*" text="env gather* (amsmath)" insert="\begin{gather*}%\%|%\\end{gather*}" info="The gather* environment is an unnumbered gather environment."/>
-		<insert id="multline*" text="env multline* (amsmath)" insert="\begin{multline*}%\%|%\\end{multline*}" info="The multline* environment is an unnumbered multline environment."/>
-
-		<separator/>
-
-		<insert id="cases" text="env cases (amsmath)" insert="\begin{cases}%\%|%\\end{cases}" info="The cases environment provides a strucure that displays as a brace left to an array of lines with two left-aligned columns."/>
-		<insert id="split" text="env split (amsmath)" insert="\begin{split}%\%|%\\end{split}" info="The split environment is similar to the multline environment but allows vertical alignment using &amp; signs. There is no eqn number. Use inside displayed environments."/>
+			<insert id="cases" text="env cases (amsmath)" insert="\begin{cases}%\    %&lt;val1%>  &amp;  \text{%&lt;cond1%>} \\%\    %&lt;val2%>  &amp;  \text{%&lt;cond2%>}%\\end{cases}" info="Distinction of cases (within other math env)"/>
+			<insert id="split" text="env split (amsmath)" insert="\begin{split}%\    %&lt;ralign%> &amp; %&lt;lalign%> \\%\           &amp; %&lt;lalign%>%\\end{split}" info="Single equation split into multiple aligned lines (within other math env)"/>
 	</menu>
 
 

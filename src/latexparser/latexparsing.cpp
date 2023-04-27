@@ -343,7 +343,7 @@ bool latexDetermineContexts2(QDocumentLineHandle *dlh, TokenStack &stack, Comman
                 //possible command argument without brackets
                 CommandDescription &cd = commandStack.top();
                 if (cd.args > 0) {
-                    cd.optionalArgs = 0; // no optional arguments after mandatory
+                    //cd.optionalArgs = 0; // relax no optional arguments after mandatory, e.g. \newcommand\abc[1]{adadf}, #3073
                     cd.bracketArgs = 0;
                     cd.args--;
                     tk.subtype = cd.argTypes.takeFirst();
@@ -445,7 +445,10 @@ bool latexDetermineContexts2(QDocumentLineHandle *dlh, TokenStack &stack, Comman
                     tk.argLevel = ConfigManager::RUNAWAYLIMIT; // run-away prevention, needs to be >0 as otherwise closing barces are misinterpreted
                     if (!stack.isEmpty()) {
                         tk.subtype = stack.top().subtype;
-                        if(tk.subtype==Token::keyValArg){
+                        if(tk.subtype==Token::text){
+                            tk.subtype=Token::none; //avoid assignening text subtype to just arbitrary braces inside an argument, see #3040 (#2603)
+                        }
+                        if(stack.top().subtype==Token::keyValArg){
                             // still the generic argument, needs to be broken down to key or val
                             if(lastComma>0){
                                 // -> val

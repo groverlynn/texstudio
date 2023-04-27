@@ -60,6 +60,7 @@ UserMenuDialog::UserMenuDialog(QWidget *parent,  QString name, QLanguageFactory 
 	codeedit->editor()->setFlag(QEditor::AdjustIndent, false);
 	codeedit->editor()->setDisplayModifyTime(false);
 	codeedit->editor()->document()->setCenterDocumentInEditor(false);
+
 	languages->setLanguage(codeedit->editor(), "");
 	//QLineMarkPanel* lineMarkPanel=new QLineMarkPanel;
 	//QAction* lineMarkPanelAction=codeedit->addPanel(lineMarkPanel, QCodeEdit::West, false);
@@ -120,6 +121,7 @@ UserMenuDialog::UserMenuDialog(QWidget *parent,  QString name, QLanguageFactory 
 	connect(ui.triggerEdit, SIGNAL(textEdited(QString)), SLOT(triggerChanged()));
 	connect(ui.triggerHelp, SIGNAL(linkActivated(QString)), SLOT(showTooltip()));
 
+    codeedit->editor()->clearFocus();
 }
 
 UserMenuDialog::~UserMenuDialog()
@@ -255,6 +257,15 @@ QTreeWidgetItem *UserMenuDialog::findCreateFolder(QTreeWidgetItem *parent, QStri
     return parent;
 }
 
+void UserMenuDialog::keyPressEvent(QKeyEvent *e)
+{
+    if(e->key()==Qt::Key_Escape && codeedit->editor()->hasFocus()){
+        e->accept();
+        return;
+    }
+    QDialog::keyPressEvent(e);
+}
+
 void UserMenuDialog::change(QTreeWidgetItem *current,QTreeWidgetItem *previous)
 {
     Q_UNUSED(previous)
@@ -278,6 +289,8 @@ void UserMenuDialog::change(QTreeWidgetItem *current,QTreeWidgetItem *previous)
         if (codeedit->editor()->text() != m.typedTag()) {
             codeedit->editor()->setText(m.typedTag(), false);
             setLanguageFromText();
+            codeedit->editor()->setFlag(QEditor::CursorOn,false);
+            codeedit->editor()->repaintCursor();
         }
     }
 }
@@ -449,6 +462,8 @@ void UserMenuDialog::changeTypeToNormal()
 	languages->setLanguage(codeedit->editor(), "(La)TeX Macro");
 	if (cur.startsWith("%SCRIPT\n")) codeedit->editor()->setText(cur.mid(8), false);
 	else if (cur.startsWith("%") && !cur.startsWith("%%")) codeedit->editor()->setText(cur.mid(1), false);
+    codeedit->editor()->setFlag(QEditor::CursorOn,false);
+    codeedit->editor()->repaintCursor();
 }
 
 void UserMenuDialog::changeTypeToEnvironment()
@@ -463,6 +478,8 @@ void UserMenuDialog::changeTypeToEnvironment()
 		if (!cur.startsWith("%")) cur = "%" + cur;
 		codeedit->editor()->setText(cur, false);
 	}
+    codeedit->editor()->setFlag(QEditor::CursorOn,false);
+    codeedit->editor()->repaintCursor();
 }
 
 void UserMenuDialog::changeTypeToScript()
@@ -472,6 +489,8 @@ void UserMenuDialog::changeTypeToScript()
 	if (cur.startsWith("%SCRIPT\n")) return;
 	if (cur.startsWith("%") && !cur.startsWith("%%")) cur = cur.mid(1);
 	codeedit->editor()->setText("%SCRIPT\n" + cur, false);
+    codeedit->editor()->setFlag(QEditor::CursorOn,false);
+    codeedit->editor()->repaintCursor();
 }
 
 void UserMenuDialog::textChanged()

@@ -301,6 +301,7 @@
 <file>completion/beamerthemeSzeged.cwl</file>
 <file>completion/beamerthemetamu.cwl</file>
 <file>completion/beamerthemethubeamer.cwl</file>
+<file>completion/beamerthemeTianQing.cwl</file>
 <file>completion/beamerthemeTorinoTh.cwl</file>
 <file>completion/beamerthemetree.cwl</file>
 <file>completion/beamerthemetrigon.cwl</file>
@@ -581,6 +582,7 @@
 <file>completion/CJK.cwl</file>
 <file>completion/CJKfntef.cwl</file>
 <file>completion/CJKnumb.cwl</file>
+<file>completion/CJKpunct.cwl</file>
 <file>completion/CJKutf8.cwl</file>
 <file>completion/cjkutf8-josa.cwl</file>
 <file>completion/cjkutf8-ko.cwl</file>
@@ -837,6 +839,7 @@
 <file>completion/class-njustthesis.cwl</file>
 <file>completion/class-njuthesis.cwl</file>
 <file>completion/class-nlctdoc.cwl</file>
+<file>completion/class-nostarch.cwl</file>
 <file>completion/class-novel.cwl</file>
 <file>completion/class-nwafuthesis.cwl</file>
 <file>completion/class-nwejmart.cwl</file>
@@ -980,6 +983,7 @@
 <file>completion/ClearSans.cwl</file>
 <file>completion/clefval.cwl</file>
 <file>completion/cleveref.cwl</file>
+<file>completion/cleveref-usedon.cwl</file>
 <file>completion/clicks.cwl</file>
 <file>completion/clipboard.cwl</file>
 <file>completion/clock.cwl</file>
@@ -1297,6 +1301,7 @@
 <file>completion/efbox.cwl</file>
 <file>completion/eforms.cwl</file>
 <file>completion/egothic.cwl</file>
+<file>completion/egpeirce.cwl</file>
 <file>completion/egplot.cwl</file>
 <file>completion/egypto.cwl</file>
 <file>completion/Eichenla.cwl</file>
@@ -1319,6 +1324,7 @@
 <file>completion/embedfile.cwl</file>
 <file>completion/embrac.cwl</file>
 <file>completion/emf.cwl</file>
+<file>completion/emo.cwl</file>
 <file>completion/emojicite.cwl</file>
 <file>completion/emoji.cwl</file>
 <file>completion/emp.cwl</file>
@@ -1464,6 +1470,7 @@
 <file>completion/fcprefix.cwl</file>
 <file>completion/fdsymbol.cwl</file>
 <file>completion/fdulogo.cwl</file>
+<file>completion/FenetreCas.cwl</file>
 <file>completion/fenixpar.cwl</file>
 <file>completion/fenixtok.cwl</file>
 <file>completion/fetamont.cwl</file>
@@ -1607,6 +1614,7 @@
 <file>completion/gbt7714.cwl</file>
 <file>completion/gchords.cwl</file>
 <file>completion/gckanbun.cwl</file>
+<file>completion/gelasio.cwl</file>
 <file>completion/genealogytree.cwl</file>
 <file>completion/gensymb.cwl</file>
 <file>completion/gentiumbook.cwl</file>
@@ -1769,6 +1777,7 @@
 <file>completion/hieroglf.cwl</file>
 <file>completion/highlightlatex.cwl</file>
 <file>completion/HindMadurai.cwl</file>
+<file>completion/hitex.cwl</file>
 <file>completion/hlist.cwl</file>
 <file>completion/hmtrump.cwl</file>
 <file>completion/hnja2hngl.cwl</file>
@@ -1885,6 +1894,7 @@
 <file>completion/iwona.cwl</file>
 <file>completion/jamtimes.cwl</file>
 <file>completion/JeuxCartes.cwl</file>
+<file>completion/jiazhu.cwl</file>
 <file>completion/jigsaw.cwl</file>
 <file>completion/jiwonlipsum.cwl</file>
 <file>completion/jkmath.cwl</file>
@@ -2297,6 +2307,7 @@
 <file>completion/midpage.cwl</file>
 <file>completion/miller.cwl</file>
 <file>completion/milstd.cwl</file>
+<file>completion/milsymb.cwl</file>
 <file>completion/mindflow.cwl</file>
 <file>completion/minibox.cwl</file>
 <file>completion/minidocument.cwl</file>
@@ -2481,6 +2492,7 @@
 <file>completion/Nouveaud.cwl</file>
 <file>completion/nowidow.cwl</file>
 <file>completion/nowtoaux.cwl</file>
+<file>completion/nshyper.cwl</file>
 <file>completion/ntabbing.cwl</file>
 <file>completion/nth.cwl</file>
 <file>completion/ntheorem.cwl</file>
@@ -2534,6 +2546,7 @@
 <file>completion/orcidlink.cwl</file>
 <file>completion/ordinalpt.cwl</file>
 <file>completion/orientation.cwl</file>
+<file>completion/osda.cwl</file>
 <file>completion/Oswald.cwl</file>
 <file>completion/otf.cwl</file>
 <file>completion/otfontdef.cwl</file>
@@ -2625,6 +2638,7 @@
 <file>completion/pgf.cwl</file>
 <file>completion/pgf-filehook.cwl</file>
 <file>completion/pgffor.cwl</file>
+<file>completion/pgffor-ext.cwl</file>
 <file>completion/pgfgantt.cwl</file>
 <file>completion/pgf-interference.cwl</file>
 <file>completion/pgfkeys.cwl</file>
@@ -2950,6 +2964,7 @@
 <file>completion/pythonhighlight.cwl</file>
 <file>completion/pythonimmediate.cwl</file>
 <file>completion/pythontex.cwl</file>
+<file>completion/qcircuit.cwl</file>
 <file>completion/qcm.cwl</file>
 <file>completion/qqru.cwl</file>
 <file>completion/qrbill.cwl</file>
@@ -2960,6 +2975,7 @@
 <file>completion/qtree.cwl</file>
 <file>completion/quantikz.cwl</file>
 <file>completion/quattrocento.cwl</file>
+<file>completion/quickreaction.cwl</file>
 <file>completion/quiz2socrative.cwl</file>
 <file>completion/quotchap.cwl</file>
 <file>completion/quoted.cwl</file>
@@ -3116,9 +3132,9 @@
 <file>completion/sdapslayout.cwl</file>
 <file>completion/se2colors.cwl</file>
 <file>completion/se2fonts.cwl</file>
+<file>completion/se2packages.cwl</file>
 <file>completion/secdot.cwl</file>
 <file>completion/secnum.cwl</file>
-<file>completion/secsty.cwl</file>
 <file>completion/sectionbox.cwl</file>
 <file>completion/sectionbreak.cwl</file>
 <file>completion/sectsty.cwl</file>
@@ -3358,6 +3374,7 @@
 <file>completion/tagpair.cwl</file>
 <file>completion/tagpdf.cwl</file>
 <file>completion/tameflts.cwl</file>
+<file>completion/tangocolors.cwl</file>
 <file>completion/TangramTikz.cwl</file>
 <file>completion/tascmac.cwl</file>
 <file>completion/tasks.cwl</file>
@@ -3541,8 +3558,11 @@
 <file>completion/tikzlibraryext.calendar-plus.cwl</file>
 <file>completion/tikzlibraryexternal.cwl</file>
 <file>completion/tikzlibraryext.misc.cwl</file>
+<file>completion/tikzlibraryext.node-families.cwl</file>
 <file>completion/tikzlibraryext.node-families.shapes.geometric.cwl</file>
+<file>completion/tikzlibraryext.nodes.cwl</file>
 <file>completion/tikzlibraryext.paths.arcto.cwl</file>
+<file>completion/tikzlibraryext.paths.timer.cwl</file>
 <file>completion/tikzlibraryext.patterns.images.cwl</file>
 <file>completion/tikzlibraryext.positioning-plus.cwl</file>
 <file>completion/tikzlibraryext.scalepicture.cwl</file>
@@ -3574,6 +3594,7 @@
 <file>completion/tikzlibrarymatrix.skeleton.cwl</file>
 <file>completion/tikzlibrarymindmap.cwl</file>
 <file>completion/tikzlibrarynef.cwl</file>
+<file>completion/tikzlibrarynfold.cwl</file>
 <file>completion/tikzlibraryocgx.cwl</file>
 <file>completion/tikzlibraryoptics.cwl</file>
 <file>completion/tikzlibraryoverlay-beamer-styles.cwl</file>
@@ -4008,6 +4029,7 @@
 <file>completion/zennote.cwl</file>
 <file>completion/zhlineskip.cwl</file>
 <file>completion/zhlipsum.cwl</file>
+<file>completion/zhmCJK.cwl</file>
 <file>completion/zhnumber.cwl</file>
 <file>completion/zhspacing.cwl</file>
 <file>completion/zi4.cwl</file>
