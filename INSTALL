@@ -15,9 +15,9 @@ Requirements :
 * Poppler for the internal pdf preview 
   (is automatically disabled if poppler is not found)
 * For MacOS, brew deliberately broke the poppler package. Try the following poppler-qt6:
-* wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/poppler-23.02.0-Darwin.tar.xz
-* sudo tar xvf ./poppler-23.02.0-Darwin.tar.xz -C /usr/local/QtBase-6.4.2-Darwin --strip-components=1
-* rm poppler-23.02.0-Darwin.tar.xz
+* wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.5.0/poppler-23.04.0-Darwin.tar.xz
+* sudo tar xvf ./poppler-23.04.0-Darwin.tar.xz -C /usr/local/qtbase-6.5.0 --strip-components=1
+* rm poppler-23.04.0-Darwin.tar.xz
 * mkdir build
 * cd build
 * cmake ..
@@ -42,3 +42,42 @@ Requirements :
 * cp -L /opt/homebrew/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
 * install_name_tool -add_rpath @loader_path/../Frameworks texstudio.app/Contents/MacOS/texstudio
 * /opt/Qt/6.4.2/macos/bin/macdeployqt texstudio.app -no-strip -dmg -always-overwrite
+
+
+# build per github
+## poppler
+wget https://github.com/sunderme/homebrew-qt6/releases/download/6.4.2/QtBase-6.4.2-Darwin.tar.xz
+sudo tar xvf ./QtBase-6.4.2-Darwin.tar.xz -C /usr/local
+rm QtBase-6.4.2-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/QtSvg-6.4.2-Darwin.tar.xz
+sudo tar xvf ./QtSvg-6.4.2-Darwin.tar.xz -C /usr/local/QtBase-6.4.2-Darwin --strip-components=1
+rm QtSvg-6.4.2-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/Qt5Compat-6.4.2-Darwin.tar.xz
+sudo tar xvf ./Qt5Compat-6.4.2-Darwin.tar.xz -C /usr/local/QtBase-6.4.2-Darwin --strip-components=1
+rm Qt5Compat-6.4.2-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/QtTools-6.4.2-Darwin.tar.xz
+sudo tar xvf ./QtTools-6.4.2-Darwin.tar.xz -C /usr/local/QtBase-6.4.2-Darwin --strip-components=1
+rm QtTools-6.4.2-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/QtDeclarative-6.4.2-Darwin.tar.xz
+sudo tar xvf ./QtDeclarative-6.4.2-Darwin.tar.xz -C /usr/local/QtBase-6.4.2-Darwin --strip-components=1
+rm QtDeclarative-6.4.2-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/poppler-23.02.0-Darwin.tar.xz
+sudo tar xvf ./poppler-23.02.0-Darwin.tar.xz -C /usr/local --strip-components=1
+rm poppler-23.02.0-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.4.2/QuaZip-1.4-Darwin.tar.xz
+sudo tar xvf ./QuaZip-1.4-Darwin.tar.xz -C /usr/local --strip-components=1
+rm QuaZip--23.02.0-Darwin.tar.xz
+brew install cairo fontconfig freetype gettext jpeg libpng libtiff little-cms2 nspr nss openjpeg
+brew install ninja pkg-config
+## configure
+mkdir build
+cd build
+/usr/local/QtBase-6.4.2-Darwin/bin/qt-cmake .. -G Ninja
+## Build
+cmake --build . --parallel
+## workaround
+mkdir -p texstudio.app/Contents/Frameworks
+cp /opt/homebrew/lib/libbrotlicommon.1.dylib texstudio.app/Contents/Frameworks
+touch texstudio.app/Contents/Resources/empty.lproj
+## package
+/usr/local/QtBase-6.4.2-Darwin/bin/macdeployqt texstudio.app -dmg
