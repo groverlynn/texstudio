@@ -1086,8 +1086,19 @@ bool LatexDocument::patchStructure(int linenr, int count, bool recheck)
                 QString firstOptArg = Parsing::getArg(args, dlh, 0, ArgumentList::Optional);
                 if (cmd == "\\documentclass") {
                     //special treatment for documentclass, especially for the class options
-                    // at the moment a change here soes not automatically lead to an update of corresponding definitions, here babel
+                    // at the moment a change here does not automatically lead to an update of corresponding definitions, here babel
                     mClassOptions = firstOptArg;
+                    // special treatment for subfile class
+                    m_isSubfileRoot=(firstArg=="subfiles");
+                    if(firstArg=="subfiles"){
+                        // optional argument points to actual root
+                        // this is used to load that document
+                        QString fname = findFileName(firstOptArg);
+                        LatexDocument *dc = parent->findDocumentFromName(fname);
+                        if (!dc) {
+                            parent->addDocToLoad(fname);
+                        }
+                    }
                 }
 
                 QStringList packages;
@@ -2092,7 +2103,7 @@ QString LatexDocuments::getCompileFileName() const
 		return currentDocument->findFileName(curDocFile);
 	}
 	//
-	const LatexDocument *rootDoc = currentDocument->getRootDocument();
+    const LatexDocument *rootDoc = currentDocument->getRootDocument(nullptr,true);
 	curDocFile = currentDocument->getFileName();
 	if (rootDoc)
 		curDocFile = rootDoc->getFileName();
@@ -2407,6 +2418,9 @@ void LatexDocument::appendStructure(StructureEntry *base, StructureEntry *additi
             break; // no further level to go down
         }
         se=se->children.last();
+        if(se->type  != StructureEntry::SE_SECTION){
+            break; // no structure
+        }
         for(int j=se->level;j<lp.structureDepth();++j){
             parent_level[j+1]=se;
         }
@@ -2865,14 +2879,23 @@ void LatexDocuments::updateMasterSlaveRelations(LatexDocument *doc, bool recheck
 		doc->emitUpdateCompleter();
     }
 }
-
-const LatexDocument *LatexDocument::getRootDocument(QSet<const LatexDocument *> *visitedDocs) const
+/*!
+ * \brief get root document
+ * Walk up through document structures
+ * \param visitedDocs keep track of visisted document to break closed circles
+ * \param breakAtSubfileRoot break at a dtected subfile root
+ * \return detected root document
+ */
+const LatexDocument *LatexDocument::getRootDocument(QSet<const LatexDocument *> *visitedDocs,bool breakAtSubfileRoot) const
 {
 	// special handling if explicit master is set
     if(!parent) return nullptr;
 	if (parent && parent->masterDocument)
 		return parent->masterDocument;
-	const LatexDocument *result = this;
+    const LatexDocument *result = this;
+    if(breakAtSubfileRoot && m_isSubfileRoot){
+        return result;
+    }
 	bool deleteVisitedDocs = false;
 	if (!visitedDocs) {
 		visitedDocs = new QSet<const LatexDocument *>();
@@ -3225,8 +3248,13 @@ QSet<QString> LatexDocument::usedPackages()
 	}
 	return packages;
 }
-
-LatexDocument *LatexDocuments::getRootDocumentForDoc(LatexDocument *doc) const   // doc==0 means current document
+/*!
+ * \brief LatexDocuments::getRootDocumentForDoc
+ * \param doc
+ * \param breakAtSubfileRoot check if one of the parent documents is a subfiles root and use that instead of the actual root document
+ * \return found "root" document
+ */
+LatexDocument *LatexDocuments::getRootDocumentForDoc(LatexDocument *doc,bool breakAtSubfileRoot) const   // doc==0 means current document
 {
 	if (masterDocument)
 		return masterDocument;
@@ -3235,7 +3263,7 @@ LatexDocument *LatexDocuments::getRootDocumentForDoc(LatexDocument *doc) const  
 		current = doc;
 	if (!current)
 		return current;
-	return current->getRootDocument();
+    return const_cast<LatexDocument *>(current->getRootDocument(nullptr,breakAtSubfileRoot));
 }
 
 QString LatexDocument::getAbsoluteFilePath(const QString &relName, const QString &extension, const QStringList &additionalSearchPaths) const
