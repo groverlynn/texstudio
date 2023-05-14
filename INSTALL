@@ -27,8 +27,8 @@ Requirements :
 * bash BUILD.sh
 
 * One-liner:
-* /opt/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -DQT_QMAKE_EXECUTABLE:STRING=/opt/Qt/6.4.2/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/opt/Qt/6.4.2/macos -DCMAKE_C_COMPILER:STRING=/opt/homebrew/bin/gcc-12 -DCMAKE_CXX_COMPILER:STRING=/opt/homebrew/bin/g++-12
-* /opt/Qt/Tools/CMake/CMake.app/Contents/bin/cmake --build . --parallel
+* /Applications/Qt/Tools/CMake/CMake.app/Contents/bin/cmake -S .. -B . -GNinja -DCMAKE_BUILD_TYPE:STRING=Debug -DQT_QMAKE_EXECUTABLE:STRING=/Applications/Qt/6.5.0/macos/bin/qmake -DCMAKE_PREFIX_PATH:STRING=/Applications/Qt/6.5.0/macos -DCMAKE_C_COMPILER:STRING=/opt/homebrew/bin/gcc-12 -DCMAKE_CXX_COMPILER:STRING=/opt/homebrew/bin/g++-12
+* /Applications/Qt/Tools/CMake/CMake.app/Contents/bin/cmake --build . --parallel
 
 * Or, manually:
 * mkdir build
@@ -46,7 +46,7 @@ Requirements :
 
 # build per github
 ## poppler
-wget https://github.com/sunderme/homebrew-qt6/releases/download/6.5.0/QtBase-6.5.0-Darwin.tar.xz
+wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.5.0/QtBase-6.5.0-Darwin.tar.xz
 sudo tar xvf ./QtBase-6.5.0-Darwin.tar.xz -C /opt
 rm QtBase-6.5.0-Darwin.tar.xz
 wget https://github.com/sunderme/homebrew-qt6-modules/releases/download/6.5.0/QtSvg-6.5.0-Darwin.tar.xz
