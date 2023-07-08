@@ -782,7 +782,7 @@ void SyntaxCheck::checkLine(const QString &line, Ranges &newRanges, StackEnviron
                     }
                 }
             }
-			if (ltxCommands->possibleCommands["user"].contains(word) || ltxCommands->customCommands.contains(word))
+            if (ltxCommands->possibleCommands["user"].contains(word))
 				continue;
 			if (!checkCommand(word, activeEnv)) {
 				Error elem;
@@ -902,6 +902,13 @@ void SyntaxCheck::checkLine(const QString &line, Ranges &newRanges, StackEnviron
 						}
 					}
 				}
+                if(option.contains("colspec")){
+                    const QRegularExpression re{"^(.*colspec\\s*[=]\\s*\\{)(.*)\\}"};
+                    const QRegularExpressionMatch match = re.match(option);
+                    if (match.hasMatch()) {
+                        option = match.captured(2);
+                    }
+                }
 				QSet<QString> translationMap=ltxCommands->possibleCommands.value("%columntypes");
 				QStringList res = LatexTables::splitColDef(option);
 				QStringList res2;
@@ -1071,7 +1078,7 @@ void SyntaxCheck::checkLine(const QString &line, Ranges &newRanges, StackEnviron
                 }
             }
 
-			if (ltxCommands->possibleCommands["user"].contains(word) || ltxCommands->customCommands.contains(word))
+            if (ltxCommands->possibleCommands["user"].contains(word))
 				continue;
 
 			if (!checkCommand(word, activeEnv)) {

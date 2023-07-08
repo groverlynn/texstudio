@@ -137,6 +137,7 @@ private:
     void setStructureSectionIcons();
     void updateStatusBarIcons();
     void updatePDFIcons();
+	void setCheckedPreviewModeAction();
 
 	void updateUserMacros(bool updateMenu = true);
 
@@ -343,7 +344,7 @@ private slots:
 	void fileDiffMerge();
 	void declareConflictResolved();
 protected slots:
-    void openExternalFile(QString name, const QString &defaultExt = "tex", LatexDocument *doc = nullptr,bool relativeToCurrentDoc=false); // signaled by latexViewer to open specific file
+    LatexEditorView * openExternalFile(QString name, const QString &defaultExt = "tex", LatexDocument *doc = nullptr,bool relativeToCurrentDoc=false); // signaled by latexViewer to open specific file
     void openExternalFileFromAction();
 
 	void editUndo(); ///< undo changes in text editor
@@ -376,7 +377,6 @@ protected slots:
 	void editThesaurus(int line = -1, int col = -1);
 	void editChangeLineEnding();
 	void setPreviewMode();
-	void setCheckedPreviewModeAction();
 	void editSetupEncoding();
 	void editInsertUnicode(); ///< open dialog to insert a unicode character
 	void editInsertRefToNextLabel(const QString &refCmd = "\\ref", bool backward = false);

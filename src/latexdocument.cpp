@@ -208,9 +208,14 @@ QDocumentSelection LatexDocument::sectionSelection(StructureEntry *section)
 	return result;
 }
 
+void LatexDocument::clearAppendix()
+{
+    mAppendixLine = nullptr;
+}
+
 class LatexStructureMerger{
 public:
-	LatexStructureMerger (LatexDocument* document, int maxDepth):
+    LatexStructureMerger (LatexDocument* document, int maxDepth):
 		document(document), parent_level(maxDepth)
 	{
 	}
@@ -1127,7 +1132,8 @@ bool LatexDocument::patchStructure(int linenr, int count, bool recheck)
 #endif
 				//add new bibs and set bibTeXFilesNeedsUpdate if there was any change
 				foreach (const QString &elem, bibs) { //latex doesn't seem to allow any spaces in file names
-					mMentionedBibTeXFiles.insert(line(i).handle(), FileNamePair(elem, getAbsoluteFilePath(elem, "bib", additionalBibPaths)));
+                    QString absolutePath=getAbsoluteFilePath(elem, "bib", additionalBibPaths);
+                    mMentionedBibTeXFiles.insert(line(i).handle(), FileNamePair(elem, absolutePath));
 					if (oldBibs.removeAll(elem) == 0)
 						bibTeXFilesNeedsUpdate = true;
 				}
@@ -1532,6 +1538,24 @@ QMultiHash<QDocumentLineHandle *, int> LatexDocument::getLabels(const QString &n
 	}
 	return result;
 }
+/*!
+ * \brief find first document which defines given label
+ * \param name
+ * \return document
+ */
+LatexDocument* LatexDocument::getDocumentForLabel(const QString &name){
+    foreach (LatexDocument *elem, getListOfDocs()) {
+        QMultiHash<QDocumentLineHandle *, ReferencePair>::const_iterator it;
+        for (it = elem->mLabelItem.constBegin(); it != elem->mLabelItem.constEnd(); ++it) {
+            ReferencePair rp = it.value();
+            if (rp.name == name) {
+                return elem;
+            }
+        }
+    }
+    return nullptr;
+}
+
 
 QDocumentLineHandle *LatexDocument::findCommandDefinition(const QString &name)
 {
@@ -1686,6 +1710,11 @@ bool LatexDocument::containsChild(LatexDocument *doc) const
 	return childDocs.contains(doc);
 }
 
+LatexDocument *LatexDocument::getMasterDocument() const
+{
+    return masterDocument;
+}
+
 QList<LatexDocument *>LatexDocument::getListOfDocs(QSet<LatexDocument *> *visitedDocs)
 {
 	QList<LatexDocument *>listOfDocs;
@@ -1747,10 +1776,14 @@ void LatexDocument::recheckRefsLabels(QList<LatexDocument*> listOfDocs,QStringLi
 	QMultiHash<QDocumentLineHandle *, ReferencePair>::const_iterator it;
     QSet<QDocumentLineHandle*> dlhs;
 	for (it = mLabelItem.constBegin(); it != mLabelItem.constEnd(); ++it) {
-        dlhs.insert(it.key());
+        if(it.key()){
+            dlhs.insert(it.key());
+        }
     }
     for (it = mRefItem.constBegin(); it != mRefItem.constEnd(); ++it) {
-        dlhs.insert(it.key());
+        if(it.key()){
+            dlhs.insert(it.key());
+        }
     }
 
     for(QDocumentLineHandle *dlh : dlhs){
@@ -1835,8 +1868,10 @@ void LatexDocument::updateRefsLabels(const QString &ref)
 	QMultiHash<QDocumentLineHandle *, int>::const_iterator it;
 	for (it = occurences.constBegin(); it != occurences.constEnd(); ++it) {
 		QDocumentLineHandle *dlh = it.key();
-        dlh->clearOverlays(formatList);
         for(const int pos : occurences.values(dlh)) {
+            foreach (const auto &format, formatList) {
+                dlh->removeOverlay(QFormatRange(pos, ref.length(), format));
+            }
 			if (cnt > 1) {
 				dlh->addOverlay(QFormatRange(pos, ref.length(), referenceMultipleFormat));
 			} else if (cnt == 1) dlh->addOverlay(QFormatRange(pos, ref.length(), referencePresentFormat));
@@ -2238,7 +2273,9 @@ void LatexDocuments::updateBibFiles(bool updateFiles)
 			QMultiHash<QDocumentLineHandle *, FileNamePair>::iterator it = doc->mentionedBibTeXFiles().begin();
 			QMultiHash<QDocumentLineHandle *, FileNamePair>::iterator itend = doc->mentionedBibTeXFiles().end();
 			for (; it != itend; ++it) {
-				it.value().absolute = getAbsoluteFilePath(it.value().relative, ".bib", additionalBibPaths).replace(QDir::separator(), "/"); // update absolute path
+                if(it.value().absolute.isEmpty()){
+                    it.value().absolute = getAbsoluteFilePath(it.value().relative, ".bib", additionalBibPaths).replace(QDir::separator(), "/"); // update absolute path
+                }
 				mentionedBibTeXFiles << it.value().absolute;
 			}
 		}
@@ -2952,6 +2989,11 @@ LatexDocument *LatexDocument::getRootDocument()
     return const_cast<LatexDocument *>(getRootDocument(nullptr));
 }
 
+LatexDocument *LatexDocument::getTopMasterDocument()
+{
+    return getRootDocument();    // DEPRECATED: only the for backward compatibility of user scripts
+}
+
 QStringList LatexDocument::includedFiles(bool importsOnly)
 {
     QStringList helper;
@@ -3011,7 +3053,6 @@ bool LatexDocument::updateCompletionFiles(const bool forceUpdate, const bool for
 	QSet<QString> userCommandsForSyntaxCheck = ltxCommands.possibleCommands["user"];
 	QSet<QString> columntypeForSyntaxCheck = ltxCommands.possibleCommands["%columntypes"];
 	ltxCommands.optionCommands = pck.optionCommands;
-	ltxCommands.specialTreatmentCommands = pck.specialTreatmentCommands;
 	ltxCommands.specialDefCommands = pck.specialDefCommands;
 	ltxCommands.possibleCommands = pck.possibleCommands;
 	ltxCommands.environmentAliases = pck.environmentAliases;
@@ -3088,9 +3129,14 @@ const QSet<QString> &LatexDocument::getCWLFiles() const
 	return mCWLFiles;
 }
 
+QString LatexDocument::spellingDictName() const
+{
+    return mSpellingDictName;
+}
+
 void LatexDocument::emitUpdateCompleter()
 {
-	emit updateCompleter();
+    emit updateCompleter();
 }
 
 void LatexDocument::gatherCompletionFiles(QStringList &files, QStringList &loadedFiles, LatexPackage &pck, bool gatherForCompleter)
@@ -3326,8 +3372,25 @@ void LatexDocument::patchLinesContaining(const QStringList cmds)
 					break;
 				}
 			}
-		}
-	}
+        }
+    }
+}
+/*!
+ * \brief reparse unknown commands
+ * lp has been changed
+ */
+void LatexDocument::patchUnknownCommands()
+{
+    for(int i=0;i<lines();++i){
+        QDocumentLineHandle *dlh=line(i).handle();
+        TokenList tl = dlh->getCookieLocked(QDocumentLine::LEXER_COOKIE).value<TokenList >();
+        for(int j=0;j<tl.length();++j){
+            if(tl[j].type==Token::commandUnknown && tl[j].length>2){ // skip over '\\' and similar
+                patchStructure(i,1,true);
+                break;
+            }
+        }
+    }
 }
 
 void LatexDocuments::enablePatch(const bool enable)
@@ -3370,12 +3433,12 @@ void LatexDocument::updateLtxCommands(bool updateAll)
 	lp.append(LatexParser::getInstance()); // append commands set in config
 	QList<LatexDocument *>listOfDocs = getListOfDocs();
 	foreach (const LatexDocument *elem, listOfDocs) {
-		lp.append(elem->ltxCommands);
+        lp.append(elem->ltxCommands);
 	}
 
 	if (updateAll) {
 		foreach (LatexDocument *elem, listOfDocs) {
-            elem->setLtxCommands(lp);
+            elem->setLtxCommands(lp, (elem==this)  && !updateAll);
             elem->reCheckSyntax();
 		}
 		// check if other document have this doc as child as well (reused doc...)
@@ -3405,14 +3468,26 @@ void LatexDocument::updateLtxCommands(bool updateAll)
 
 	LatexEditorView *view = getEditorView();
 	if (view) {
-		view->updateReplamentList(lp, false);
-	}
+        view->updateReplamentList(lp, false);
+    }
+}
+/*!
+ * \brief add latex commands from new loaded (cached) document to root document
+ * Do not recreate the whole command list
+ */
+void LatexDocument::addLtxCommands()
+{
+    lp.append(this->ltxCommands);
 }
 
-void LatexDocument::setLtxCommands(const LatexParser &cmds)
+void LatexDocument::setLtxCommands(const LatexParser &cmds,bool skipPatch)
 {
 	SynChecker.setLtxCommands(cmds);
 	lp = cmds;
+    // reparse unknown commands
+    if(!skipPatch){
+        patchUnknownCommands();
+    }
 
 	LatexEditorView *view = getEditorView();
 	if (view) {
@@ -3505,6 +3580,8 @@ bool LatexDocument::languageIsLatexLike() const
  */
 void LatexDocument::reCheckSyntax(int lineStart, int lineNum)
 {
+    if(isIncompleteInMemory()) return; // no syntax check on cached documents
+
 	// Basic sanity checks
 	Q_ASSERT(lineStart >= 0);
 	Q_ASSERT((lineNum == -1) || (lineNum > 0));
@@ -3576,6 +3653,16 @@ QString LatexDocument::getLastEnvName(int lineNumber)
         return "";
     return env.top().name;
 }
+
+void LatexDocument::enableSyntaxCheck(bool enable)
+{
+    syntaxChecking = enable;
+    SynChecker.enableSyntaxCheck(enable);
+}
+
+bool LatexDocument::isSubfileRoot(){
+    return m_isSubfileRoot;
+}
 /*!
  * \brief save internal data for caching
  * Data contains labels,user commands and children documents
@@ -3593,6 +3680,15 @@ bool LatexDocument::saveCachingData(const QString &folder)
 
     QFileInfo fi=getFileInfo();
     QFile file(folder+"/"+fi.baseName()+".json");
+
+    // remove cache if dealing with modified, unsaved changes as saved text differs
+    if(!isClean()){
+        if(file.exists()){
+            file.remove();
+        }
+        return false;
+    }
+
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         return false;
 
@@ -3601,20 +3697,36 @@ bool LatexDocument::saveCachingData(const QString &folder)
         ja_labels.append(elem.name);
     }
 
+    QJsonArray ja_refs;
+    for(const auto &elem:mRefItem){
+        ja_refs.append(elem.name);
+    }
+
     QJsonArray ja_docs;
-    for(const auto &elem:childDocs){
-        ja_docs.append(elem->fileName);
+    for(const auto &elem:includedFiles()){
+        ja_docs.append(elem);
     }
 
     QJsonArray ja_userCommands;
     for(const auto &elem:mUserCommandList.values()){
+        if(elem.name.isEmpty()) continue; // skip empty values
         ja_userCommands.append(elem.name);
     }
 
     QJsonArray ja_packages;
     for(const QString &elem:mUsepackageList.values()){
+        if(elem.endsWith("#subfiles") && elem != "#subfiles") continue; // filter class [file]{subfiles} as it leads to unnecessarily loading packages in cached files
         ja_packages.append(elem);
     }
+    QJsonArray ja_bibitems;
+    for(const auto &elem:mBibItem.values()){
+        ja_bibitems.append(elem.name);
+    }
+    QJsonArray ja_bibtexfiles;
+    for(const auto &elem:mMentionedBibTeXFiles.values()){
+        ja_bibtexfiles.append(elem.absolute+"#"+elem.relative);
+    }
+
     // store toc structure
     QStringList toc=unrollStructure();
     QJsonArray ja_toc;
@@ -3625,9 +3737,12 @@ bool LatexDocument::saveCachingData(const QString &folder)
     QJsonObject dd;
     dd["filename"]=getFileName();
     dd["labels"]=ja_labels;
+    dd["refs"]=ja_refs;
     dd["childdocs"]=ja_docs;
     dd["usercommands"]=ja_userCommands;
     dd["packages"]=ja_packages;
+    dd["bibitems"]=ja_bibitems;
+    dd["bibtexfiles"]=ja_bibtexfiles;
     dd["toc"]=ja_toc;
     dd["modified"]=fi.lastModified().toString();
 
@@ -3662,9 +3777,10 @@ bool LatexDocument::restoreCachedData(const QString &folder,const QString fileNa
     QJsonObject dd=jsonDoc.object();
     // check modified data
     QString modifiedDate=dd["modified"].toString();
-    if(fi.lastModified().toString()!=modifiedDate){
+    auto delta=fi.lastModified().toSecsSinceEpoch()-QDateTime::fromString(modifiedDate).toSecsSinceEpoch();
+    if(delta>1){ // add 1 second tolerance when determine if obsolete
         // cache is obsolete
-        qDebug()<<"cached data obsolete: "<<fileName;
+        qDebug()<<"cached data obsolete: "<<fileName<<fi.lastModified().toString()<<modifiedDate<<fi.absoluteFilePath();
         return false;
     }
 
@@ -3674,6 +3790,7 @@ bool LatexDocument::restoreCachedData(const QString &folder,const QString fileNa
         // filename does not match exactly
         return false;
     }
+    setFileName(fileName);
     QJsonArray ja=dd.value("labels").toArray();
     for (int i = 0; i < ja.size(); ++i) {
         QString lbl=ja[i].toString();
@@ -3681,14 +3798,34 @@ bool LatexDocument::restoreCachedData(const QString &folder,const QString fileNa
         rp.name=lbl;
         mLabelItem.insert(nullptr,rp);
     }
+    ja=dd.value("refs").toArray();
+    for (int i = 0; i < ja.size(); ++i) {
+        QString lbl=ja[i].toString();
+        ReferencePair rp;
+        rp.name=lbl;
+        mRefItem.insert(nullptr,rp);
+    }
+    ja=dd.value("bibitems").toArray();
+    for (int i = 0; i < ja.size(); ++i) {
+        QString lbl=ja[i].toString();
+        ReferencePair rp;
+        rp.name=lbl;
+        mBibItem.insert(nullptr,rp);
+    }
+    ja=dd.value("bibtexfiles").toArray();
+    for (int i = 0; i < ja.size(); ++i) {
+        QString lbl=ja[i].toString();
+        QStringList lbls=lbl.split("#");
+        if(lbls.size()==2){
+            FileNamePair fnp(lbls[1],lbls[0]);
+            mMentionedBibTeXFiles.insert(nullptr,fnp);
+        }
+    }
+
     ja=dd.value("childdocs").toArray();
     for (int i = 0; i < ja.size(); ++i) {
         QString fn=ja[i].toString();
         mIncludedFilesList.insert(nullptr,fn);
-        LatexDocument *dc = parent->findDocumentFromName(fn);
-        if (!dc) {
-            parent->addDocToLoad(fn);
-        }
     }
     ja=dd.value("usercommands").toArray();
     for (int i = 0; i < ja.size(); ++i) {
@@ -3698,9 +3835,11 @@ bool LatexDocument::restoreCachedData(const QString &folder,const QString fileNa
         ltxCommands.possibleCommands["user"].insert(cmd);
     }
     ja=dd.value("packages").toArray();
+    bool addedPackages=false;
     for (int i = 0; i < ja.size(); ++i) {
         QString package=ja[i].toString();
         mUsepackageList.insert(nullptr,package);
+        addedPackages=true;
     }
     ja=dd.value("toc").toArray();
     QVector<StructureEntry *> parent_level(lp.structureDepth()+1);
@@ -3734,6 +3873,9 @@ bool LatexDocument::restoreCachedData(const QString &folder,const QString fileNa
         for(int k=pos+1;k<parent_level.size();++k){
             parent_level[k]=se;
         }
+    }
+    if(addedPackages){
+        updateCompletionFiles(false, false, true);
     }
     m_cachedDataOnly=true;
     return true;

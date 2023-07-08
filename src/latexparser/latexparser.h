@@ -35,20 +35,14 @@ public:
 	}
 	int structureCommandLevel(const QString &cmd) const;
 
-	/// realizes whether col is in a \command or in a parameter {}
-	int findContext(QString &line, int &column) const;
-	ContextType findContext(const QString &line, int column, QString &command, QString &value) const;
-
 	QSet<QString> environmentCommands; ///< used by LatexReader only, obsolete
 	QSet<QString> optionCommands; ///< used by LatexReader only, obsolete
 	QStringList mathStartCommands; ///< commands to start math-mode like '$'
 	QStringList mathStopCommands; ///< commands to stop math-mode like '$'
-	QSet<QString> customCommands; ///< commands defined in config dialog as custom commands
-	QMultiHash<QString, QString> packageAliases; ///< aliases for classes to packages e.g. article = latex-document, etc
+    QMultiHash<QString, QString> packageAliases; ///< aliases for classes to packages e.g. article = latex-document, etc
 	QMultiHash<QString, QString> environmentAliases; ///< aliases for environments, e.g. equation is math, supertabular is also tab etc.
 	/// commands used for syntax check (per doc basis)
 	QHash<QString, QSet<QString> > possibleCommands;
-	QHash<QString, QSet<QPair<QString, int> > > specialTreatmentCommands; ///< special commands, obsolete
 	QHash<QString, QString> specialDefCommands; ///< define special elements, e.g. define color etc
 	QMap<int, QString> mapSpecialArgs;
 

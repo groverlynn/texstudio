@@ -1495,7 +1495,7 @@ void Texstudio::setupMenus()
 	configManager.modifyManagedShortcuts();
 }
 /*! \brief slot for actions from Menu Preview Display Mode
-*/
+ */
 void Texstudio::setPreviewMode()
 {
 	QAction *act = qobject_cast<QAction *>(sender());
@@ -1504,7 +1504,7 @@ void Texstudio::setPreviewMode()
 	}
 }
 /*! \brief set action for Menu Preview Display Mode
-*/
+ */
 void Texstudio::setCheckedPreviewModeAction()
 {
 	ConfigManager::PreviewMode pm = configManager.previewMode;
@@ -2191,7 +2191,9 @@ LatexEditorView *Texstudio::load(const QString &f , bool asProject, bool hidden,
         delete existingView;
         existingView=nullptr;
         LatexDocument *m=doc->getMasterDocument();
-        m->removeChild(doc);
+        if(m){
+            m->removeChild(doc);
+        }
         documents.deleteDocument(doc,true);
         doc=nullptr;
     }
@@ -2314,7 +2316,13 @@ LatexEditorView *Texstudio::load(const QString &f , bool asProject, bool hidden,
     documents.updateMasterSlaveRelations(doc, recheck);
 
     if (recheck || hidden) {
-		doc->updateLtxCommands();
+        if(!doc->isIncompleteInMemory() || !doc->containedPackages().isEmpty() || !doc->userCommandList().isEmpty()){
+            if(hidden){
+                doc->addLtxCommands();
+            }else{
+                doc->updateLtxCommands();
+            }
+        }
 	}
 
 	if (!hidden) {
@@ -2331,6 +2339,16 @@ LatexEditorView *Texstudio::load(const QString &f , bool asProject, bool hidden,
 		}
 
 	}
+    if(doc->isIncompleteInMemory()){
+        // load included files from cached document
+        foreach(const QString &fn,doc->includedFiles()){
+            LatexDocument *dc = documents.findDocumentFromName(fn);
+            if (!dc) {
+                documents.addDocToLoad(fn);
+            }
+        }
+
+    }
 
 	updateStructure(true, doc, true);
 
@@ -2350,6 +2368,18 @@ LatexEditorView *Texstudio::load(const QString &f , bool asProject, bool hidden,
 			Q_ASSERT(!fnp.absolute.isEmpty());
 			rootDoc->lastCompiledBibTeXFiles.insert(fnp.absolute);
 		}
+    }
+    if(doc->isIncompleteInMemory()){
+        // update bibid highlights
+        bool bibTeXFilesNeedsUpdate=!doc->mentionedBibTeXFiles().isEmpty();
+        if(bibTeXFilesNeedsUpdate || !doc->bibItems().isEmpty()){
+            documents.updateBibFiles(bibTeXFilesNeedsUpdate);
+            foreach (LatexDocument *elem, doc->getListOfDocs()) {
+                LatexEditorView *edView=elem->getEditorView();
+                if (edView)
+                    edView->updateCitationFormats();
+            }
+        }
     }
 
 #ifndef Q_OS_MAC
@@ -3943,7 +3973,7 @@ void Texstudio::editEraseWordCmdEnv()
 	// If the case |\cmd is encountered, we shift the
 	// cursor by one to \|cmd so the regular erase approach works.
 	int col = cursor.columnNumber();
-	if ((col < line.count())						// not at end of line
+    if ((col < line.size())						// not at end of line
 	        && (line.at(col) == '\\')					// likely a command/env - check further
 	        && (col == 0 || line.at(col - 1).isSpace()))	// cmd is at start or previous char is space: non-ambiguous situation like word|\cmd
 		// don't need to finally check for command |\c should be handled like \|c for any c (even space and empty)
@@ -4046,10 +4076,23 @@ void Texstudio::editGotoDefinition(QDocumentCursor c)
 	switch (tk.type) {
 	case Token::labelRef:
 	case Token::labelRefList: {
-		QMultiHash<QDocumentLineHandle *, int> defs = doc->getLabels(tk.getText());
-		if (defs.isEmpty()) return;
-        QDocumentLineHandle *target = defs.keys().constFirst();
-		LatexEditorView *edView = getEditorViewFromHandle(target);
+        QMultiHash<QDocumentLineHandle *, int> defs = doc->getLabels(tk.getText());
+        QDocumentLineHandle *target = nullptr;
+        LatexEditorView *edView = nullptr;
+        if (defs.isEmpty()){
+            LatexDocument *targetDoc=doc->getDocumentForLabel(tk.getText());
+            if(!targetDoc)
+                return;
+            edView = openExternalFile(targetDoc->getFileName(),"tex",targetDoc);
+            defs=edView->getDocument()->getLabels(tk.getText());
+            target = defs.keys().constFirst();
+        }else{
+            target = defs.keys().constFirst();
+            edView = getEditorViewFromHandle(target);
+            if(edView->isHidden()){
+                openExternalFile(target->document()->getFileName());
+            }
+        }
 		if (!edView) return;
 		if (edView != currentEditorView()) {
 			editors->setCurrentEditor(edView);
@@ -4723,7 +4766,6 @@ void Texstudio::normalCompletion()
 	QString command;
 	QDocumentCursor c = currentEditorView()->editor->cursor();
 	QDocumentLineHandle *dlh = c.line().handle();
-	//LatexParser::ContextType ctx=view->lp.findContext(word, c.columnNumber(), command, value);
 	TokenStack ts = Parsing::getContext(dlh, c.columnNumber());
 	Token tk;
 	if (!ts.isEmpty()) {
@@ -5080,10 +5122,6 @@ void Texstudio::insertTag(const QString &Entity, int dx, int dy)
 	else if (dx == 0) currentEditor()->setCursorPosition(curline + dy, 0);
 	else currentEditor()->setCursorPosition(curline + dy, curindex + dx);
 	currentEditor()->setFocus();
-	//	outputView->setMessage("");
-	//logViewerTabBar->setCurrentIndex(0);
-	//OutputTable->hide();
-	//logpresent=false;
 }
 
 /*!
@@ -5098,82 +5136,65 @@ void Texstudio::insertCitation(const QString &text)
 {
 	QString citeCmd, citeKey;
 
-	if (text.length() > 1 && text.at(0) == '\\') {
-		LatexParser::ContextType ctx = latexParser.findContext(text, 1, citeCmd, citeKey);
-		if (LatexParser::Command != ctx) {
-			citeCmd = "";
-			citeKey = text;
-		}
+    QRegularExpression re("^(\\\\\\w+\\*?)\\{(.*)\\}");
+    QRegularExpressionMatch match = re.match(text);
+    if (match.hasMatch()) {
+        citeCmd = match.captured(1);
+        citeKey = match.captured(2);
 	} else {
 		citeCmd = "";
 		citeKey = text;
 	}
 
 	if (!currentEditorView()) return;
-	QDocumentCursor c = currentEditor()->cursor();
-	QString line = c.line().text();
-	int cursorCol = c.columnNumber();
-	QString command, value;
-	LatexParser::ContextType context = latexParser.findContext(line, cursorCol, command, value);
+    QDocumentCursor c = currentEditor()->cursor();
+    QDocumentLineHandle *dlh= c.line().handle();
 
-	// Workaround: findContext yields Citation for \cite{..}|\n, but cursorCol is beyond the line,
-	// which causes a crash when determining the insertCol later on.
-	if (context == LatexParser::Citation && cursorCol == line.length() && cursorCol > 0) cursorCol--;
+    TokenStack ts = Parsing::getContext(dlh, c.columnNumber());
 
     // if cursor is directly behind a cite command, insert into that command
-	if (context != LatexParser::Citation && cursorCol > 0) {
-		LatexParser::ContextType prevContext = LatexParser::Unknown;
-		prevContext = latexParser.findContext(line, cursorCol - 1, command, value);
-		if (prevContext == LatexParser::Citation) {
-			cursorCol--;
-			context = prevContext;
-		}
-	}
+    if(!ts.isEmpty()){
+        Token tk=ts.last();
+        if(tk.type == Token::command){
+            // for now, simply assume that it should be added to the next argument
+            TokenList tl = dlh->getCookieLocked(QDocumentLine::LEXER_COOKIE).value<TokenList>();
+            int i = tl.indexOf(tk);
+            Token tk2=tl.value(i+1);
+            if(tk2.type==Token::braces && tk2.subtype == Token::bibItem){
+                tk=tk2; // let the normal code handle this
+                c.moveTo(c.lineNumber(),tk.start);
+            }else{
+                // don't indert in the middle of a command
+                return;
+            }
+        }
+        if(tk.type == Token::braces && tk.subtype == Token::bibItem){
+            if(c.columnNumber()==tk.start){
+                // left of braces, move one to the right
+                currentEditor()->setCursorPosition(c.lineNumber(), tk.start+1);
+                // check if braces are empty or not
+                ts = Parsing::getContext(dlh, c.columnNumber()+1);
+                if(!ts.isEmpty() && ts.last().type == Token::bibItem){
+                    insertTag(citeKey+",", citeKey.length()+1); // prepend key
+                    return;
+                }
+            }
+            insertTag(citeKey, citeKey.length());
+            return;
+        }
+        if(tk.type == Token::bibItem){
+            currentEditor()->setCursorPosition(c.lineNumber(), tk.start+tk.length);
+            insertTag(","+citeKey, citeKey.length()+1);
+            return;
+        }
 
-
-	int insertCol = -1;
-	if (context == LatexParser::Command && latexParser.possibleCommands["%cite"].contains(command)) {
-		insertCol = line.indexOf('{', cursorCol) + 1;
-	} else if (context == LatexParser::Citation) {
-		if (cursorCol <= 0) return; // should not be possible,
-		if (line.at(cursorCol) == '{' || line.at(cursorCol) == ',') {
-			insertCol = cursorCol + 1;
-		} else if (line.at(cursorCol - 1) == '{' || line.at(cursorCol - 1) == ',') {
-			insertCol = cursorCol;
-		} else {
-			int nextComma = line.indexOf(',', cursorCol);
-			int closingBracket = line.indexOf('}', cursorCol);
-			if (nextComma >= 0 && (closingBracket == -1 || closingBracket > nextComma)) {
-				insertCol = nextComma + 1;
-			} else if (closingBracket >= 0) {
-				insertCol = closingBracket;
-			}
-		}
-	} else {
-		QString tag;
-		if (citeCmd.isEmpty())
-            tag = citeCmd = configManager.citeCommand+"{" + citeKey + "}";
-		else
-			tag = text;
-		insertTag(tag, tag.length());
-		return;
-	}
-
-	if (insertCol < 0 || insertCol >= line.length()) return;
-
-	currentEditor()->setCursorPosition(c.lineNumber(), insertCol);
-	// now the insertCol is either behind '{', behind ',' or at '}'
-	if (insertCol > 0 && line.at(insertCol - 1) == '{') {
-		if (line.at(insertCol) == '}') {
-			insertTag(citeKey, citeKey.length());
-		} else {
-			insertTag(citeKey + ",", citeKey.length() + 1);
-		}
-	} else if (insertCol > 0 && line.at(insertCol - 1) == ',') {
-		insertTag(citeKey + ",", citeKey.length() + 1);
-	} else {
-		insertTag("," + citeKey, citeKey.length() + 1);
-	}
+    }
+    QString tag;
+    if (citeCmd.isEmpty())
+        tag = citeCmd = configManager.citeCommand+"{" + citeKey + "}";
+    else
+        tag = text;
+    insertTag(tag, tag.length());
 }
 
 void Texstudio::insertFormula(const QString &formula)
@@ -5267,13 +5288,7 @@ void Texstudio::callToolButtonAction()
 	REQUIRE(index >= 0);
 	REQUIRE(index < menu->actions().size());
 	QList<QAction *> actions = menu->actions();
-	for (int i = 0; i < actions.size(); i++) {
-		if (actions[i]->isSeparator()) continue;
-		if (index == 0) {
-			actions[i]->trigger();
-			break;
-		} else index--;
-	}
+    actions[index]->trigger();
 }
 
 void Texstudio::insertFromAction()
@@ -5898,13 +5913,15 @@ bool Texstudio::runCommand(const QString &commandline, QString *buffer, QTextCod
 			currentEditor()->saveCopy(tmpName);
 			currentEditorView()->document->setTemporaryFileName(tmpName);
 		} else {
-			QMessageBox::warning(this, tr("Error"), tr("Can't detect the file name.\nYou have to save a document before you can compile it."));
-			return false;
+            if(saveAll){
+                QMessageBox::warning(this, tr("Error"), tr("Can't detect the file name.\nYou have to save a document before you can compile it."));
+                return false;
+            }
 		}
 	}
 
 	QString finame = documents.getTemporaryCompileFileName();
-	if (finame == "") {
+    if (finame == "" && saveAll) {
 		UtilsUi::txsWarning(tr("Can't detect the file name"));
 		return false;
 	}
@@ -6954,8 +6971,8 @@ void Texstudio::generalOptions()
         delete pdfviewerWindow;
     }
 #endif
-    // update action from Menu Preview Display Mode
-	setCheckedPreviewModeAction();
+    // update Menu Idefix/Preview Display Mode
+    setCheckedPreviewModeAction();
 #ifdef INTERNAL_TERMINAL
     outputView->getTerminalWidget()->updateSettings();
 #endif
@@ -7752,7 +7769,7 @@ bool Texstudio::eventFilter(QObject *obj, QEvent *event)
             QTreeWidgetItem *item=structureTreeWidget->itemAt(helpEvent->pos());
             if(item){
                 StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
-                if(!entry)
+                if(!entry || !entry->document)
                     return false;
                 QString text;
                 if (!entry->tooltip.isNull()) {
@@ -7905,7 +7922,11 @@ void Texstudio::updateCompleter(LatexEditorView *edView)
 
         QStringList collected_mentionedBibTeXFiles;
         foreach (const LatexDocument *doc, docs) {
-            collected_mentionedBibTeXFiles << doc->listOfMentionedBibTeXFiles();
+            foreach(const QString &elem,doc->listOfMentionedBibTeXFiles()){
+                if(!collected_mentionedBibTeXFiles.contains(elem)){
+                    collected_mentionedBibTeXFiles << elem;
+                }
+            }
         }
 
         for (int i = 0; i < collected_mentionedBibTeXFiles.count(); i++) {
@@ -8055,10 +8076,9 @@ void Texstudio::gotoLine(QTreeWidgetItem *item, int)
             // going to hidden doc
             // relevant for hidden master document
             bool unmodified=se->document->isClean();
-            openExternalFile(se->document->getFileName(),"tex",se->document);
+            LatexEditorView *edView = openExternalFile(se->document->getFileName(),"tex",se->document);
             if(unmodified)
                 se->document->setClean(); // work-around, unclear where that state is reset during load
-            LatexEditorView *edView = se->document->getEditorView();
             if (edView) {
                 int ln= jumpToCachedDocument ? se->getCachedLineNumber() : se->getRealLineNumber();
                 gotoLine(ln, 0, edView);
@@ -8069,7 +8089,8 @@ void Texstudio::gotoLine(QTreeWidgetItem *item, int)
         if(se->type == StructureEntry::SE_DOCUMENT_ROOT){
             LatexEditorView *edView = se->document->getEditorView();
             if (!edView) return;
-            editors->setCurrentEditor(edView);
+            gotoLine(0, 0, edView);
+            //editors->setCurrentEditor(edView);
         }
         if(se->type==StructureEntry::SE_INCLUDE || se->type==StructureEntry::SE_BIBTEX){
             saveCurrentCursorToHistory();
@@ -8588,10 +8609,10 @@ void Texstudio::previewAvailable(const QString &imageFile, const PreviewSource &
 				completerPreview = false;
 				completer->showTooltip(text);
 			} else {
-                    QToolTip::showText(p.toPoint(), text, nullptr);
+                QToolTip::showText(p.toPoint(), text, nullptr);
 			}
-		}
-		LatexEditorView::hideTooltipWhenLeavingLine = currentEditorView()->editor->cursor().lineNumber();
+        }
+        LatexEditorView::hideTooltipWhenLeavingLine = currentEditorView()->editor->cursor().lineNumber();
 	}
 	if (configManager.previewMode == ConfigManager::PM_INLINE && source.fromLine >= 0) {
 		QDocument *doc = currentEditor()->document();
@@ -8872,9 +8893,9 @@ QStringList Texstudio::makePreviewHeader(const LatexDocument *rootDoc)
 	if ((buildManager.dvi2pngMode == BuildManager::DPM_EMBEDDED_PDF || buildManager.dvi2pngMode == BuildManager::DPM_LUA_EMBEDDED_PDF)
 			&& configManager.previewMode != ConfigManager::PM_EMBEDDED) {
 		header << "\\usepackage[active,tightpage]{preview}"
-		       << "\\usepackage{varwidth}"
-		       << "\\AtBeginDocument{\\begin{preview}\\begin{varwidth}{\\linewidth}}"
-		       << "\\AtEndDocument{\\end{varwidth}\\end{preview}}";
+			<< "\\usepackage{varwidth}"
+			<< "\\AtBeginDocument{\\begin{preview}\\begin{varwidth}{\\linewidth}}"
+			<< "\\AtEndDocument{\\end{varwidth}\\end{preview}}";
 	}
 	header << "\\pagestyle{empty}";// << "\\begin{document}";
 	return header;
@@ -9712,13 +9733,14 @@ void Texstudio::findMissingBracket()
 	if (c.isValid()) currentEditor()->setCursor(c);
 }
 
-void Texstudio::openExternalFile(QString name, const QString &defaultExt, LatexDocument *doc, bool relativeToCurrentDoc)
+LatexEditorView* Texstudio::openExternalFile(QString name, const QString &defaultExt, LatexDocument *doc, bool relativeToCurrentDoc)
 {
 	if (!doc) {
-		if (!currentEditor()) return;
+        if (!currentEditor()) return nullptr;
 		doc = qobject_cast<LatexDocument *>(currentEditor()->document());
 	}
-	if (!doc) return;
+    if (!doc) return nullptr;
+    if(doc->getFileName().isEmpty()) return nullptr; // unsaved file, no relative filename meaningful
 	name.remove('"');  // ignore quotes (http://sourceforge.net/p/texstudio/bugs/1366/)
     if(name.endsWith('#')){
         relativeToCurrentDoc=true;
@@ -9731,13 +9753,13 @@ void Texstudio::openExternalFile(QString name, const QString &defaultExt, LatexD
     if(relativeToCurrentDoc){
         curPaths<< ensureTrailingDirSeparator(doc->getFileInfo().absolutePath());
     }
-    bool loaded = false;
+    LatexEditorView * loaded = nullptr;
     loaded = load(documents.getAbsoluteFilePath(name, defaultExt,curPaths));
-    if(!loaded){
+    if(loaded == nullptr){
         loaded = load(documents.getAbsoluteFilePath(name, "",curPaths));
     }
 
-	if (!loaded) {
+    if (loaded == nullptr) {
         QFileInfo fi(documents.getAbsoluteFilePath(name, defaultExt,curPaths));
 		if (fi.exists()) {
 			UtilsUi::txsCritical(tr("Unable to open file \"%1\".").arg(fi.fileName()));
@@ -9754,6 +9776,7 @@ void Texstudio::openExternalFile(QString name, const QString &defaultExt, LatexD
 			}
 		}
     }
+    return loaded;
 }
 
 
@@ -10914,8 +10937,6 @@ void Texstudio::checkCWLs()
 		res << "\tspecial treatment commands";
 		foreach (const QString &key, package.specialDefCommands.keys()) {
 			QString line = QString("\t\t%1: ").arg(key);
-			foreach (const QPairQStringInt &pair, package.specialTreatmentCommands.value(key))
-				line += QString("%1 (%2)").arg(pair.first).arg(pair.second) + ", ";
 			line.chop(2);
 			res << line;
 		}
@@ -11471,6 +11492,7 @@ void Texstudio::updateTOC(){
         return;
     }
     root->setText(0,doc->getFileInfo().fileName());
+    root->setData(0,Qt::UserRole,QVariant::fromValue<StructureEntry *>(doc->baseStructure));
 
     StructureEntry *base=doc->baseStructure;
     QList<QTreeWidgetItem*> todoList;
@@ -11616,8 +11638,10 @@ bool Texstudio::parseStruct(StructureEntry* se, QVector<QTreeWidgetItem *> &root
         }
         if(elem->type == StructureEntry::SE_INCLUDE){
             LatexDocument *doc=elem->document;
-            //QString fn=ensureTrailingDirSeparator(doc->getRootDocument()->getFileInfo().absolutePath())+elem->title;
-            QFileInfo fi(doc->getRootDocument()->getFileInfo().absolutePath(),elem->title);
+            QString name=elem->title;
+            name.replace("\\string~",QDir::homePath());
+            QString fname = doc->findFileName(name);
+            QFileInfo fi(fname);
             doc=documents.findDocumentFromName(fi.absoluteFilePath());
             if(!doc){
                 doc=documents.findDocumentFromName(fi.absoluteFilePath()+".tex");
@@ -11793,7 +11817,7 @@ void Texstudio::createLabelFromAction()
     mDontScrollToItem = entry->type != StructureEntry::SE_SECTION;
     LatexEditorView *edView = entry->document->getEditorView();
     QEditor::MoveFlags mflags = QEditor::NavigationToHeader;
-    if (!edView) {
+    if (!edView || entry->document->isIncompleteInMemory()) {
         edView = load(entry->document->getFileName());
         if (!edView) return;
         mflags &= ~QEditor::Animated;
@@ -11875,9 +11899,12 @@ void Texstudio::editSectionCopy()
     StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
     if(!entry) return;
     LatexEditorView *edView = entry->document->getEditorView();
+    if(entry->document->isIncompleteInMemory()){
+        edView = openExternalFile(entry->document->getFileName(),"tex",entry->document);
+    }
     if(!edView) return;
     editors->setCurrentEditor(edView);
-    QDocumentSelection sel = entry->document->sectionSelection(entry);
+    QDocumentSelection sel = edView->document->sectionSelection(entry);
 
     edView->editor->setCursorPosition(sel.startLine, 0);
     QDocumentCursor cur = edView->editor->cursor();
@@ -11906,9 +11933,12 @@ void Texstudio::editSectionCut()
     StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
     if (!entry) return;
     LatexEditorView *edView = entry->document->getEditorView();
+    if(entry->document->isIncompleteInMemory()){
+        edView = openExternalFile(entry->document->getFileName(),"tex",entry->document);
+    }
     if (!edView) return;
     editors->setCurrentEditor(edView);
-    QDocumentSelection sel = entry->document->sectionSelection(entry);
+    QDocumentSelection sel = edView->document->sectionSelection(entry);
 
     edView->editor->setCursorPosition(sel.startLine, 0);
     QDocumentCursor cur = edView->editor->cursor();
@@ -11936,6 +11966,9 @@ void Texstudio::editSectionPasteBefore()
     StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
     if (!entry) return;
     LatexEditorView *edView = entry->document->getEditorView();
+    if(entry->document->isIncompleteInMemory()){
+        edView = openExternalFile(entry->document->getFileName(),"tex",entry->document);
+    }
     if (!edView) return;
     editors->setCurrentEditor(edView);
 
@@ -11962,9 +11995,12 @@ void Texstudio::editSectionPasteAfter()
     StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
     if (!entry) return;
     LatexEditorView *edView = entry->document->getEditorView();
+    if(entry->document->isIncompleteInMemory()){
+        edView = openExternalFile(entry->document->getFileName(),"tex",entry->document);
+    }
     if (!edView) return;
     editors->setCurrentEditor(edView);
-    QDocumentSelection sel = entry->document->sectionSelection(entry);
+    QDocumentSelection sel = edView->document->sectionSelection(entry);
 
     int line = sel.endLine;
     if (line >= edView->editor->document()->lines()) {
@@ -12000,9 +12036,12 @@ void Texstudio::editIndentSection()
     StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
     if (!entry) return;
     LatexEditorView *edView = entry->document->getEditorView();
+    if(entry->document->isIncompleteInMemory()){
+        edView = openExternalFile(entry->document->getFileName(),"tex",entry->document);
+    }
     if (!edView) return;
     editors->setCurrentEditor(edView);
-    QDocumentSelection sel = entry->document->sectionSelection(entry);
+    QDocumentSelection sel = edView->document->sectionSelection(entry);
 
     QStringList sectionOrder;
     sectionOrder << "\\subparagraph" << "\\paragraph" << "\\subsubsection" << "\\subsection" << "\\section" << "\\chapter";
@@ -12045,9 +12084,12 @@ void Texstudio::editUnIndentSection()
     StructureEntry *entry = item->data(0,Qt::UserRole).value<StructureEntry *>();
     if (!entry) return;
     LatexEditorView *edView = entry->document->getEditorView();
+    if(entry->document->isIncompleteInMemory()){
+        edView = openExternalFile(entry->document->getFileName(),"tex",entry->document);
+    }
     if (!edView) return;
     editors->setCurrentEditor(edView);
-    QDocumentSelection sel = entry->document->sectionSelection(entry);
+    QDocumentSelection sel = edView->document->sectionSelection(entry);
 
     QStringList sectionOrder;
     sectionOrder << "\\chapter" << "\\section" << "\\subsection" << "\\subsubsection" << "\\paragraph" << "\\subparagraph" ;

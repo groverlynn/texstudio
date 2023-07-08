@@ -1558,3 +1558,15 @@ nostarch:
 class-nostarch
 latex-document
 tex
+hu-berlin-letter:
+class-hu-berlin-letter
+latex-document
+tex
+examz:
+class-examz
+latex-document
+tex
+mitthesis:
+class-mitthesis
+latex-document
+tex

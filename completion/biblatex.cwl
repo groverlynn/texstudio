@@ -332,7 +332,7 @@ biblistfilter=
 \DeclareBibliographyCategory{category}
 \addtocategory{category}{bibid}
 
-\defbibenvironment{envname}{begincode}{endcode}{itemcode}
+\defbibenvironment{envname}{begdef}{enddef}{itemcode}
 \defbibheading{name}{code}
 \defbibheading{name}[title%text]{code}
 \defbibnote{name}{text}
@@ -7685,7 +7685,7 @@ eutreaty#true,false
 \indexonly{bibid}#C
 #endif
 
-### biblatex-oxref v3.0 ###
+### biblatex-oxref v3.1 ###
 #ifOption:style=oxalph
 # loads oxyear bibliography style
 #include:xpatch
@@ -7720,6 +7720,7 @@ usenametitles#true,false
 \Commission#*
 \datingpagespunct#*
 \decisionsandreports#*
+\DeclareAbbrEndChars{characters}#*
 \echrreports#*
 \ecrreporttitle#*
 \explanatorynote#*
@@ -7795,6 +7796,7 @@ usenametitles#true,false
 \Commission#*
 \datingpagespunct#*
 \decisionsandreports#*
+\DeclareAbbrEndChars{characters}#*
 \echrreports#*
 \ecrreporttitle#*
 \explanatorynote#*
@@ -7869,6 +7871,7 @@ usenametitles#true,false
 \Commission#*
 \datingpagespunct#*
 \decisionsandreports#*
+\DeclareAbbrEndChars{characters}#*
 \echrreports#*
 \ecrreporttitle#*
 \explanatorynote#*
@@ -7938,6 +7941,7 @@ usenametitles#true,false
 \Commission#*
 \datingpagespunct#*
 \decisionsandreports#*
+\DeclareAbbrEndChars{characters}#*
 \echrreports#*
 \ecrreporttitle#*
 \explanatorynote#*
@@ -8066,7 +8070,7 @@ biblabel=#superscript,brackets
 \mkibid{arg}#*
 #endif
 
-### biblatex-publist v2.0 ###
+### biblatex-publist v2.5 ###
 #ifOption:style=publist
 # from publist.bbx
 \ExecutePublistOptions{options%keyvals}
@@ -8076,6 +8080,7 @@ plauthorfirstname=%<first name%>
 plauthornameprefix=%<von-part%>
 plauthorhandling=#omit,highlight
 nameorder=#family-given,given-family
+fixyear#true,false
 hlyear#true,false
 marginyear#true,false
 plsorting=%<sorting scheme%>
@@ -8100,6 +8105,8 @@ plnumbering=#global,local,global-descending,local-descending,none
 \plmarginyear{text}#*
 \plyearhl{text}#*
 \plauthorhl{text}#*
+\bplopenoa#*
+\bplcloseoa#*
 \plextrainfosep#*
 \extralabelnumberwidth#*
 \shiftplnum{integer}
@@ -8123,6 +8130,9 @@ plnumbering=#global,local,global-descending,local-descending,none
 \thebplbgitems#S
 \theplnumgroup#S
 \resetplnumgroup#S
+\GetTotalCount
+\GetSectionCount
+\GetSectionCount[section number]
 # from publist.cbx
 \citeitem[prenote][postnote]{bibid}#*C
 \citeitem[postnote]{bibid}#*C
@@ -8176,6 +8186,15 @@ linktitleissn#true,false
 \therealliststop#*
 \thenonplauthor#*
 \thenonpleditor#*
+\ExecuteDepPublistOptions{arg}#S
+\thebplitems#S
+\thebplsecitems#S
+\thebplbgitems#S
+\theplnumgroup#S
+\resetplnumgroup#S
+\GetTotalCount
+\GetSectionCount
+\GetSectionCount[section number]
 #endif
 
 ### biblatex-realauthor v2.7.1a ###

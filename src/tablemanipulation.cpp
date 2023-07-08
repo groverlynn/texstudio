@@ -7,7 +7,7 @@
 #include "configmanager.h"
 
 QSet<QString> LatexTables::tabularNames = QSet<QString>() << "tabular" << "array" << "longtable" << "supertabular" << "tabu" << "longtabu"
-                                        << "IEEEeqnarray" << "xtabular" << "xtabular*" << "mpxtabular" << "mpxtabular*";
+                                                          << "IEEEeqnarray" << "xtabular" << "xtabular*" << "mpxtabular" << "mpxtabular*"<<"tblr"<<"longtblr"<<"talltblr";
 QSet<QString> LatexTables::tabularNamesWithOneOption = QSet<QString>() << "tabular*" << "tabularx" << "tabulary";
 QSet<QString> LatexTables::mathTables = QSet<QString>() << "align" << "align*" << "array" << "matrix" << "matrix*" << "bmatrix" << "bmatrix*"
                                       << "Bmatrix" << "Bmatrix*" << "pmatrix" << "pmatrix*" << "vmatrix" << "vmatrix*"
@@ -482,9 +482,22 @@ QString LatexTables::getDef(QDocumentCursor &cur)
 				opt.chop(1);
 				cur.moveTo(c.lineNumber(), pos + 1);
 				cur.movePosition(opt.length(), QDocumentCursor::NextCharacter, QDocumentCursor::KeepAnchor);
+                break;
 			}
 		}
 	}
+    // in case of colspec, refine further
+    if(opt.contains("colspec")){
+        QRegularExpression re{"^(.*colspec\\s*[=]\\s*\\{)(.*)\\}"};
+        QRegularExpressionMatch match = re.match(opt);
+        if (match.hasMatch()) {
+            int offset=match.capturedLength(1);
+            QString matched = match.captured(2);
+            opt=matched;
+            cur.moveTo(c.lineNumber(), pos+1+offset);
+            cur.movePosition(opt.length(), QDocumentCursor::NextCharacter, QDocumentCursor::KeepAnchor);
+        }
+    }
 	return opt;
 }
 
@@ -526,7 +539,9 @@ int LatexTables::getNumberOfColumns(QStringList values)
 			}
 			if (!opt.startsWith("{") || !opt.endsWith("}")) return -1;
 			opt = opt.mid(1);
-			opt.chop(1);
+            opt.chop(1);
+            // in case of colspec, refine further
+            opt=handleColSpec(opt);
 			//calculate number of columns ...
 			QStringList res = splitColDef(opt);
 			int cols = res.count();
@@ -894,6 +909,7 @@ void LatexTables::alignTableCols(QDocumentCursor &cur)
 		if (args.count() < 3) alignment = ""; // incomplete definition -> fall back to defaults
 		else alignment = args.at(2).value;
 	} else return; // not a registered table environment
+    alignment=handleColSpec(alignment);
 	int cellsEnd = text.indexOf("\\end{" + tableType);
 	if (cellsEnd < 0) return;
 	QString beginPart = text.left(cellsStart);
@@ -919,8 +935,26 @@ void LatexTables::alignTableCols(QDocumentCursor &cur)
 	for (int i = 0; i < content.count(); i++) {
 		result.append(indentation + content.at(i) + '\n');
 	}
-	result.append(indentation + endPart);
-	cur.replaceSelectedText(result);
+    result.append(indentation + endPart);
+    cur.replaceSelectedText(result);
+}
+
+/*!
+ * \brief if preamble uses colspec syntax, extract alignment, otherwise return original text
+ * \param opt
+ * \return refined preamble with alignment info only
+ */
+QString LatexTables::handleColSpec(QString opt)
+{
+    // in case of colspec, refine further
+    if(opt.contains("colspec")){
+        QRegularExpression re{"^(.*colspec\\s*[=]\\s*\\{)(.*)\\}"};
+        QRegularExpressionMatch match = re.match(opt);
+        if (match.hasMatch()) {
+            opt = match.captured(2);
+        }
+    }
+    return opt;
 }
 
 LatexTableModel::LatexTableModel(QObject *parent) : QAbstractTableModel(parent), metaLineCommandPos(0)

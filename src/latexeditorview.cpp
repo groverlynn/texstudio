@@ -681,11 +681,11 @@ LatexEditorView::LatexEditorView(QWidget *parent, LatexEditorViewConfig *aconfig
 	gotoLinePanel->setFont(QApplication::font());
 	gotoLinePanelAction = codeeditor->addPanel(gotoLinePanel, QCodeEdit::South, false);
 
-	searchReplacePanel = new QSearchReplacePanel;
+    searchReplacePanel = new QSearchReplacePanel;
 	searchReplacePanel->setFont(QApplication::font());
 	searchReplacePanelAction = codeeditor->addPanel(searchReplacePanel, QCodeEdit::South, false);
-	searchReplacePanel->hide();
-	connect(searchReplacePanel, SIGNAL(showExtendedSearch()), this, SIGNAL(showExtendedSearch()));
+    searchReplacePanel->hide();
+    connect(searchReplacePanel, SIGNAL(showExtendedSearch()), this, SIGNAL(showExtendedSearch()));
 
 	connect(lineMarkPanel, SIGNAL(lineClicked(int)), this, SLOT(lineMarkClicked(int)));
     connect(lineMarkPanel, SIGNAL(toolTipRequested(int,int)), this, SLOT(lineMarkToolTip(int,int)));
@@ -889,15 +889,24 @@ void LatexEditorView::moveLines(int delta)
 	QList<QPair<int, int> > blocks = getSelectedLineBlocks();
 	document->beginMacro();
 	int i = delta < 0 ? blocks.size() - 1 : 0;
+    QVector<bool>skipMove(cursors.length(),false);
 	while (i >= 0 && i < blocks.size()) {
 		//edit
+        if ((delta < 0 && blocks[i].first==0)||(delta > 0 && blocks[i].second==(document->lineCount()-1))) {
+            skipMove[i]=true;
+            i += delta;
+            continue;
+        }
+        bool skipCursorUp=blocks[i].second==(document->lineCount()-1);
 		QDocumentCursor edit = document->cursor(blocks[i].first, 0, blocks[i].second);
 		QString text = edit.selectedText();
-		edit.removeSelectedText();
-		edit.eraseLine();
-		if (delta < 0) {
-			if (blocks[i].second < document->lineCount())
-				edit.movePosition(1, QDocumentCursor::PreviousLine);
+        edit.removeSelectedText();
+        edit.eraseLine();
+        if (delta < 0) {
+            if(!skipCursorUp){
+                // special treatment of last line of document
+                edit.movePosition(1, QDocumentCursor::PreviousLine);
+            }
 			edit.movePosition(1, QDocumentCursor::StartOfLine);
 			edit.insertText(text + "\n");
 		} else {
@@ -910,6 +919,7 @@ void LatexEditorView::moveLines(int delta)
 	//move cursors
 	for (int i=0;i<cursors.length();i++) {
 		cursors[i].setAutoUpdated(true);
+        if(skipMove[i]) continue;
 		if (cursors[i].hasSelection()) {
 			cursors[i].setAnchorLineNumber(cursors[i].anchorLineNumber() + delta);
 			cursors[i].setLineNumber(cursors[i].lineNumber() + delta, QDocumentCursor::KeepAnchor);
@@ -2694,12 +2704,13 @@ void LatexEditorView::mouseHovered(QPoint pos)
 				QToolTip::showText(editor->mapToGlobal(editor->mapFromFrame(pos)), text);
 			}
 		}
-		if (tk.subtype == Token::color) {
-			QString text;
-			if (ts.size() > 1) {
-				ts.pop();
-				tk = ts.top();
-			}
+		if (config->imageToolTip && tk.subtype == Token::color) {
+            handled=true;
+            QString text;
+            if (ts.size() > 1 && tk.type==Token::word) {
+                ts.pop();
+                tk = ts.top();
+            }
             text = QString("\\noindent{\\color%1 \\rule{1cm}{1cm} }").arg(tk.getText());
 			m_point = editor->mapToGlobal(editor->mapFromFrame(pos));
 			emit showPreview(text);
@@ -2772,25 +2783,7 @@ void LatexEditorView::mouseHovered(QPoint pos)
 	if (handled)
 		return;
 
-	QToolTip::hideText();
-
-	/*
-		switch (LatexParser::getInstance().findContext(line, cursor.columnNumber(), command, value)){
-	    case LatexParser::Unknown: // when does this happen ????
-			if (config->toolTipPreview) {
-				QString command = extractMath(cursor);
-				if (!command.isEmpty()) {
-					m_point = editor->mapToGlobal(editor->mapFromFrame(pos));
-					emit showPreview(command);
-				} else {
-					QToolTip::hideText();
-				}
-			}
-			break;
-
-
-	     }*/
-	//QToolTip::showText(editor->mapToGlobal(pos), line);
+    QToolTip::hideText();
 }
 
 bool LatexEditorView::closeElement()

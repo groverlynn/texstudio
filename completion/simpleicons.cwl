@@ -1,5 +1,5 @@
 # simpleicons package
-# Matthew Bertucci 2023/05/12 for v8.13.0
+# Matthew Bertucci 2023/06/23 for v9.2.0
 
 #include:ifxetex
 #include:ifluatex
@@ -94,7 +94,6 @@ alibabacloud
 alibabadotcom
 aliexpress
 alipay
-alitalia
 allegro
 alliedmodders
 allocine
@@ -121,6 +120,7 @@ amazonrds
 amazons3
 amazonsqs
 amd
+ameba
 americanairlines
 americanexpress
 amg
@@ -166,6 +166,7 @@ apachekylin
 apachemaven
 apachenetbeanside
 apacheopenoffice
+apacheparquet
 apachepulsar
 apacherocketmq
 apachesolr
@@ -276,6 +277,7 @@ behance
 beijingsubway
 bem
 bentley
+bento
 betfair
 bigbasket
 bigbluebutton
@@ -321,6 +323,7 @@ bootstrap
 borgbackup
 bosch
 bose
+botblecms
 boulanger
 bower
 box
@@ -468,6 +471,7 @@ commerzbank
 commitlint
 commodore
 commonworkflowlanguage
+compilerexplorer
 composer
 comsol
 conan
@@ -633,6 +637,7 @@ ea
 eagle
 easyjet
 ebay
+ebox
 eclipseche
 eclipseide
 eclipsejetty
@@ -776,6 +781,7 @@ fontforge
 foodpanda
 ford
 forestry
+forgejo
 formstack
 fortinet
 fortran
@@ -795,7 +801,9 @@ freecodecamp
 freedesktopdotorg
 freelancer
 freenas
+freepik
 frontendmentor
+frontify
 fsecure
 fugacloud
 fujifilm
@@ -812,6 +820,7 @@ gamejolt
 garmin
 gatling
 gatsby
+gdal
 geant
 geeksforgeeks
 generalelectric
@@ -865,6 +874,7 @@ googleadmob
 googleads
 googleadsense
 googleanalytics
+googleappsscript
 googleassistant
 googlecalendar
 googlecardboard
@@ -1200,6 +1210,7 @@ legacygames
 lemmy
 lenovo
 lens
+leptos
 leroymerlin
 less
 letsencrypt
@@ -1216,6 +1227,7 @@ lichess
 lidl
 lifx
 lighthouse
+lightning
 line
 lineageos
 linear
@@ -1223,7 +1235,6 @@ linkedin
 linkerd
 linkfire
 linktree
-linode
 linux
 linuxcontainers
 linuxfoundation
@@ -1353,6 +1364,7 @@ minetest
 mini
 minutemailer
 miro
+misskey
 mitsubishi
 mix
 mixcloud
@@ -1388,9 +1400,11 @@ msi
 msibusiness
 mta
 mtr
+mubi
 mui
 mulesoft
 muller
+multisim
 mumble
 musescore
 musicbrainz
@@ -1562,6 +1576,7 @@ parsedotly
 passport
 pastebin
 patreon
+payloadcms
 payoneer
 paypal
 paytm
@@ -1688,6 +1703,7 @@ prosieben
 protocolsdotio
 protodotio
 protondb
+protondrive
 protonmail
 protonvpn
 protools
@@ -1715,7 +1731,6 @@ pysyft
 pytest
 python
 pytorch
-pytorchlightning
 pyup
 qantas
 qatarairways
@@ -1768,6 +1783,7 @@ reactos
 reactquery
 reactrouter
 reacttable
+readdotcv
 readme
 readthedocs
 realm
@@ -1818,6 +1834,7 @@ ripple
 riseup
 roamresearch
 roblox
+robloxstudio
 robotframework
 rocketdotchat
 rocksdb
@@ -1985,6 +2002,7 @@ soundcloud
 sourceengine
 sourceforge
 sourcegraph
+sourcehut
 sourcetree
 southwestairlines
 spacemacs
@@ -2069,6 +2087,7 @@ subversion
 suckless
 sumologic
 supabase
+supercrease
 supermicro
 superuser
 surrealdb
@@ -2182,6 +2201,7 @@ tplink
 tqdm
 traefikmesh
 traefikproxy
+trailforks
 trainerroad
 trakt
 transferwise
@@ -2302,6 +2322,7 @@ vk
 vlcmediaplayer
 vmware
 vodafone
+voipdotms
 volkswagen
 volvo
 vonage
@@ -2454,6 +2475,7 @@ zettlr
 zhihu
 zig
 zigbee
+zilch
 zillow
 zingat
 zoho

@@ -38,6 +38,7 @@
 <file>completion/adjmulticol.cwl</file>
 <file>completion/adjustbox.cwl</file>
 <file>completion/adobecaslon.cwl</file>
+<file>completion/adobeornaments.cwl</file>
 <file>completion/adrlist.cwl</file>
 <file>completion/adtrees.cwl</file>
 <file>completion/advdate.cwl</file>
@@ -684,6 +685,7 @@
 <file>completion/class-europasscv.cwl</file>
 <file>completion/class-europecv.cwl</file>
 <file>completion/class-exam.cwl</file>
+<file>completion/class-examz.cwl</file>
 <file>completion/class-exam-n.cwl</file>
 <file>completion/class-exam-zh.cwl</file>
 <file>completion/class-exesheet.cwl</file>
@@ -733,6 +735,7 @@
 <file>completion/class-hgbthesis.cwl</file>
 <file>completion/class-hitec.cwl</file>
 <file>completion/class-hletter.cwl</file>
+<file>completion/class-hu-berlin-letter.cwl</file>
 <file>completion/classico.cwl</file>
 <file>completion/classics.cwl</file>
 <file>completion/classicthesis-arsclassica.cwl</file>
@@ -820,6 +823,7 @@
 <file>completion/class-milog.cwl</file>
 <file>completion/class-minimart.cwl</file>
 <file>completion/class-minimbook.cwl</file>
+<file>completion/class-mitthesis.cwl</file>
 <file>completion/class-mla.cwl</file>
 <file>completion/class-mnras.cwl</file>
 <file>completion/class-moderncv.cwl</file>
@@ -1087,6 +1091,7 @@
 <file>completion/correctmathalign.cwl</file>
 <file>completion/corridx.cwl</file>
 <file>completion/coseoul.cwl</file>
+<file>completion/counterz.cwl</file>
 <file>completion/countriesofeurope.cwl</file>
 <file>completion/counttexruns.cwl</file>
 <file>completion/couriers.cwl</file>
@@ -1124,6 +1129,7 @@
 <file>completion/ctex.cwl</file>
 <file>completion/cu-calendar.cwl</file>
 <file>completion/cu-kinovar.cwl</file>
+<file>completion/cu-kruk.cwl</file>
 <file>completion/cu-num.cwl</file>
 <file>completion/currency.cwl</file>
 <file>completion/currfile-abspath.cwl</file>
@@ -1795,6 +1801,7 @@
 <file>completion/hulipsum.cwl</file>
 <file>completion/humanist.cwl</file>
 <file>completion/huncial.cwl</file>
+<file>completion/hu-berlin-base.cwl</file>
 <file>completion/hvarabic.cwl</file>
 <file>completion/hvextern.cwl</file>
 <file>completion/hvfloat.cwl</file>
@@ -1896,6 +1903,7 @@
 <file>completion/itnumpar.cwl</file>
 <file>completion/iwona.cwl</file>
 <file>completion/jamtimes.cwl</file>
+<file>completion/javascripthttp.cwl</file>
 <file>completion/JeuxCartes.cwl</file>
 <file>completion/jiazhu.cwl</file>
 <file>completion/jigsaw.cwl</file>
@@ -2129,6 +2137,7 @@
 <file>completion/luacolor.cwl</file>
 <file>completion/luacomplex.cwl</file>
 <file>completion/luagcd.cwl</file>
+<file>completion/luahttp.cwl</file>
 <file>completion/luahyphenrules.cwl</file>
 <file>completion/luaimageembed.cwl</file>
 <file>completion/luaindex.cwl</file>
@@ -2355,6 +2364,7 @@
 <file>completion/morewrites.cwl</file>
 <file>completion/morisawa.cwl</file>
 <file>completion/MorrisIn.cwl</file>
+<file>completion/movement-arrows.cwl</file>
 <file>completion/mparhack.cwl</file>
 <file>completion/mpgraphics.cwl</file>
 <file>completion/mpostinl.cwl</file>
@@ -2759,6 +2769,7 @@
 <file>completion/popupmenu.cwl</file>
 <file>completion/postage.cwl</file>
 <file>completion/poster.cwl</file>
+<file>completion/postit.cwl</file>
 <file>completion/postnotes.cwl</file>
 <file>completion/powerdot-aggie.cwl</file>
 <file>completion/powerdot-BerlinFU.cwl</file>
@@ -2802,6 +2813,8 @@
 <file>completion/ProfCollege.cwl</file>
 <file>completion/ProfLabo.cwl</file>
 <file>completion/ProfLycee.cwl</file>
+<file>completion/ProfMaquette.cwl</file>
+<file>completion/ProfSio.cwl</file>
 <file>completion/program.cwl</file>
 <file>completion/progressbar.cwl</file>
 <file>completion/projlib-author.cwl</file>
@@ -2981,6 +2994,7 @@
 <file>completion/quattrocento.cwl</file>
 <file>completion/quickreaction.cwl</file>
 <file>completion/quiz2socrative.cwl</file>
+<file>completion/quizztex.cwl</file>
 <file>completion/quotchap.cwl</file>
 <file>completion/quoted.cwl</file>
 <file>completion/quoting.cwl</file>
@@ -3054,11 +3068,13 @@
 <file>completion/romande.cwl</file>
 <file>completion/romannum.cwl</file>
 <file>completion/Romantik.cwl</file>
+<file>completion/rorlink.cwl</file>
 <file>completion/rotating.cwl</file>
 <file>completion/rotchiffre.cwl</file>
 <file>completion/Rothdn.cwl</file>
 <file>completion/rotpages.cwl</file>
 <file>completion/rotunda.cwl</file>
+<file>completion/RoueQuestions.cwl</file>
 <file>completion/roundbox.cwl</file>
 <file>completion/Royal.cwl</file>
 <file>completion/rsfso.cwl</file>
@@ -3295,6 +3311,7 @@
 <file>completion/stricttex.cwl</file>
 <file>completion/stringenc.cwl</file>
 <file>completion/stringstrings.cwl</file>
+<file>completion/string-diagrams.cwl</file>
 <file>completion/stripsemantex.cwl</file>
 <file>completion/structmech.cwl</file>
 <file>completion/struktex.cwl</file>
@@ -3491,6 +3508,7 @@
 <file>completion/thumby.cwl</file>
 <file>completion/ticket.cwl</file>
 <file>completion/ticollege.cwl</file>
+<file>completion/tikz2d-fr.cwl</file>
 <file>completion/tikz3d-fr.cwl</file>
 <file>completion/tikz-3dplot.cwl</file>
 <file>completion/tikz-among-us.cwl</file>
@@ -4051,6 +4069,7 @@
 <file>completion/zitie.cwl</file>
 <file>completion/zlmtt.cwl</file>
 <file>completion/zref-abspage.cwl</file>
+<file>completion/zref-abspos.cwl</file>
 <file>completion/zref-base.cwl</file>
 <file>completion/zref-check.cwl</file>
 <file>completion/zref-clever.cwl</file>
@@ -4060,10 +4079,12 @@
 <file>completion/zref-env.cwl</file>
 <file>completion/zref-hyperref.cwl</file>
 <file>completion/zref-lastpage.cwl</file>
+<file>completion/zref-marks.cwl</file>
 <file>completion/zref-nextpage.cwl</file>
 <file>completion/zref-pageattr.cwl</file>
 <file>completion/zref-pagelayout.cwl</file>
 <file>completion/zref-perpage.cwl</file>
+<file>completion/zref-runs.cwl</file>
 <file>completion/zref-savepos.cwl</file>
 <file>completion/zref-thepage.cwl</file>
 <file>completion/zref-titleref.cwl</file>

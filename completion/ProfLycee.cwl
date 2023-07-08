@@ -1,7 +1,8 @@
 # ProfLycee package
-# Matthew Bertucci 2023/05/09 for v2.6.3
+# Matthew Bertucci 2023/06/15 for v2.7.0
 
 #include:mathtools
+#include:amssymb
 #include:xcolor
 # xcolor loaded with table and svgnames options
 #include:tikz
@@ -14,6 +15,7 @@
 #include:xintexpr
 #include:xintbinhex
 #include:xinttools
+#include:xintgcd
 #include:randomlist
 #include:simplekv
 #include:listofitems
@@ -36,9 +38,12 @@
 #include:tcolorboxlibraryminted
 #include:iftex
 #include:piton
+#include:nicematrix
+#include:cancel
 
 #keyvals:\usepackage/ProfLycee#c
 build
+nonamssymb
 #endkeyvals
 
 \useproflyclib{librairies%keyvals}
@@ -412,6 +417,7 @@ AffOrigine#true,false
 Annee#true,false
 Trigo#true,false
 Dfrac#true,false
+Frac#true,false
 #endkeyvals
 
 \AffAngleRadian{expr}
@@ -526,6 +532,38 @@ Elargir=%<pourcentage%>
 Epaisseur=%<épaisseur%>
 Valeurs={%<liste%>}
 AffValeurs#true,false
+#endkeyvals
+
+## Histogrammes ##
+\Histogramme{données}
+\Histogramme[options%keyvals]{données}
+\Histogramme*{données}
+\Histogramme*[options%keyvals]{données}
+
+#keyvals:\Histogramme,\Histogramme*
+DebutOx=%<nombre%>
+FinOx=%<nombre%>
+Largeur=%<nombre%>
+Hauteur=%<nombre%>
+ListeCouleurs={%<couleur1,couleur2,...%>}
+ElargirX=##L
+ElargirY=##L
+LabelX=%<texte%>
+LabelY=%<texte%>
+GradX={%<graduations%>}
+GradY={%<graduations%>}
+AffEffectifs#true,false
+PosEffectifs=#bas,milieu,haut,dessus
+Remplir#true,false
+Opacite=%<factor%>
+AffBornes#true,false
+GrilleV#true,false
+PoliceAxes=%<font commands%>
+PoliceEffectifs=%<font commands%>
+EpaisseurTraits=%<épaisseur%>
+Grille=%<GradX%>/%<UniteAire%>
+ExtraGrilleY=%<nombre%>
+PosLegende=
 #endkeyvals
 
 ## Calculs de probabilités ##
@@ -655,6 +693,17 @@ NotationAncien#true,false
 Formule#true,false
 #endkeyvals
 
+## Fonction de répartition ##
+\FonctionRepartTikz{liste des probas,borneinf,bornesup}
+\FonctionRepartTikz[option%keyvals]{liste des probas,borneinf,bornesup}
+
+#keyvals:\FonctionRepartTikz
+Couleur=#%color
+Epaisseur=%<épaisseur%>
+Pointilles#true,false
+Extremite=#crochet,point
+#endkeyvals
+
 ## Conversions binaire/hexadécimal/décimal ##
 \ConversionDecBin{nombre}
 \ConversionDecBin[options%keyvals]{nombre}
@@ -710,6 +759,18 @@ Noeud=%<nom du nœud%>
 CouleurResultat#true,false
 AfficheConclusion#true,false
 AfficheDelimiteurs#true,false
+#endkeyvals
+
+## Résolution d’une équation diophantienne ##
+\EquationDiophantienne{equation}
+\EquationDiophantienne[options%keyvals]{equation}
+
+#keyvals:\EquationDiophantienne
+Lettre=%<nom%>
+Inconnues=%<x/y%>
+Entier=%<nom%>
+Cadres#true,false
+PresPGCD#true,false
 #endkeyvals
 
 ## Fractions, ensembles ##
@@ -795,11 +856,55 @@ Methode=#RectanglesGauche,RectanglesDroite,RectanglesMilieu,Trapezes
 NbSubDiv=%<nombre%>
 #endkeyvals
 
-## Style « main levée » en TikZ ##
-#keyvals:\draw#c
-mainlevee
-mainlevee=%<segment-length%> et %<amplitude%>
+## Affichage de coordonnées ##
+\AffPoint(liste de coordonnées)
+\AffPoint[options](liste de coordonnées)
+\AffVecteur(liste de coordonnées)
+\AffVecteur<options nicematrix>(liste de coordonnées)
+\AffVecteur[options](liste de coordonnées)
+\AffVecteur[options]<options nicematrix>(liste de coordonnées)
+
+## Équation cartésienne d’un plan de l’espace ##
+\TrouveEqCartPlan(vecteur normal)(point)
+\TrouveEqCartPlan(vecteur dir1)(vecteur dir2)(point)
+\TrouveEqCartPlan[options%keyvals](vecteur normal)(point)
+\TrouveEqCartPlan[options%keyvals](vecteur dir1)(vecteur dir2)(point)
+
+#keyvals:\TrouveEqCartPlan
+OptionCoeffs=%<option%>
+SimplifCoeffs#true,false
+Facteur=%<facteur%>
 #endkeyvals
+
+## Équation paramétrique d’une droite de l’espace ##
+\TrouveEqParamDroite(vecteur directeur)(point)
+\TrouveEqParamDroite[options%keyvals](vecteur directeur)(point)
+
+#keyvals:\TrouveEqParamDroite
+OptionCoeffs=%<option%>
+Reel=%<symbole%>
+Oppose#true,false
+Rgras#true,false
+#endkeyvals
+
+## Équation cartésienne d’une droite du plan ##
+\TrouveEqCartDroite(vecteur)(point)
+\TrouveEqCartDroite[options%keyvals](vecteur)(point)
+
+#keyvals:\TrouveEqCartDroite
+OptionCoeffs=%<option%>
+SimplifCoeffs#true,false
+Facteur=%<facteur%>
+VectDirecteur#true,false
+#endkeyvals
+
+## Norme d’un vecteur, distance entre deux points ##
+\TrouveNorme(vecteur)
+\TrouveNorme(point1)(point2)
+
+## Distance d’un point à un plan ##
+\TrouveDistancePtPlan(point)(vec normal du plan)(point du plan)
+\TrouveDistancePtPlan(point)(équation cartésienne)
 
 ## Écriture d’un trinôme, trinôme aléatoire ##
 \EcritureTrinome{a}{b}{c}
@@ -1437,3 +1542,58 @@ vertcapyt#B
 \AffCoeffFloat[opt]{arg}#S
 \AffCoeffPa{arg}#S
 \AffCoeffPa[opt]{arg}#S
+\AffCoeffSgn{arg1}{arg2}#S
+\AffCoeffSgn[opt]{arg1}{arg2}#S
+\AffCoeffSgn*{arg1}{arg2}#S
+\AffCoeffSgn*[opt]{arg1}{arg2}#S
+\AffCoeffSgnSimpl{arg}#S
+\AffCoeffSgnSimpl[opt]{arg}#S
+\AffCoeffSgnSimpl*{arg}#S
+\AffCoeffSgnSimpl*[opt]{arg}#S
+\eqcartplformat#S
+\eqcartplfact#S
+\eqcartdteformat#S
+\eqcartdtefact#S
+\eqparamdteformat#S
+\eqparamdtereel#S
+\AffVarDteParam{arg1}{arg2}#S
+\AffVarDteParamAlign{arg1}{arg2}#S
+\AffCoeffBezout{arg}#S
+\EgaliteBezout{arg1}{arg2}#S
+\EgaliteBezout[opt]{arg1}{arg2}#S
+\AffCoeffDioph{arg}#S
+\AffCoeffDiophSign{arg}#S
+\LettreSolEDioph#S
+\CouleurSolEDioph#S
+\InconnuesSolEDioph#S
+\TrouveEqCartPlanAux#S
+\TrouveEqCartDroiteAux#S
+\AffVecteurAux#S
+\TrouveEqParamDroiteAux#S
+\TrouveDistancePtPlanAux#S
+\TrouveNormeAux#S
+\HistoCouleurs#S
+\HistoLargeur#S
+\HistoHauteur#S
+\HistoGradX#S
+\HistoGradY#S
+\HistoPosEff#S
+\HistoLabelx#S
+\HistoLabely#S
+\HistoElargirx#S
+\HistoElargiry#S
+\HistoFonte#S
+\HistoFonteEff#S
+\HistoOpac#S
+\HistoDebX#S
+\HistoFinX#S
+\HistoEptraits#S
+\HistogrammeTikz{arg}#S
+\HistogrammeTikz[opt]{arg}#S
+\CrochetFctRepart{arg1}{arg2}#S
+\FctRepartColor#S
+\FctRepartThickness#S
+\FctRepartExtremite#S
+\HistoGrille#S
+\HistoExtraGridY#S
+\HistoPosLeg#S

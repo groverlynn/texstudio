@@ -1,16 +1,15 @@
 # covington package
-# Matthew Bertucci 2022/08/31 for v2.8
+# Matthew Bertucci 2023/06/25 for v2.12
 
-#include:xkeyval
 #include:iftex
+#include:varwidth
 
 #keyvals:\usepackage/covington#c
-force
-keeplayout
-noglossbreaks
-owncounter
-ownfncounter
-ownfncounter*
+force#true,false
+keeplayout#true,false
+noglossbreaks#true,false
+owncounter#true,false
+fnexamplecounter=#main,own,own-reset
 #endkeyvals
 
 \twodias{upper diac}{lower diac}{char}
@@ -29,18 +28,21 @@ ownfncounter*
 \begin{covexample}[options%keyvals]#*
 \end{covexample}#*
 
-#keyvals:\begin{example},\begin{covexample}
-preamble={%<text%>}
-#endkeyvals
+\setexampleoptions{options%keyvals}
+
+\begin{examples}
+\begin{examples}[options%keyvals]
+\end{examples}
+\begin{covexamples}#*
+\begin{covexamples}[options%keyvals]#*
+\end{covexamples}#*
 
 \examplenumbersep#*
 \subexamplenumbersep#*
 \exampleind#*
 
-\begin{examples}
-\end{examples}
-\begin{covexamples}#*
-\end{covexamples}#*
+\expreamble{text}
+\expostamble{text}
 
 \begin{subexamples}
 \begin{subexamples}[option%keyvals]
@@ -48,8 +50,47 @@ preamble={%<text%>}
 \begin{covsubexamples}[option%keyvals]#*
 \end{covsubexamples}#*
 
-#keyvals:\begin{subexamples},\begin{covsubexamples}
+\subexpreamble{text}
+\subexpostamble{text}
+
+#keyvals:\begin{example},\begin{covexample},\begin{examples},\begin{covexamples},\begin{subexamples},\begin{covsubexamples},\setexampleoptions
+fs={%<font settings%>}
+fsno={%<font settings%>}
+judge={%<text%>}
+*
+?
+*?
+??
+fsjudge={%<font settings%>}
+leftmargin=##L
+addnumbersep=##L
+judgewidth={%<text%>}
+addjudgesep=##L
+numberformat={%<template%>}
+fnnumberformat={%<template%>}
+#endkeyvals
+
+## keys with no effect in examples environment
+#keyvals:\begin{example},\begin{covexample},\begin{subexamples},\begin{covsubexamples},\setexampleoptions
 preamble={%<text%>}
+postamble={%<text%>}
+fspreamble={%<font settings%>}
+fspostamble={%<font settings%>}
+#endkeyvals
+
+#keyvals:\begin{example},\begin{covexample},\setexampleoptions
+postamble*={%<text%>}
+#endkeyvals
+
+## keys only for subexamples
+#keyvals:\begin{subexamples},\begin{covsubexamples},\setexampleoptions
+fssubpreamble={%<font settings%>}
+fssubpostamble={%<font settings%>}
+addsubnumbersep=##L
+subnumberformat={%<template%>}
+subjudge={%<text%>}
+subpreamble={%<text%>}
+subpostamble={%<text%>}
 #endkeyvals
 
 \covexnumber{arg}#*
@@ -57,24 +98,49 @@ preamble={%<text%>}
 \covsubexnumber{arg}#*
 \covexamplefs#*
 \covexamplenofs#*
-\subexpreamblefs#*
 \expreamblefs#*
+\subexpreamblefs#*
+\expostamblefs#*
+\subexpostamblefs#*
 \thecovfnex#*
 \pxref{label}#r
+\digloss{glossline1}{glossline2}{translation}
+\digloss{glossline1}[comment1]{glossline2}[comment2]{translation}
 \digloss[options%keyvals]{glossline1}{glossline2}{translation}
+\digloss[options%keyvals]{glossline1}[comment1]{glossline2}[comment2]{translation}
+\trigloss{glossline1}{glossline2}{glossline3}{translation}
+\trigloss{glossline1}[comment1]{glossline2}[comment2]{glossline3}[comment3]{translation}
 \trigloss[options%keyvals]{glossline1}{glossline2}{glossline3}{translation}
+\trigloss[options%keyvals]{glossline1}[comment1]{glossline2}[comment2]{glossline3}[comment3]{translation}
 \setglossoptions{options%keyvals}
 
 #keyvals:\digloss,\trigloss,\setglossoptions
 ex#true,false
 tlr#true,false
+tlr*#true,false
 fsi={%<font settings%>}
 fsii={%<font settings%>}
 fsiii={%<font settings%>}
+fstl={%<font settings%>}
+enquotetl#true,false
+addlinesepi=##L
+addlinesepii=##L
+addlinesepiii=##L
+judge={%<text%>}
+fsjudge={%<font settings%>}
+addjudgesep=##L
 preamble={%<text%>}
 postamble={%<text%>}
+fspreamble={%<font settings%>}
+fspostamble={%<font settings%>}
+glosswidth=##L
+glosssep=##L
+glosscommentwidth=##L
+fscomments={%<font settings%>}
 #endkeyvals
 
+\glosswidth#*
+\glosssep#*
 \gll#*
 \glll#*
 \xgll#*
@@ -83,11 +149,9 @@ postamble={%<text%>}
 \glt#*
 \gln#*
 \glot{translation}#*
+\glot[judgment marker]{translation}#*
 \glosspreamble{text}#*
 \glend#*
-\glosslineone#*
-\glosslinetwo#*
-\glosslinethree#*
 \glosslinetrans{text}#*
 \covenquote{text}#*
 \glosslinepreamble#*
@@ -96,7 +160,7 @@ postamble={%<text%>}
 \fs{contents}
 \lfs{label%plain}{contents}
 \drs{variables}{contents}
-\sdrs{above-text}{variables}{contents}
+\sdrs{above-text%text}{variables}{contents}
 \negdrs{variables}{contents}
 \ifdrs{variables1}{contents1}{variables2}{contents2}
 \alifdrs{variables1}{contents1}{variables2}{contents2}
@@ -120,6 +184,10 @@ postamble={%<text%>}
 \twoaccsep#*
 
 # not documented
+\begin{covgloss}#S
+\end{covgloss}#S
+\begin{covsubexs}#S
+\end{covsubexs}#S
 \bx#S
 \donewords#S
 \eachwordone#S
@@ -131,22 +199,18 @@ postamble={%<text%>}
 \fileversion#S
 \forceredeffalse#S
 \forceredeftrue#S
+\fsglpostamble#S
+\fsglpreamble#S
 \getwords#S
-\gexamplefalse#S
-\gexampletrue#S
-\ggexamplefalse#S
-\ggexampletrue#S
-\ggtrightfalse#S
-\ggtrighttrue#S
 \gline#S
+\glnx#S
 \glossglue#S
-\gtrightfalse#S
-\gtrighttrue#S
+\glosslineone#S
+\glosslinetwo#S
+\glosslinethree#S
+\glosspwidth#*
+\IfExPreamble{arg}#S
 \ifforceredef#S
-\ifgexample#S
-\ifggexample#S
-\ifggtright#S
-\ifgtright#S
 \ifnoglossbreaks#S
 \ifnotdone#S
 \ifownexcounter#S
@@ -154,9 +218,6 @@ postamble={%<text%>}
 \ifresetownfnexcounter#S
 \iftweaklayout#S
 \lastword{arg1}{arg2}{arg3}#S
-\lglosslineone#S
-\lglosslinethree#S
-\lglosslinetwo#S
 \lineone#S
 \linethree#S
 \linetwo#S
@@ -169,10 +230,13 @@ postamble={%<text%>}
 \ownexcountertrue#S
 \ownfnexcounterfalse#S
 \ownfnexcountertrue#S
+\pline#S
+\RegisterExPreamble{arg}#S
 \resetownfnexcounterfalse#S
 \resetownfnexcountertrue#S
 \testdone#S
 \thecovex#*
+\theexplid#S
 \threesent#S
 \tweaklayoutfalse#S
 \tweaklayouttrue#S

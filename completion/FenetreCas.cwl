@@ -1,5 +1,5 @@
 # FenetreCas package
-# Matthew Bertucci 2023/05/07 for v0.1.1
+# Matthew Bertucci 2023/06/14 for v0.1.3
 
 #include:tikz
 #include:xstring
@@ -33,12 +33,15 @@ Entete#true,false
 HauteurLigne=%<nombre%>
 TailleCommande=%<commande%>
 TailleResultat=%<commande%>
+PosRes=#gauche,centre,droite
 ElargirAuto=%<nombre%>
 HauteurAuto#true,false
 MargeV=##L
 MargeH=%<nombre%>
 Fond#true,false
 CouleurFond=#%color
+Select#true,false
+CouleurSelect=#%color
 #endkeyvals
 
 \begin{CalculFormelXcas}#\pictureHighlight
@@ -76,6 +79,8 @@ CouleurFond=#%color
 #endkeyvals
 
 # not documented
+\GEOCFcolfond#S
+\GEOCFcolselect#S
 \GEOCFcoulentete#S
 \GEOCFcoulnum#S
 \GEOCFelargirauto#S
@@ -86,6 +91,7 @@ CouleurFond=#%color
 \GEOCFoffset#S
 \GEOCFoffseth#S
 \GEOCFpolnum#S
+\GEOCFposrep#S
 \GEOCFtaillecmd#S
 \GEOCFtailleres#S
 \GEOCFtitre#S
@@ -116,5 +122,4 @@ CouleurFond=#%color
 \XCCFtaillecmd#S
 \XCCFtailleres#S
 \XCCFtxtopts#S
-\GEOCFcolfond#S
 \XCCFcolfond#S

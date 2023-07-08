@@ -484,7 +484,7 @@ ConfigManager::ConfigManager(QObject *parent): QObject (parent),
 	registerOption("Files/Parse Master", &parseMaster, true, &pseudoDialog->checkBoxParseRootDoc);
 	registerOption("Files/Autosave", &autosaveEveryMinutes, 0);
     registerOption("Files/Autoload", &autoLoadChildren, true, &pseudoDialog->checkBoxAutoLoad);
-    registerOption("Files/CacheStructure", &cacheDocuments, false, &pseudoDialog->checkBoxUseCache);
+    registerOption("Files/CacheStructure", &cacheDocuments, true, &pseudoDialog->checkBoxUseCache);
 	QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 	registerOption("Files/Bib Paths", &additionalBibPaths, env.value("BIBINPUTS", ""), &pseudoDialog->lineEditPathBib);
 	registerOption("Files/Image Paths", &additionalImagePaths, env.value("TEXINPUTS", ""), &pseudoDialog->lineEditPathImages);
@@ -1001,10 +1001,8 @@ QSettings *ConfigManager::readSettings(bool reread)
 		completerConfig->words.unite(pck.completionWords);
 		latexParser.optionCommands.unite(pck.optionCommands);
 #if (QT_VERSION>=QT_VERSION_CHECK(5,15,0))
-        latexParser.specialTreatmentCommands.insert(pck.specialTreatmentCommands);
         latexParser.specialDefCommands.insert(pck.specialDefCommands);
 #else
-		latexParser.specialTreatmentCommands.unite(pck.specialTreatmentCommands);
         latexParser.specialDefCommands.unite(pck.specialDefCommands);
 #endif
 		latexParser.environmentAliases.unite(pck.environmentAliases);
@@ -1183,9 +1181,6 @@ QSettings *ConfigManager::readSettings(bool reread)
 	}
 	replacedIconsOnMenus = config->value("customIcons").toMap();
 
-	//custom highlighting
-    LatexParser::getInstance().customCommands = convertStringListtoSet(config->value("customCommands").toStringList());
-
 	//--------------------appearance------------------------------------
 	QFontDatabase fdb;
 	QStringList xf = fdb.families();
@@ -1329,9 +1324,6 @@ QSettings *ConfigManager::saveSettings(const QString &saveName)
 		else config->setValue(mtb.name + "ToolBar", mtb.actualActions);
 	}
 	config->setValue("customIcons", replacedIconsOnMenus);
-	// custom highlighting
-    QStringList zw = LatexParser::getInstance().customCommands.values();
-	config->setValue("customCommands", zw);
 
 #if QT_VERSION<QT_VERSION_CHECK(6,0,0)
     if(writtenQtVersion>=0x060000){
@@ -1731,11 +1723,6 @@ bool ConfigManager::execConfigDialog(QWidget *parentToDialog)
             tobeLoaded.append(pck.requiredPackages);
             completerConfig->words.unite(pck.completionWords);
 			latexParser.optionCommands.unite(pck.optionCommands);
-#if (QT_VERSION>=QT_VERSION_CHECK(5,15,0))
-            latexParser.specialTreatmentCommands.insert(pck.specialTreatmentCommands);
-#else
-			latexParser.specialTreatmentCommands.unite(pck.specialTreatmentCommands);
-#endif
 			latexParser.environmentAliases.unite(pck.environmentAliases);
 			latexParser.commandDefs.unite(pck.commandDescriptions);
 
